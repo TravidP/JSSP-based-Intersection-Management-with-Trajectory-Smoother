@@ -1,0 +1,44 @@
+\section{Problem Formulation}
+\label{sec:problem_formulation}
+% EN: Define the mathematical problem carefully. Keep notation consistent with the later scheduler and smoother sections.
+% CN: 本节要严谨定义数学问题，并保证符号和后面的调度器、轨迹平滑部分一致。
+
+\subsection{Intersection Conflict-Zone Model}
+% EN: Describe how the intersection is divided into conflict zones and how each route maps to an ordered sequence of zones.
+% CN: 写清楚路口如何划分冲突区，以及每条车辆路径如何对应一个有序冲突区序列。
+Consider an intersection management region with a set of connected autonomous vehicles $\mathcal{V}$ and a set of conflict zones $\mathcal{Z}$. Each vehicle $i \in \mathcal{V}$ follows a known route through an ordered conflict-zone sequence
+\begin{equation}
+  \mathcal{R}_i = \left(z_{i,1}, z_{i,2}, \ldots, z_{i,n_i}\right), \quad z_{i,k} \in \mathcal{Z}.
+\end{equation}
+The route sequence is determined by the vehicle's incoming lane, outgoing lane, and turning movement.
+
+\subsection{JSSP Representation}
+% EN: Explain vehicle-job, conflict-zone-machine, and traversal-operation mappings.
+% CN: 解释车辆对应 job，冲突区对应 machine，车辆穿越冲突区对应 operation。
+The intersection scheduling problem is formulated as a job shop scheduling problem. Vehicle $i$ is treated as a job $J_i$, conflict zone $z$ is treated as a machine $M_z$, and the traversal of vehicle $i$ through zone $z_{i,k}$ is an operation $O_{i,k}$. Each operation has a processing time $p_{i,k}$ that approximates the time required for vehicle $i$ to occupy and clear conflict zone $z_{i,k}$.
+
+Let $s_{i,k}$ denote the scheduled start time of operation $O_{i,k}$. The route order imposes the precedence constraint
+\begin{equation}
+  s_{i,k+1} \geq s_{i,k} + p_{i,k}, \quad k = 1,\ldots,n_i-1.
+  \label{eq:precedence}
+\end{equation}
+If two operations $O_{i,k}$ and $O_{j,l}$ use the same conflict zone, they cannot overlap:
+\begin{equation}
+  [s_{i,k}, s_{i,k}+p_{i,k}) \cap [s_{j,l}, s_{j,l}+p_{j,l}) = \emptyset.
+  \label{eq:disjunctive}
+\end{equation}
+
+\subsection{Objective}
+% EN: Choose the final objective after experiments. Possible objectives include total delay, makespan, number of stops, and energy proxy.
+% CN: 最终目标函数需要结合实验确定，可以考虑总延误、makespan、停车次数和能耗代理指标。
+The high-level scheduler seeks a feasible ordering of conflict-zone operations that reduces traffic inefficiency. A general objective can be written as
+\begin{equation}
+  \min_{\{s_{i,k}\}} \ \alpha C_{\max} + \beta \sum_{i \in \mathcal{V}} d_i + \gamma \sum_{i \in \mathcal{V}} n_i^{\mathrm{stop}},
+  \label{eq:objective}
+\end{equation}
+where $C_{\max}$ is the schedule makespan, $d_i$ is vehicle delay, $n_i^{\mathrm{stop}}$ is the number of stops, and $\alpha$, $\beta$, and $\gamma$ are weights selected for the study.
+
+\subsection{Safety and Communication Assumptions}
+% EN: State assumptions explicitly: known routes, reliable communication inside the control zone, bounded acceleration, and fallback behavior.
+% CN: 明确假设：路径已知、管理区域内通信可靠、车辆加速度有界、存在安全 fallback。
+The first draft assumes that each vehicle communicates its route, position, speed, and acceleration to the intersection manager after entering the control region. Vehicle dynamics are bounded by speed and acceleration limits. If communication is lost or a trajectory becomes infeasible, the vehicle falls back to conservative stop-line behavior.

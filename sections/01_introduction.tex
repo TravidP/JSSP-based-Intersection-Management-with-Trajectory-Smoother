@@ -1,0 +1,23 @@
+\section{Introduction}
+\label{sec:introduction}
+% EN: Start from the real-world need: AVs, logistics yards, warehouses, ports, and urban intersections. Then narrow to the gap between high-level schedules and low-level vehicle execution.
+% CN: 先写现实背景：自动驾驶、智能工厂、仓库、港口和城市路口。然后逐步收束到本文关注的核心 gap：调度结果如何被车辆平滑执行。
+
+\IEEEPARstart{A}{utonomous} vehicles are increasingly deployed in structured environments such as intelligent factories, warehouses, and ports, while connected autonomous vehicles are also becoming more relevant for urban traffic systems. With vehicle-to-vehicle and vehicle-to-infrastructure communication, an intersection no longer needs to be controlled only by fixed signal phases or human driving conventions. Instead, autonomous intersection management can coordinate the passing order of vehicles before they reach the conflict area.
+
+Early scheduling methods often rely on predefined rules such as first-come-first-served policies, reservation mechanisms, or hand-designed heuristics. These methods are intuitive and easy to deploy, but their search space grows rapidly when traffic density increases and many vehicles compete for overlapping conflict zones. More recent graph-based and job-shop-scheduling-inspired formulations provide a compact way to represent the conflict relationship between vehicles and intersection zones.
+
+However, a high-quality abstract schedule is only one part of the control problem. After a vehicle receives an assigned passing order or scheduled conflict-zone time, it must still adapt its speed and acceleration to satisfy the schedule. If vehicles simply stop at the stop line and wait for their turn, the intersection may suffer from stop-and-go waves, longer delay, and higher energy consumption. A smoother velocity profile can reduce unnecessary stops and make the schedule more practical for real vehicle execution.
+
+This paper aims to bridge this gap by combining high-level JSSP-based scheduling and low-level trajectory smoothing. The proposed framework recalculates the schedule when vehicles enter or leave the intersection management region, and then uses the scheduled times as references for speed optimization. The high-level scheduler is intended to be trained in SUMO through reinforcement learning, while the low-level smoother prepares the method for later vehicle-in-the-loop validation in CARLA.
+
+The main contributions are summarized as follows:
+\begin{itemize}
+  \item A hierarchical autonomous intersection management framework that connects JSSP-based passing-order optimization with vehicle-level trajectory execution.
+  \item An event-triggered graph scheduling mechanism that updates the intersection schedule when the active vehicle set changes.
+  \item A low-level speed smoothing formulation that tracks scheduled conflict-zone times while reducing unnecessary stop-line waiting.
+  \item A simulation-oriented evaluation plan comparing the proposed method with first-come-first-served and stop-at-intersection baselines.
+\end{itemize}
+
+% EN: Add verified citations for FCFS, reservation-based AIM, JSSP-based AIM, stop-and-go energy loss, and smooth velocity planning.
+% CN: 后续需要在这里补充真实引用：FCFS、预约式路口管理、JSSP 路口调度、停车波/能耗、速度平滑控制等。

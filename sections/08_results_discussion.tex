@@ -1,0 +1,24 @@
+\section{Results and Discussion}
+\label{sec:results_discussion}
+% EN: This is a placeholder structure for future experimental results. Keep the claims conservative until data is available.
+% CN: 这里先放结果章节框架。在真实数据出来前，所有结论都要保守表达。
+
+\subsection{Scheduling Performance}
+% EN: Compare delay, throughput, and makespan against baselines.
+% CN: 比较 proposed method 和 baselines 在延误、吞吐量、makespan 上的表现。
+This subsection will report whether the learned JSSP scheduler improves intersection throughput and reduces delay under different traffic densities. The analysis should include both average performance and variability across random seeds.
+
+\subsection{Trajectory Smoothness}
+% EN: Show whether smoothing reduces stops and acceleration fluctuation.
+% CN: 展示速度平滑是否减少停车次数和加速度波动。
+This subsection will evaluate whether the low-level smoother reduces unnecessary stops before the intersection. Useful plots include speed-time profiles, acceleration-time profiles, and histograms of stop counts.
+
+\subsection{Ablation Study}
+% EN: Compare full hierarchy, scheduler only, smoother only if meaningful, and FCFS.
+% CN: 做消融实验：完整框架、只有调度、只有平滑或 FCFS。
+An ablation study should separate the contribution of high-level scheduling from that of low-level trajectory smoothing. The expected comparison is between the proposed hierarchy, the JSSP scheduler without smoothing, and the FCFS stop-line baseline.
+
+\subsection{Limitations}
+% EN: Discuss limitations honestly: communication assumptions, scalability, policy generalization, and sim-to-real gap.
+% CN: 诚实讨论局限：通信假设、规模扩展、策略泛化和仿真到真实车辆的差距。
+The current framework assumes reliable communication and known routes inside the management region. Future work should test robustness to delayed messages, uncertain vehicle dynamics, mixed traffic with human-driven vehicles, and deployment on vehicle-in-the-loop platforms.

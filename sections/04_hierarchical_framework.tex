@@ -1,0 +1,39 @@
+\section{Hierarchical Intersection Management Framework}
+\label{sec:hierarchical_framework}
+% EN: This is the core architecture section. Make the reader understand how the scheduler and smoother exchange information.
+% CN: 这是文章核心框架部分，要让读者理解高层调度器和低层平滑控制器如何交互。
+
+The proposed framework contains two coupled layers. The high-level layer builds a JSSP graph from the active vehicle set and computes the conflict-zone schedule. The low-level layer receives scheduled conflict-zone entry times and generates smooth vehicle speed commands that track the schedule while satisfying physical constraints.
+
+\subsection{Event-Triggered Replanning}
+% EN: Explain when the graph is rebuilt and why event-triggered updates are cheaper than continuous global replanning.
+% CN: 说明什么时候重建图，以及事件触发更新为什么比连续全局重规划更高效。
+The scheduler is updated when a vehicle enters the management region, leaves the intersection, or violates a schedule-tracking tolerance. These events change the feasible operation set or the expected occupancy time of conflict zones. Between events, the low-level smoother continuously adjusts vehicle speed without forcing a full graph rescheduling step.
+
+\subsection{Information Flow}
+% EN: Describe inputs and outputs of each layer. This can later become a system diagram.
+% CN: 写清楚每一层的输入输出，后续可以画成系统框图。
+At each scheduling event, the manager receives the active vehicle states, route sequences, and estimated processing times. It outputs a schedule containing operation order and target start times. Each vehicle then solves a local speed-smoothing problem using its current state, route geometry, and assigned conflict-zone times.
+
+\begin{figure}[!t]
+\centering
+\begin{algorithmic}[1]
+\REQUIRE Active vehicles $\mathcal{V}$, conflict zones $\mathcal{Z}$, current time $t$
+\ENSURE Scheduled conflict-zone times and smoothed speed references
+\STATE Detect whether a vehicle enters, exits, or violates tracking tolerance.
+\IF{a scheduling event is triggered}
+  \STATE Build the JSSP graph from $\mathcal{V}$ and vehicle route sequences.
+  \STATE Select operation ordering using the learned RL scheduler.
+  \STATE Convert operation order into target conflict-zone entry times.
+\ENDIF
+\FOR{each active vehicle $i \in \mathcal{V}$}
+  \STATE Generate a smooth velocity trajectory that tracks the scheduled times.
+  \STATE Apply safety constraints and conservative fallback if needed.
+\ENDFOR
+\end{algorithmic}
+\caption{Event-triggered hierarchical intersection management.}
+\label{alg:hierarchical_scheduler}
+\end{figure}
+
+% EN: Later, add a system block diagram showing SUMO, scheduler, smoother, and optional CARLA validation.
+% CN: 后续可以补一个系统框图，展示 SUMO、调度器、平滑控制器和 CARLA 验证之间的关系。

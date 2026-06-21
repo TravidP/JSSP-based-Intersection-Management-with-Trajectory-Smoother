@@ -1,0 +1,35 @@
+\section{Reinforcement-Learning-Based JSSP Scheduler}
+\label{sec:rl_jssp_scheduler}
+% EN: Define the MDP and explain how a schedule is constructed step by step.
+% CN: 本节定义 MDP，并说明调度序列如何一步步构建。
+
+\subsection{Graph State Representation}
+% EN: Describe operation nodes, route precedence edges, machine conflict edges, and schedulable operations.
+% CN: 描述 operation 节点、路径先后约束边、机器冲突边以及当前可调度操作集合。
+The scheduler represents the current intersection as a graph whose nodes are operations and whose edges encode precedence and conflict relationships. Precedence edges connect consecutive conflict zones on the same vehicle route. Conflict edges connect operations that require the same conflict zone. At each decision step, only operations whose predecessors have already been scheduled are schedulable.
+
+\begin{figure}[!t]
+\centering
+\includegraphics[width=\linewidth]{jssp_rl_state_transition_reference}
+\caption{Draft reference for a JSSP/RL state-transition idea. TODO: redraw this figure in an original style and cite the source paper before submission.}
+\label{fig:jssp_state_transition}
+\end{figure}
+
+\subsection{MDP Definition}
+% EN: Be explicit about observation, action, reward, and transition. This is where the RL method becomes reproducible.
+% CN: 明确定义 observation、action、reward 和 transition，这是强化学习方法可复现的关键。
+The Markov decision process is defined by four elements:
+\begin{itemize}
+  \item \textbf{Observation}: graph features including operation status, estimated processing time, vehicle arrival time, route order, and conflict-zone occupancy.
+  \item \textbf{Action}: selection of one schedulable operation, equivalent to assigning priority to a vehicle-zone traversal.
+  \item \textbf{Transition}: update of the partial schedule after the selected operation is placed, including newly schedulable operations.
+  \item \textbf{Reward}: negative schedule cost, such as incremental delay, makespan increase, stop penalty, or a weighted combination of these terms.
+\end{itemize}
+
+\subsection{Training in SUMO}
+% EN: Explain how training episodes are generated, how traffic demand changes, and how the learned policy is evaluated.
+% CN: 说明 SUMO 中 episode 如何生成、交通流如何变化、训练好的策略如何评估。
+Training episodes are generated in SUMO by sampling traffic demand, vehicle routes, and arrival patterns. The RL scheduler observes the graph state and constructs a passing order for active vehicles. The simulation returns delay, waiting time, and schedule feasibility signals that are converted into rewards. After training, the learned policy is evaluated under unseen traffic densities and intersection layouts.
+
+% EN: Decide later whether the policy is graph neural network based, pointer-network based, or another architecture.
+% CN: 后续需要确定策略网络结构，例如 GNN、pointer network 或其他图调度网络。

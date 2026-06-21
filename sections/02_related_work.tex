@@ -1,0 +1,27 @@
+\section{Related Work}
+\label{sec:related_work}
+% EN: Organize this section by research themes rather than paper-by-paper summaries. Each paragraph should end by explaining what limitation motivates this paper.
+% CN: 本节建议按主题组织，而不是逐篇论文罗列。每个主题最后说明它和本文工作的差距。
+
+\subsection{Autonomous Intersection Management}
+% EN: Review signal-free AIM, reservation-based approaches, and centralized/decentralized coordination.
+% CN: 回顾无信号灯路口管理、预约式方法、集中式和分布式协调方法。
+Autonomous intersection management replaces fixed traffic signals with negotiated or optimized vehicle movements and has been widely discussed as a promising direction for connected autonomous traffic systems \cite{zhong2020autonomous}. Reservation-based approaches divide the intersection into spatial or temporal resources, while rule-based methods determine priority through arrival time, lane, or safety margins. These methods are practical baselines because they are interpretable and computationally light, but they may become conservative when traffic demand is high.
+
+\subsection{Scheduling and Graph-Based Formulations}
+% EN: Explain how conflict zones can be viewed as shared machines and vehicles as jobs. Discuss why JSSP is attractive for dense traffic.
+% CN: 解释冲突区如何对应机器、车辆如何对应作业，并说明 JSSP 适合高密度交通的原因。
+The job shop scheduling problem provides a natural abstraction for intersection coordination. Each vehicle can be treated as a job, each conflict zone as a machine, and each vehicle-zone traversal as an operation. Precedence constraints preserve the geometric order of zones along a path, while disjunctive constraints prevent two conflicting vehicles from occupying the same zone at the same time. This abstraction is attractive because it converts a traffic coordination problem into a structured combinatorial optimization problem.
+
+\subsection{Reinforcement Learning for Combinatorial Scheduling}
+% EN: Discuss RL policies that construct schedules step by step, including state, action, and reward design.
+% CN: 讨论强化学习如何逐步构建调度序列，重点写状态、动作和奖励设计。
+Reinforcement learning has been used to learn dispatching policies for combinatorial scheduling problems where handcrafted priority rules are difficult to tune. In a JSSP setting, an agent can observe the current partial schedule and select the next schedulable operation. For intersection management, this mechanism can be adapted to select which vehicle should enter a conflict zone next. The key challenge is to design an observation representation that captures safety, route order, and traffic density while remaining computationally efficient.
+
+\subsection{Trajectory Smoothing and Stop Avoidance}
+% EN: Review velocity planning, energy-aware control, control barrier functions, and smooth crossing strategies.
+% CN: 回顾速度规划、能耗优化、控制屏障函数和平滑通过路口的方法。
+Even when the passing order is optimized, vehicles still need feasible speed trajectories to execute the schedule. Stop-line waiting is simple but may increase delay, acceleration variation, and energy consumption. Smooth trajectory planning methods adjust vehicle speed before reaching the intersection so that vehicles can arrive at conflict zones close to their assigned time. This paper follows this direction and treats low-level smoothing as an execution layer below the learned scheduler.
+
+% EN: Replace these TODO notes with verified citations before submission. Do not cite a paper unless its claim has been checked.
+% CN: 投稿前必须把 TODO 替换为核实过的真实文献，不要为了占位编造引用。

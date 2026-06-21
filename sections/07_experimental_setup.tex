@@ -1,0 +1,56 @@
+\section{Experimental Setup}
+\label{sec:experimental_setup}
+% EN: Describe exactly how the method will be tested. This section should make the future results credible and reproducible.
+% CN: 本节写清楚方法如何测试，让后续结果可信且可复现。
+
+\subsection{Simulation Platform}
+% EN: SUMO is the main training and evaluation platform. CARLA can be used later for vehicle-in-the-loop validation.
+% CN: SUMO 作为主要训练和评估平台，CARLA 后续可用于 vehicle-in-the-loop 验证。
+The first evaluation stage will be conducted in SUMO because it supports scalable microscopic traffic simulation and repeated training episodes. A later validation stage can connect the scheduler and smoother to CARLA to examine vehicle-level execution under richer dynamics and perception assumptions.
+
+\subsection{Scenarios and Baselines}
+% EN: Define intersection layouts, vehicle demand levels, and baseline controllers.
+% CN: 定义路口布局、车流密度和对比基线。
+The experiments will include multiple traffic densities and route distributions. The primary baseline is a first-come-first-served controller that requires vehicles to stop at the intersection stop line before crossing. Additional baselines may include heuristic priority rules and a scheduler without trajectory smoothing.
+
+\begin{table}[!t]
+\caption{Candidate Baseline Methods}
+\label{tab:baselines}
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.28\linewidth}p{0.58\linewidth}}
+\toprule
+\textbf{Method} & \textbf{Description} \\
+\midrule
+FCFS stop-line & Vehicles are served by arrival order and wait before entering the intersection. \\
+Heuristic scheduler & Passing priority is selected by a handcrafted rule such as earliest arrival or shortest traversal time. \\
+JSSP scheduler only & High-level schedule is used without low-level velocity smoothing. \\
+Proposed hierarchy & JSSP/RL scheduler plus low-level smooth trajectory tracking. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Evaluation Metrics}
+% EN: Report metrics that reflect both scheduling quality and vehicle-level execution quality.
+% CN: 指标需要同时反映调度质量和车辆执行质量。
+\begin{table}[!t]
+\caption{Candidate Evaluation Metrics}
+\label{tab:metrics}
+\centering
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{p{0.34\linewidth}p{0.52\linewidth}}
+\toprule
+\textbf{Metric} & \textbf{Purpose} \\
+\midrule
+Average delay & Measures traffic efficiency. \\
+Throughput & Counts vehicles that clear the intersection per unit time. \\
+Number of stops & Evaluates stop-and-go reduction. \\
+Acceleration variance & Measures trajectory smoothness. \\
+Energy proxy & Estimates energy-related cost from speed and acceleration profiles. \\
+Computation time & Checks real-time scheduling feasibility. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% EN: Later, add exact SUMO network files, route generation parameters, random seeds, and training hyperparameters.
+% CN: 后续补充 SUMO 路网、route 生成参数、随机种子和训练超参数。

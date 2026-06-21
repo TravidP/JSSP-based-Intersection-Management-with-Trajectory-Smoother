@@ -1,0 +1,72 @@
+%% IEEE journal draft for hierarchical JSSP-based intersection management.
+\documentclass[journal]{IEEEtran}
+
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{siunitx}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{algorithmic}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{assets/figures/}}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg}
+
+\hypersetup{
+  pdftitle={Hierarchical JSSP-Based Scheduling With Smooth Trajectory Optimization for Autonomous Intersection Management},
+  pdfauthor={Author Name},
+  pdfkeywords={autonomous intersection management, job shop scheduling, reinforcement learning, trajectory smoothing, connected autonomous vehicles}
+}
+
+\hyphenation{op-tical net-works semi-conduc-tor sched-ul-ing tra-jec-to-ry}
+
+\begin{document}
+
+\title{Hierarchical JSSP-Based Scheduling With Smooth Trajectory Optimization for Autonomous Intersection Management}
+
+\author{Author~Name%
+\thanks{Author information, affiliation, and funding acknowledgment will be updated before submission.}%
+\thanks{Manuscript prepared as an IEEE journal-style draft.}}
+
+\markboth{IEEE Journal Draft,~2026}%
+{Author: Hierarchical JSSP-Based Scheduling With Smooth Trajectory Optimization}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/00_abstract}
+\end{abstract}
+
+\begin{IEEEkeywords}
+Autonomous intersection management, connected autonomous vehicles, job shop scheduling problem, reinforcement learning, trajectory optimization, velocity smoothing, V2X.
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+\input{sections/01_introduction}
+\input{sections/02_related_work}
+\input{sections/03_problem_formulation}
+\input{sections/04_hierarchical_framework}
+\input{sections/05_rl_jssp_scheduler}
+\input{sections/06_trajectory_smoothing}
+\input{sections/07_experimental_setup}
+\input{sections/08_results_discussion}
+\input{sections/09_conclusion}
+
+\section*{Acknowledgment}
+The author would like to thank collaborators and supervisors who provide feedback on the intersection management formulation, simulation design, and trajectory smoothing method.
+
+\ifCLASSOPTIONcaptionsoff
+  \newpage
+\fi
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
