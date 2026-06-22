@@ -6,6 +6,8 @@
 \subsection{Graph State Representation}
 % EN: Describe operation nodes, route precedence edges, machine conflict edges, and schedulable operations.
 % CN: 描述 operation 节点、路径先后约束边、机器冲突边以及当前可调度操作集合。
+\hl{We represent the state of job shop using a disjunctive graph}.
+
 The scheduler represents the current intersection as a graph whose nodes are operations and whose edges encode precedence and conflict relationships. Precedence edges connect consecutive conflict zones on the same vehicle route. Conflict edges connect operations that require the same conflict zone. At each decision step, only operations whose predecessors have already been scheduled are schedulable.
 
 \begin{figure}[!t]
@@ -29,6 +31,7 @@ The Markov decision process is defined by four elements:
 \subsection{Training in SUMO}
 % EN: Explain how training episodes are generated, how traffic demand changes, and how the learned policy is evaluated.
 % CN: 说明 SUMO 中 episode 如何生成、交通流如何变化、训练好的策略如何评估。
+\hl{How to design intersection for training is an open question. We can start with a simple 4-way intersection with 4 conflict zones and then scale up to more complex layouts.}
 Training episodes are generated in SUMO by sampling traffic demand, vehicle routes, and arrival patterns. The RL scheduler observes the graph state and constructs a passing order for active vehicles. The simulation returns delay, waiting time, and schedule feasibility signals that are converted into rewards. After training, the learned policy is evaluated under unseen traffic densities and intersection layouts.
 
 % EN: Decide later whether the policy is graph neural network based, pointer-network based, or another architecture.
