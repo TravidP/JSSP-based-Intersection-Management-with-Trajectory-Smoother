@@ -9,15 +9,22 @@ Early scheduling methods often rely on predefined rules such as first-come-first
 
 However, a high-quality abstract schedule is only one part of the control problem. After a vehicle receives an assigned passing order or scheduled conflict-zone time, it must still adapt its speed and acceleration to satisfy the schedule. If vehicles simply stop at the stop line and wait for their turn, the intersection may suffer from stop-and-go waves, longer delay, and higher energy consumption. A smoother velocity profile can reduce unnecessary stops and make the schedule more practical for real vehicle execution.
 
-This paper aims to bridge this gap by combining high-level JSSP-based scheduling and low-level trajectory smoothing. The proposed framework recalculates the schedule when vehicles enter or leave the intersection management region, and then uses the scheduled times as references for speed optimization. The high-level scheduler is intended to be trained in SUMO through reinforcement learning, while the low-level smoother prepares the method for later vehicle-in-the-loop validation in CARLA.
+\begin{addedblock}
+This paper bridges this gap by combining high-level JSSP-based scheduling and low-level trajectory smoothing. The high-level scheduler is trained offline and deployed online as a fixed policy: when a scheduling event occurs, the policy sequentially rolls out operation decisions until all remaining conflict-zone traversals of the active vehicles have been ordered. A schedule generator then converts the selected operation order into target conflict-zone entry times, which are passed to the low-level smoother for physically feasible execution.
+\end{addedblock}
 
 The main contributions are summarized as follows:
+\begin{addedblock}
 \begin{itemize}
   \item A hierarchical autonomous intersection management framework that connects JSSP-based passing-order optimization with vehicle-level trajectory execution.
-  \item An event-triggered graph scheduling mechanism that updates the intersection schedule when the active vehicle set changes.
+  \item An event-triggered online rollout mechanism in which an offline-trained RL policy constructs the remaining operation order for the current active vehicle set.
   \item A low-level speed smoothing formulation that tracks scheduled conflict-zone times while reducing unnecessary stop-line waiting.
-  \item A simulation-oriented evaluation plan comparing the proposed method with first-come-first-served and stop-at-intersection baselines.
+  \item A simulation-oriented evaluation plan comparing the proposed method with first-come-first-served, heuristic scheduling, and scheduler-only baselines.
 \end{itemize}
-\hl{we find that there are fewer research that incorporate both high-level scheduling and low-level trajectory smoothing in the context of autonomous intersection management. This paper aims to fill this gap by proposing a hierarchical framework that integrates JSSP-based scheduling with smooth trajectory optimization.}
+Compared with studies that focus only on high-level ordering or only on low-level vehicle control, this paper explicitly studies the interface between graph-based JSSP scheduling and executable smooth trajectories for autonomous intersection management.
+\end{addedblock}
+
+% CN summary for author review only; not visible in the compiled PDF:
+% 本文强调高层调度器在线阶段不持续训练 RL，而是使用离线训练好的策略进行 sequential rollout，直到当前 active vehicles 的剩余冲突区操作全部排完，再将 order 和 target times 传给低层轨迹平滑器。
 % EN: Add verified citations for FCFS, reservation-based AIM, JSSP-based AIM, stop-and-go energy loss, and smooth velocity planning.
 % CN: 后续需要在这里补充真实引用：FCFS、预约式路口管理、JSSP 路口调度、停车波/能耗、速度平滑控制等。

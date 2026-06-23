@@ -5,10 +5,41 @@
 
 The proposed framework contains two coupled layers. The high-level layer builds a JSSP graph from the active vehicle set and computes the conflict-zone schedule. This layer is detailed in Section~\ref{sec:rl_jssp_scheduler}, where the scheduler observes a graph state and selects schedulable operations step by step. The low-level layer receives scheduled conflict-zone entry times and generates smooth vehicle speed commands that track the schedule while satisfying physical constraints. This execution layer is detailed in Section~\ref{sec:trajectory_smoothing}.
 
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=3.4mm,
+  block/.style={draw=addedblue, rounded corners=1pt, align=center, text width=.88\linewidth, inner sep=2.7pt, text=addedblue, line width=.35pt},
+  arrow/.style={-{Stealth[length=1.7mm,width=1.2mm]}, draw=addedblue, line width=.35pt}
+]
+\node[block] (event) {Scheduling event: active vehicle set changes};
+\node[block, below=of event] (fix) {Preserve started or committed operations};
+\node[block, below=of fix] (graph) {Build JSSP graph from remaining active operations};
+\node[block, below=of graph] (rollout) {Frozen RL policy sequentially selects schedulable operations};
+\node[block, below=of rollout] (times) {Schedule generator computes target entry times and occupancies};
+\node[block, below=of times] (smooth) {Low-level smoother checks feasibility and generates trajectories};
+\node[block, below=of smooth] (exec) {Execute trajectory if feasible};
+\draw[arrow] (event) -- (fix);
+\draw[arrow] (fix) -- (graph);
+\draw[arrow] (graph) -- (rollout);
+\draw[arrow] (rollout) -- (times);
+\draw[arrow] (times) -- (smooth);
+\draw[arrow] (smooth) -- (exec);
+\draw[arrow, dashed] (smooth.west) -- ++(-0.06,0) |- (event.west);
+\end{tikzpicture}
+\caption{\added{Online scheduling logic with offline-trained policy rollout and low-level feasibility feedback.}}
+\label{fig:online_rollout_framework}
+\end{figure}
+
 \subsection{Closed-Loop Hierarchical Logic}
 % EN: Explain the complete loop: active vehicle set, graph scheduling, scheduled times, smoothing, execution feedback, and possible replanning.
 % CN: 说明完整闭环：活跃车辆集合、图调度、调度时间、速度平滑、执行反馈，以及必要时重新调度。
 At time $t$, the intersection manager maintains an active vehicle set $\mathcal{V}(t)$ and a route sequence $\mathcal{R}_i$ for each vehicle $i$. The high-level scheduler converts these routes into JSSP operations and determines an operation order. This order is then converted into scheduled conflict-zone start times $\{s_{i,k}\}$, where $s_{i,k}$ is the target time for vehicle $i$ to enter conflict zone $z_{i,k}$.
+
+\begin{addedblock}
+More precisely, a vehicle entering the management region triggers a high-level scheduling event. Operations that have already started, finished, or been committed for near-term execution are fixed. The remaining operations of the current active vehicles are encoded as a JSSP graph, and the offline-trained RL policy performs a sequential rollout: at each rollout step it selects one schedulable operation, the partial schedule is updated, and the process continues until every remaining conflict-zone operation has been scheduled. The policy is therefore used online only for inference and rollout, not for continued RL training during vehicle control.
+\end{addedblock}
 
 The low-level smoother treats $\{s_{i,k}\}$ as time references rather than hard stop-line permissions. It predicts the arrival time $\hat{t}_{i,k}$ under the current velocity plan, computes the tracking error later defined in \eqref{eq:tracking_error}, and adjusts speed upstream to reduce this error. In this way, the high-level scheduler decides \emph{who should pass first}, while the low-level smoother decides \emph{how each vehicle should move} to execute that decision smoothly.
 
@@ -17,42 +48,55 @@ The low-level smoother treats $\{s_{i,k}\}$ as time references rather than hard 
 % CN: 说明什么时候重建图，以及事件触发更新为什么比连续全局重规划更高效。
 The scheduler is updated when a vehicle enters the management region, leaves the intersection, violates a schedule-tracking tolerance, or reports that the smoothing problem is infeasible. These events change either the feasible operation set or the expected occupancy time of conflict zones. Between events, the low-level smoother continuously adjusts vehicle speed without forcing a full graph rescheduling step.
 
-To keep the closed loop physically consistent, operations that have already started or finished are treated as fixed commitments during replanning. Only unscheduled or not-yet-executed operations are reconsidered by the high-level scheduler. This prevents the replanner from changing a decision that a vehicle has already begun to execute.
+\begin{addedblock}
+To keep replanning physically consistent, fixed commitments are not re-ordered. The high-level scheduler only rolls out decisions for unscheduled or not-yet-executed operations, while the schedule generator respects the fixed time windows that have already been accepted by the smoother or begun by a vehicle.
+\end{addedblock}
 
 \subsection{Information Flow}
 % EN: Describe inputs and outputs of each layer. This can later become a system diagram.
 % CN: 写清楚每一层的输入输出，后续可以画成系统框图。
 At each scheduling event, the manager receives active vehicle states, route sequences, estimated processing times, and the set of fixed operations. The scheduler outputs an operation order and target start times for the remaining conflict-zone traversals. Each vehicle then solves a local speed-smoothing problem using its current state, route geometry, assigned conflict-zone times, and safety constraints.
 
-The information passed from the scheduler to the smoother is therefore
+\begin{addedblock}
+The information passed from the scheduler to the smoother is the set of ordered conflict-zone reservations
+\end{addedblock}
 \begin{equation}
-  \mathcal{S}_i = \left\{(z_{i,k}, s_{i,k}, p_{i,k}) \mid z_{i,k} \in \mathcal{R}_i \right\},
+  \mathcal{S} = \left\{(i,z_{i,k},q_{i,k},s_{i,k},p_{i,k}) \mid i \in \mathcal{V}(t), z_{i,k} \in \mathcal{R}_i \right\},
   \label{eq:scheduler_smoother_interface}
 \end{equation}
-where $p_{i,k}$ is the estimated conflict-zone occupancy time. The information passed back from the smoother includes predicted arrival times, tracking errors, feasibility status, and updated vehicle states. This feedback determines whether the current schedule remains executable or a new scheduling event should be triggered.
+\begin{addedblock}
+where $i$ is the vehicle identifier, $z_{i,k}$ is the conflict zone, $q_{i,k}$ is the operation rank in the generated order, $s_{i,k}$ is the target entry time, and $p_{i,k}$ is the estimated occupancy time. The smoother returns predicted arrival times, tracking errors, feasibility status, and updated vehicle states. If the schedule cannot be executed within dynamic or safety constraints, the feedback triggers replanning or a conservative stop-line fallback.
+\end{addedblock}
 
 \begin{figure}[!t]
 \centering
+{\color{addedblue}
 \begin{algorithmic}[1]
-\REQUIRE Active vehicles $\mathcal{V}$, conflict zones $\mathcal{Z}$, current time $t$
-\ENSURE Scheduled conflict-zone times and smoothed speed references
+\REQUIRE Active vehicles $\mathcal{V}(t)$, conflict zones $\mathcal{Z}$, fixed commitments $\mathcal{F}$
+\ENSURE Ordered conflict-zone reservations and smoothed speed references
 \STATE Collect vehicle states, route sequences, and execution feedback.
-\STATE Detect whether a vehicle enters, exits, violates tracking tolerance, or reports infeasibility.
-\IF{a scheduling event is triggered}
-  \STATE Fix operations that have already started or finished.
-  \STATE Build the JSSP graph from active vehicles and remaining route operations.
-  \STATE Select operation ordering using the learned RL scheduler in Section~\ref{sec:rl_jssp_scheduler}.
-  \STATE Convert operation order into target conflict-zone entry times $\{s_{i,k}\}$.
+\IF{a vehicle enters or exits, tracking tolerance is violated, or smoothing is infeasible}
+  \STATE Preserve started, finished, and committed operations in $\mathcal{F}$.
+  \STATE Build a JSSP graph for the remaining active operations $\mathcal{O}^{\mathrm{rem}}$.
+  \STATE Initialize the partial schedule with $\mathcal{F}$.
+  \WHILE{$\mathcal{O}^{\mathrm{rem}}$ contains unscheduled operations}
+    \STATE Identify schedulable operations whose route predecessors are fixed or scheduled.
+    \STATE Select one operation using the offline-trained RL policy rollout.
+    \STATE Append the selected operation to the partial order and update the graph state.
+  \ENDWHILE
+  \STATE Create the reservation set $\mathcal{S}$ from the completed order.
 \ENDIF
-\FOR{each active vehicle $i \in \mathcal{V}$}
-  \STATE Pass $\mathcal{S}_i$ to the low-level smoother in Section~\ref{sec:trajectory_smoothing}.
+\FOR{each active vehicle $i \in \mathcal{V}(t)$}
+  \STATE Pass the assigned reservations to the low-level smoother.
   \STATE Generate a smooth velocity trajectory and predicted arrival times $\{\hat{t}_{i,k}\}$.
-  \STATE Apply safety constraints; request replanning or conservative fallback if infeasible.
+  \STATE Execute if feasible; otherwise request replanning or conservative fallback.
 \ENDFOR
-\end{algorithmic}
-\caption{Event-triggered hierarchical intersection management.}
+\end{algorithmic}}
+\caption{\added{Event-triggered hierarchical intersection management with offline-trained online rollout.}}
 \label{alg:hierarchical_scheduler}
 \end{figure}
 
-% EN: Later, add a system block diagram showing SUMO, scheduler, smoother, and optional CARLA validation.
-% CN: 后续可以补一个系统框图，展示 SUMO、调度器、平滑控制器和 CARLA 验证之间的关系。
+% CN summary for author review only; not visible in the compiled PDF:
+% 在线阶段：车辆进入管理区域触发调度事件；固定已开始/已承诺操作；将 active vehicles 转成 JSSP graph；用训练好的 RL policy 逐步 rollout 选择可调度 operation；直到剩余操作全部 scheduled；输出 order、target entry time 和 occupancy time 给 low-level smoother；若 smoother infeasible，则 replanning 或 fallback。
+
+

@@ -18,10 +18,18 @@ The job shop scheduling problem provides a natural abstraction for intersection 
 % CN: 讨论强化学习如何逐步构建调度序列，重点写状态、动作和奖励设计。
 Reinforcement learning has been used to learn dispatching policies for combinatorial scheduling problems where handcrafted priority rules are difficult to tune. In a JSSP setting, an agent can observe the current partial schedule and select the next schedulable operation. For intersection management, this mechanism can be adapted to select which vehicle should enter a conflict zone next. The key challenge is to design an observation representation that captures safety, route order, and traffic density while remaining computationally efficient.
 
+\begin{addedblock}
+In the present framework, reinforcement learning is used to learn a constructive scheduling policy before deployment. During online intersection control, the trained policy parameters remain fixed, and the policy is queried repeatedly to complete the schedule for the active vehicle set. This distinction is important because online rollout has a clearer real-time role than continuous online training while vehicles are being controlled.
+\end{addedblock}
+
 \subsection{Trajectory Smoothing and Stop Avoidance}
 % EN: Review velocity planning, energy-aware control, control barrier functions, and smooth crossing strategies.
 % CN: 回顾速度规划、能耗优化、控制屏障函数和平滑通过路口的方法。
 Even when the passing order is optimized, vehicles still need feasible speed trajectories to execute the schedule. Stop-line waiting is simple but may increase delay, acceleration variation, and energy consumption. Smooth trajectory planning methods adjust vehicle speed before reaching the intersection so that vehicles can arrive at conflict zones close to their assigned time. This paper follows this direction and treats low-level smoothing as an execution layer below the learned scheduler.
+
+\begin{addedblock}
+The scheduling and smoothing layers therefore address complementary parts of the AIM problem: the scheduler determines the discrete conflict-zone order, whereas the smoother determines whether that order can be executed with bounded acceleration, safety margins, and limited unnecessary stopping.
+\end{addedblock}
 
 % EN: Replace these TODO notes with verified citations before submission. Do not cite a paper unless its claim has been checked.
 % CN: 投稿前必须把 TODO 替换为核实过的真实文献，不要为了占位编造引用。

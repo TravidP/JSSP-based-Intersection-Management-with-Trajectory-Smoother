@@ -13,10 +13,17 @@
 \usepackage[caption=false,font=footnotesize]{subfig}
 \usepackage{algorithmic}
 \usepackage{url}
-% \usepackage[hidelinks]{hyperref}
-\usepackage{hyperref}
 \usepackage{xcolor} % 提供颜色支持
 \usepackage{soul}   % 提供高亮标注支持
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+% \usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
+
+\definecolor{addedblue}{RGB}{0,73,171}
+\definecolor{summarygreen}{RGB}{0,115,72}
+\DeclareRobustCommand{\added}[1]{\textcolor{addedblue}{#1}}
+\newenvironment{addedblock}{\begingroup\color{addedblue}}{\endgroup}
 
 \graphicspath{{assets/figures/}}
 \DeclareGraphicsExtensions{.pdf,.png,.jpg,.jpeg}

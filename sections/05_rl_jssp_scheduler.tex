@@ -6,33 +6,49 @@
 \subsection{Graph State Representation}
 % EN: Describe operation nodes, route precedence edges, machine conflict edges, and schedulable operations.
 % CN: 描述 operation 节点、路径先后约束边、机器冲突边以及当前可调度操作集合。
-\hl{We represent the state of job shop using a disjunctive graph}.
-
-The scheduler represents the current intersection as a graph whose nodes are operations and whose edges encode precedence and conflict relationships. Precedence edges connect consecutive conflict zones on the same vehicle route. Conflict edges connect operations that require the same conflict zone. At each decision step, only operations whose predecessors have already been scheduled are schedulable.
+\begin{addedblock}
+Each high-level scheduling event is represented by a disjunctive graph. In this graph, each vehicle is a job, each conflict zone is a machine, and each traversal of one vehicle through one conflict zone is an operation. Route-order constraints are encoded as precedence edges between consecutive operations of the same vehicle, whereas operations that require the same conflict zone are connected by disjunctive conflict edges. At each decision step, only operations whose route predecessors have already been scheduled or fixed are included in the schedulable action set.
+\end{addedblock}
 
 \begin{figure}[!t]
 \centering
 \includegraphics[width=\linewidth]{jssp_rl_state_transition_reference}
-\caption{Draft reference for a JSSP/RL state-transition idea. TODO: redraw this figure in an original style and cite the source paper before submission.}
+\caption{Illustrative graph state transition for sequential JSSP schedule construction.}
 \label{fig:jssp_state_transition}
 \end{figure}
+% EN: This image remains a draft reference figure and should be redrawn in an original style or supported by a verified citation before submission.
+% CN: 该图仍是参考草图，投稿前需要重绘为原创风格或补充核实过的引用。
 
 \subsection{MDP Definition}
 % EN: Be explicit about observation, action, reward, and transition. This is where the RL method becomes reproducible.
 % CN: 明确定义 observation、action、reward 和 transition，这是强化学习方法可复现的关键。
-The Markov decision process is defined by four elements:
+\begin{addedblock}
+The Markov decision process is defined over partial schedules. The agent does not directly command vehicle acceleration; instead, it constructs a discrete operation order that is later translated into time references for the smoother.
+\end{addedblock}
 \begin{itemize}
   \item \textbf{Observation}: graph features including operation status, estimated processing time, vehicle arrival time, route order, and conflict-zone occupancy.
-  \item \textbf{Action}: selection of one schedulable operation, equivalent to assigning priority to a vehicle-zone traversal.
+  \item \textbf{Action}: selection of one schedulable operation, equivalent to assigning the next priority to a vehicle-zone traversal.
   \item \textbf{Transition}: update of the partial schedule after the selected operation is placed, including newly schedulable operations.
-  \item \textbf{Reward}: negative schedule cost, such as incremental delay, makespan increase, stop penalty, or a weighted combination of these terms.
+  \item \textbf{Reward}: negative schedule cost, such as incremental delay, makespan increase, stop penalty, infeasibility penalty, or a weighted combination of these terms.
 \end{itemize}
 
-\subsection{Training in SUMO}
-% EN: Explain how training episodes are generated, how traffic demand changes, and how the learned policy is evaluated.
-% CN: 说明 SUMO 中 episode 如何生成、交通流如何变化、训练好的策略如何评估。
-\hl{How to design intersection for training is an open question. We can start with a simple 4-way intersection with 4 conflict zones and then scale up to more complex layouts.}
-Training episodes are generated in SUMO by sampling traffic demand, vehicle routes, and arrival patterns. The RL scheduler observes the graph state and constructs a passing order for active vehicles. The simulation returns delay, waiting time, and schedule feasibility signals that are converted into rewards. After training, the learned policy is evaluated under unseen traffic densities and intersection layouts.
+\subsection{Offline Training and Online Rollout}
+\begin{addedblock}
+Let $\pi_\theta$ denote the trained RL policy. During offline training, the parameters $\theta$ are optimized using sampled JSSP/AIM instances and simulation feedback. During online deployment, $\theta$ is frozen. For a scheduling event at time $t$, the scheduler initializes the partial schedule with fixed commitments, computes the schedulable set, and repeatedly queries $\pi_\theta$ to select the next operation. The rollout terminates only when all remaining operations of the current active vehicles have been scheduled.
 
+After the rollout produces a complete operation order, a deterministic schedule generator assigns target entry times $s_{i,k}$ and occupancy intervals using the selected order, route precedence constraints, fixed commitments, and estimated processing times $p_{i,k}$. The resulting reservation set $\mathcal{S}$ is then sent to the low-level smoother. Thus, the online stage is policy inference plus schedule generation, not online RL training.
+\end{addedblock}
+
+\subsection{Training Route}
+% EN: Explain how training episodes are generated, how traffic demand changes, and how the learned policy is evaluated.
+% CN: 说明 episode 如何生成、交通流如何变化、训练好的策略如何评估。
+\begin{addedblock}
+The training route is organized in three stages. First, an abstract JSSP/AIM high-level scheduler is trained on generated graph instances so that the policy learns to construct feasible and efficient operation orders independent of a specific microscopic simulator. Second, the trained scheduler is connected to SUMO for closed-loop validation or additional simulation-only fine-tuning under sampled traffic demand, routes, and arrival patterns. Third, the low-level smoother is introduced into the loop so that infeasible schedules, excessive stopping, and large tracking errors can be reflected in the reward or evaluation metrics.
+
+This staged design separates learning from online control. Any fine-tuning with SUMO or smoother feedback is performed before deployment or during offline simulation experiments; the deployed intersection manager uses the trained policy for sequential rollout only.
+\end{addedblock}
+
+% CN summary for author review only; not visible in the compiled PDF:
+% 训练建议：先训练抽象 JSSP/AIM high-level scheduler；再接入 SUMO 做 closed-loop fine-tuning 或验证；最后接 low-level smoother，并加入 infeasible penalty、stop penalty 和 tracking error 相关指标。在线部署时只做 policy rollout，不边训练边控制车辆。
 % EN: Decide later whether the policy is graph neural network based, pointer-network based, or another architecture.
 % CN: 后续需要确定策略网络结构，例如 GNN、pointer network 或其他图调度网络。

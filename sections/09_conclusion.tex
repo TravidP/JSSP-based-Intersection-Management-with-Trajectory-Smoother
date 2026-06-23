@@ -4,3 +4,10 @@
 % CN: 总结研究思路。在实验完成前不要声称具体数值提升。
 
 This paper draft presents a hierarchical framework for autonomous intersection management that combines JSSP-based high-level scheduling with low-level smooth trajectory optimization. The core idea is to use reinforcement learning to construct efficient conflict-zone schedules while enabling vehicles to execute those schedules through advance speed adjustment rather than stop-line waiting. The planned evaluation will compare the proposed method against FCFS and heuristic baselines in SUMO, with future validation in CARLA. The long-term goal is to make graph-based intersection scheduling more executable for real connected autonomous vehicles.
+
+\begin{addedblock}
+A central implementation choice is that reinforcement learning is used for offline policy learning, whereas online intersection control uses the trained policy only for sequential schedule rollout. This distinction keeps the deployed scheduler focused on real-time inference: it orders the remaining operations of the active vehicles, generates target conflict-zone entry times, and relies on the smoother to confirm executable trajectories or request replanning.
+\end{addedblock}
+
+% CN summary for author review only; not visible in the compiled PDF:
+% 结论需要再次强调：部署阶段不是持续在线训练 RL，而是使用已经训练好的 high-level policy 进行 online sequential rollout，并把生成的 order/target times 交给低层 smoother 执行与反馈。
