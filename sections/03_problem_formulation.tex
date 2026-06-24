@@ -1,5 +1,6 @@
 \section{Problem Formulation}
 \label{sec:problem_formulation}
+% CN-SECTION: 问题建模定义路口、车辆路线、JSSP映射、图结构、目标函数和安全假设。
 % EN: Define the mathematical problem carefully. Keep notation consistent with the later scheduler and smoother sections.
 % CN: 本节要严谨定义数学问题，并保证符号和后面的调度器、轨迹平滑部分一致。
 
@@ -12,10 +13,56 @@ Consider an intersection management region with a set of connected autonomous ve
 \end{equation}
 The route sequence is determined by the vehicle's incoming lane, outgoing lane, and turning movement.
 
+\begin{addedtwoblock}
+The target intersection is represented as a tuple
+\begin{equation}
+  \mathcal{I}=\left(\mathcal{Z},\mathcal{T}\right),
+  \label{eq:intersection_tuple}
+\end{equation}
+where $\mathcal{Z}$ denotes the conflict-zone set and $\mathcal{T}$ denotes the admissible route or trajectory templates through the intersection. Each template in $\mathcal{T}$ induces an ordered sequence of zones and a nominal traversal model that can be used to estimate distance-to-zone, free-flow crossing time, and occupancy time.
+\end{addedtwoblock}
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=4mm,
+  pblock/.style={draw=revisionpurple, rounded corners=1pt, align=center, text width=.86\linewidth, inner sep=2.8pt, text=revisionpurple, line width=.35pt},
+  parr/.style={-{Stealth[length=1.8mm,width=1.2mm]}, draw=revisionpurple, line width=.35pt}
+]
+\node[pblock] (tuple) {Intersection tuple $\mathcal{I}=(\mathcal{Z},\mathcal{T})$};
+\node[pblock, below=of tuple] (ops) {Operation nodes $v_{i,k}$: vehicle $i$ traverses zone $z_{i,k}$};
+\node[pblock, below=of ops] (edges) {Edges: conjunctive route order $\mathcal{C}$ and disjunctive same-zone conflicts $\mathcal{D}$};
+\node[pblock, below=of edges] (rollout) {Relation-aware policy rollout selects a feasible passing order};
+\draw[parr] (tuple) -- (ops);
+\draw[parr] (ops) -- (edges);
+\draw[parr] (edges) -- (rollout);
+\end{tikzpicture}
+\caption{\addedtwo{Transformation from an intersection tuple to an operation graph for high-level scheduling.}}
+\label{fig:intersection_tuple_graph}
+\end{figure}
+
 \subsection{JSSP Representation}
 % EN: Explain vehicle-job, conflict-zone-machine, and traversal-operation mappings.
 % CN: 解释车辆对应 job，冲突区对应 machine，车辆穿越冲突区对应 operation。
 The intersection scheduling problem is formulated as a job shop scheduling problem. Vehicle $i$ is treated as a job $J_i$, conflict zone $z$ is treated as a machine $M_z$, and the traversal of vehicle $i$ through zone $z_{i,k}$ is an operation $O_{i,k}$. Each operation has a processing time $p_{i,k}$ that approximates the time required for vehicle $i$ to occupy and clear conflict zone $z_{i,k}$.
+
+\begin{addedtwoblock}
+For the neural scheduler, the active scene is converted into an operation graph
+\begin{equation}
+  \mathcal{G}=\left(\mathcal{V}_g,\mathcal{C}\cup\mathcal{D}\right),
+  \label{eq:operation_graph}
+\end{equation}
+where $\mathcal{V}_g=\{v_{i,k}\mid i\in\mathcal{V}, z_{i,k}\in\mathcal{R}_i\}$ is the set of operation nodes. The graph-node notation $\mathcal{V}_g$ is used to avoid confusion with the vehicle set $\mathcal{V}$. The conjunctive edge set
+\begin{equation}
+  \mathcal{C}=\{(v_{i,k},v_{i,k+1})\mid i\in\mathcal{V}, k=1,\ldots,n_i-1\}
+\end{equation}
+encodes same-vehicle route order. The disjunctive edge set
+\begin{equation}
+  \mathcal{D}=\{\{v_{i,k},v_{j,l}\}\mid z_{i,k}=z_{j,l}, (i,k)\neq(j,l)\}
+\end{equation}
+encodes same-conflict-zone mutual exclusion. During rollout, the policy progressively orients or resolves these disjunctive conflicts by selecting the next schedulable operation.
+\end{addedtwoblock}
 
 Let $s_{i,k}$ denote the scheduled start time of operation $O_{i,k}$. The route order imposes the precedence constraint
 \begin{equation}
@@ -38,7 +85,12 @@ The high-level scheduler seeks a feasible ordering of conflict-zone operations t
 \end{equation}
 where $C_{\max}$ is the schedule makespan, $d_i$ is vehicle delay, $n_i^{\mathrm{stop}}$ is the number of stops, and $\alpha$, $\beta$, and $\gamma$ are weights selected for the study.
 
+\begin{addedtwoblock}
+A central operational objective is to let vehicles cross the intersection without stop-line waiting whenever the schedule and vehicle dynamics make this feasible. Constant-speed travel through the management region is used as a nominal prediction model for free-flow timing and delay measurement, while stop-line waiting remains a baseline behavior and a conservative fallback when the smoother reports infeasibility.
+\end{addedtwoblock}
+
 \subsection{Safety and Communication Assumptions}
 % EN: State assumptions explicitly: known routes, reliable communication inside the control zone, bounded acceleration, and fallback behavior.
 % CN: 明确假设：路径已知、管理区域内通信可靠、车辆加速度有界、存在安全 fallback。
 The first draft assumes that each vehicle communicates its route, position, speed, and acceleration to the intersection manager after entering the control region. Vehicle dynamics are bounded by speed and acceleration limits. If communication is lost or a trajectory becomes infeasible, the vehicle falls back to conservative stop-line behavior.
+

@@ -1,5 +1,6 @@
 \section{Hierarchical Intersection Management Framework}
 \label{sec:hierarchical_framework}
+% CN-SECTION: 框架章节说明高层调度器与低层平滑器的闭环信息流和事件触发逻辑。
 % EN: This is the core architecture section. Make the reader understand how the scheduler and smoother exchange information.
 % CN: 这是文章核心框架部分，要让读者理解高层调度器和低层平滑控制器如何交互。
 
@@ -98,5 +99,6 @@ where $i$ is the vehicle identifier, $z_{i,k}$ is the conflict zone, $q_{i,k}$ i
 
 % CN summary for author review only; not visible in the compiled PDF:
 % 在线阶段：车辆进入管理区域触发调度事件；固定已开始/已承诺操作；将 active vehicles 转成 JSSP graph；用训练好的 RL policy 逐步 rollout 选择可调度 operation；直到剩余操作全部 scheduled；输出 order、target entry time 和 occupancy time 给 low-level smoother；若 smoother infeasible，则 replanning 或 fallback。
+
 
 

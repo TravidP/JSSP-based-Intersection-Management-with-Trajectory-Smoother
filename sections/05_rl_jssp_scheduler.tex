@@ -1,14 +1,16 @@
 \section{Reinforcement-Learning-Based JSSP Scheduler}
 \label{sec:rl_jssp_scheduler}
+% CN-SECTION: 本节给出高层RL-JSSP调度器的状态、特征编码、MDP、策略网络和训练/部署方式。
 % EN: Define the MDP and explain how a schedule is constructed step by step.
 % CN: 本节定义 MDP，并说明调度序列如何一步步构建。
 
-\subsection{Graph State Representation}
-% EN: Describe operation nodes, route precedence edges, machine conflict edges, and schedulable operations.
-% CN: 描述 operation 节点、路径先后约束边、机器冲突边以及当前可调度操作集合。
-\begin{addedblock}
-Each high-level scheduling event is represented by a disjunctive graph. In this graph, each vehicle is a job, each conflict zone is a machine, and each traversal of one vehicle through one conflict zone is an operation. Route-order constraints are encoded as precedence edges between consecutive operations of the same vehicle, whereas operations that require the same conflict zone are connected by disjunctive conflict edges. At each decision step, only operations whose route predecessors have already been scheduled or fixed are included in the schedulable action set.
-\end{addedblock}
+\subsection{Graph State and Operation Nodes}
+% CN-SUBSECTION: 说明调度器看到的图状态，以及operation node和typed edge的含义。
+\begin{addedtwoblock}
+At each high-level scheduling event, the scheduler receives the operation graph $\mathcal{G}$ defined in Section~\ref{sec:problem_formulation}. Each node $v_{i,k}\in\mathcal{V}_g$ represents one operation: vehicle $i$ traversing conflict zone $z_{i,k}$. The graph contains typed structural relations rather than a single homogeneous edge set. Route-precedence relations encode the predecessor and successor context of the same vehicle, while disjunctive relations connect operations competing for the same conflict zone.
+
+This representation follows learning-based JSSP dispatching on disjunctive graphs, but adapts the node features and relations to autonomous intersection management. A relation-aware graph attention encoder is used because the scheduler must distinguish same-vehicle motion continuity from same-zone conflict competition \cite{velickovic2018graphattention,zhang2020learningdispatch,shaw2018selfattention,schlichtkrull2018rgcn,chen2021rgat}.
+\end{addedtwoblock}
 
 \begin{figure}[!t]
 \centering
@@ -19,36 +21,122 @@ Each high-level scheduling event is represented by a disjunctive graph. In this 
 % EN: This image remains a draft reference figure and should be redrawn in an original style or supported by a verified citation before submission.
 % CN: 该图仍是参考草图，投稿前需要重绘为原创风格或补充核实过的引用。
 
-\subsection{MDP Definition}
-% EN: Be explicit about observation, action, reward, and transition. This is where the RL method becomes reproducible.
-% CN: 明确定义 observation、action、reward 和 transition，这是强化学习方法可复现的关键。
-\begin{addedblock}
-The Markov decision process is defined over partial schedules. The agent does not directly command vehicle acceleration; instead, it constructs a discrete operation order that is later translated into time references for the smoother.
-\end{addedblock}
+\subsection{Operation Feature Encoding}
+% CN-SUBSECTION: 归纳每个operation node的输入特征，并说明连续、类别、二值/mask特征如何编码。
+\begin{addedtwoblock}
+For an operation node $v=v_{i,k}$, the input representation summarizes vehicle $i$ before it traverses conflict zone $z_{i,k}$. The encoder deliberately separates scalar state variables, binary scheduling flags, and categorical identifiers:
 \begin{itemize}
-  \item \textbf{Observation}: graph features including operation status, estimated processing time, vehicle arrival time, route order, and conflict-zone occupancy.
-  \item \textbf{Action}: selection of one schedulable operation, equivalent to assigning the next priority to a vehicle-zone traversal.
-  \item \textbf{Transition}: update of the partial schedule after the selected operation is placed, including newly schedulable operations.
-  \item \textbf{Reward}: negative schedule cost, such as incremental delay, makespan increase, stop penalty, infeasibility penalty, or a weighted combination of these terms.
+  \item \textit{Scalar state features}: motion, timing, delay, and route-progress quantities, including current speed $u_i(t)$, distance to the target zone $d_{i,k}(t)$, nominal free-flow entry time $\hat{s}^{\mathrm{ff}}_{i,k}$, occupancy time $p_{i,k}$, stop-line waiting time $W_i(t)$, incremental delay $\Delta D_i(t)$, route completion ratio $\rho_{i,k}$, and remaining-operation count $n_i^{\mathrm{rem}}$.
+  \item \textit{Binary scheduling flags}: the fixed or committed indicator and the current schedulability indicator.
+  \item \textit{Categorical identifiers}: operation status $\sigma_v$, conflict-zone index $z_v$, and vehicle class $\tau_v$. The status $\sigma_v$ indicates whether the operation is unscheduled, executing/committed, or scheduled/finished.
 \end{itemize}
+The constant-speed model is used only as a nominal free-flow reference for estimating $\hat{s}^{\mathrm{ff}}_{i,k}$ and $\Delta D_i(t)$; it is not assumed to be the final vehicle-control behavior. The scalar and binary feature vectors are
+\begin{equation}
+\begin{aligned}
+  c_v = [&u_i(t), d_{i,k}(t), \hat{s}^{\mathrm{ff}}_{i,k}, p_{i,k}, W_i(t), \Delta D_i(t), \\
+  &\rho_{i,k}, n_i^{\mathrm{rem}}],
+\end{aligned}
+\label{eq:continuous_features}
+\end{equation}
+\begin{equation}
+  b_v=[\mathbb{1}_{\mathrm{fixed}}(v),\mathbb{1}_{\mathrm{sched}}(v)].
+  \label{eq:binary_features}
+\end{equation}
+The encoder first forms a structured concatenated feature vector:
+\begin{equation}
+\begin{aligned}
+  \tilde{x}_v = [&\operatorname{Norm}(c_v)\Vert b_v\Vert E_{\mathrm{status}}(\sigma_v)\Vert E_{\mathrm{zone}}(z_v) \\
+  &\Vert E_{\mathrm{type}}(\tau_v)],
+\end{aligned}
+\label{eq:feature_concatenation}
+\end{equation}
+Thus, $\tilde{x}_v$ does not repeat $c_v$: it concatenates normalized scalar states, explicit binary scheduling flags, and learned categorical embeddings. The schedulability indicator is intentionally present both in $b_v$ and as the hard actor mask in \eqref{eq:actor_mask}, so the encoder can condition on feasibility while invalid actions remain impossible.\featureencodingpdfcomment
+\begin{equation}
+  h_v^{(0)}=\phi_{\mathrm{enc}}(\tilde{x}_v),
+  \label{eq:input_encoder}
+\end{equation}
+where $\phi_{\mathrm{enc}}$ is the shared input projection that maps the concatenated operation features into the initial node embedding used by the relation-aware attention layers.
+\end{addedtwoblock}
+\subsection{MDP and Rollout Dynamics}
+% CN-SUBSECTION: 用MDP语言定义observation、action、transition、terminal和reward，使训练流程可复现。
+\begin{addedtwoblock}
+The MDP state at rollout step $\ell$ is the current partial schedule and its graph representation, denoted by $S_\ell=(\mathcal{G}_\ell,\mathcal{P}_\ell,\mathcal{F})$, where $\mathcal{P}_\ell$ is the partial operation order and $\mathcal{F}$ is the set of fixed or committed operations. The action set is
+\begin{equation}
+  \mathcal{A}_\ell=\{v\in\mathcal{V}_g^{\mathrm{rem}} \mid \operatorname{Pred}(v)\subseteq \mathcal{P}_\ell\cup\mathcal{F}\},
+  \label{eq:schedulable_action_set}
+\end{equation}
+so an action selects exactly one schedulable operation. The transition appends the selected operation to $\mathcal{P}_\ell$, updates node status and masks, and exposes any newly schedulable successors. The episode terminates when $\mathcal{V}_g^{\mathrm{rem}}=\emptyset$.
 
-\subsection{Offline Training and Online Rollout}
-\begin{addedblock}
+The primary rollout reward is the negative weighted incremental delay
+\begin{equation}
+  R_\ell = - \sum_{i\in\mathcal{V}(t)} w_i\Delta D_i^{(\ell)},
+  \label{eq:delay_reward}
+\end{equation}
+where $\Delta D_i^{(\ell)}$ is the additional delay induced by the partial schedule at rollout step $\ell$ relative to nominal free-flow travel, and $w_i$ is an optional vehicle-priority weight. Stop penalties and smoother-infeasibility penalties are treated as ablation terms rather than mandatory components of the base reward.
+\end{addedtwoblock}
+
+\subsection{Relation-Aware Attention Policy}
+% CN-SUBSECTION: 定义typed-edge消息传递、全局图信息、masked actor和可选critic。
+\begin{addedtwoblock}
+Let $\mathcal{R}_{\mathrm{edge}}=\{\mathrm{pre},\mathrm{succ},\mathrm{disj}\}$ denote predecessor, successor, and disjunctive same-zone relation types. For layer $k$, each relation produces a multi-head message
+\begin{equation}
+  m_{v,r}^{(k)} = \big\Vert_{a=1}^{H} \sum_{u\in\mathcal{N}_r(v)} \alpha_{uv,r}^{(k,a)} W_{r}^{(k,a)}h_u^{(k-1)},
+  \label{eq:relation_message}
+\end{equation}
+where $H$ is the number of attention heads, $\mathcal{N}_r(v)$ is the relation-specific neighborhood, and $\alpha_{uv,r}^{(k,a)}$ is the normalized attention score. The node state is updated by
+\begin{equation}
+\begin{aligned}
+  h_v^{(k)}=\phi_k(&[h_v^{(k-1)}\Vert h_v^{(0)}\Vert m_{v,\mathrm{pre}}^{(k)}\Vert m_{v,\mathrm{succ}}^{(k)} \\
+  &\Vert m_{v,\mathrm{disj}}^{(k)}\Vert m_{\mathrm{glob}}^{(k)}]),
+\end{aligned}
+  \label{eq:gat_update}
+\end{equation}
+with $K=3$ update layers in the initial design. The global message $m_{\mathrm{glob}}^{(k)}$ is obtained by pooling all current node embeddings and broadcasting the graph-level context back to each operation.
+
+The actor head maps final node embeddings to operation logits $\eta_v$. The schedulability mask is enforced as
+\begin{equation}
+  \eta_v=-\infty \quad \mathrm{if}\quad v\notin\mathcal{A}_\ell,
+  \label{eq:actor_mask}
+\end{equation}
+followed by a softmax over the remaining feasible actions. The policy may sample during training and use greedy or beam-style rollout during evaluation. An optional critic or rollout baseline can reduce gradient variance, following attention-based combinatorial optimization practice \cite{kool2019attention}.
+\end{addedtwoblock}
+
+\begin{figure}[!t]
+\centering
+\begin{tikzpicture}[
+  font=\scriptsize,
+  node distance=3.2mm,
+  nblock/.style={draw=revisionpurple, rounded corners=1pt, align=center, text width=.87\linewidth, inner sep=2.6pt, text=revisionpurple, line width=.35pt},
+  narr/.style={-{Stealth[length=1.7mm,width=1.2mm]}, draw=revisionpurple, line width=.35pt}
+]
+\node[nblock] (feat) {Feature groups: scalar, binary, categorical};
+\node[nblock, below=of feat] (enc) {Concatenate encoded features $\tilde{x}_v$, then project to $h_v^{(0)}$};
+\node[nblock, below=of enc] (gat) {Relation-aware multi-head GAT layers, $K=3$};
+\node[nblock, below=of gat] (actor) {Masked actor over schedulable operations and optional critic};
+\node[nblock, below=of actor] (sched) {Schedule generator computes order and target entry times};
+\draw[narr] (feat) -- (enc);
+\draw[narr] (enc) -- (gat);
+\draw[narr] (gat) -- (actor);
+\draw[narr] (actor) -- (sched);
+\end{tikzpicture}
+\caption{\addedtwo{Relation-aware attention policy with feature concatenation and hard schedulability masking.}}
+\label{fig:relation_aware_gat_policy}
+\end{figure}
+
+\subsection{Offline Training and Online Deployment}
+% CN-SUBSECTION: 区分离线训练和在线部署，强调在线阶段只做冻结策略rollout。
+\begin{addedtwoblock}
 Let $\pi_\theta$ denote the trained RL policy. During offline training, the parameters $\theta$ are optimized using sampled JSSP/AIM instances and simulation feedback. During online deployment, $\theta$ is frozen. For a scheduling event at time $t$, the scheduler initializes the partial schedule with fixed commitments, computes the schedulable set, and repeatedly queries $\pi_\theta$ to select the next operation. The rollout terminates only when all remaining operations of the current active vehicles have been scheduled.
 
 After the rollout produces a complete operation order, a deterministic schedule generator assigns target entry times $s_{i,k}$ and occupancy intervals using the selected order, route precedence constraints, fixed commitments, and estimated processing times $p_{i,k}$. The resulting reservation set $\mathcal{S}$ is then sent to the low-level smoother. Thus, the online stage is policy inference plus schedule generation, not online RL training.
-\end{addedblock}
+\end{addedtwoblock}
 
-\subsection{Training Route}
-% EN: Explain how training episodes are generated, how traffic demand changes, and how the learned policy is evaluated.
-% CN: 说明 episode 如何生成、交通流如何变化、训练好的策略如何评估。
-\begin{addedblock}
-The training route is organized in three stages. First, an abstract JSSP/AIM high-level scheduler is trained on generated graph instances so that the policy learns to construct feasible and efficient operation orders independent of a specific microscopic simulator. Second, the trained scheduler is connected to SUMO for closed-loop validation or additional simulation-only fine-tuning under sampled traffic demand, routes, and arrival patterns. Third, the low-level smoother is introduced into the loop so that infeasible schedules, excessive stopping, and large tracking errors can be reflected in the reward or evaluation metrics.
-
-This staged design separates learning from online control. Any fine-tuning with SUMO or smoother feedback is performed before deployment or during offline simulation experiments; the deployed intersection manager uses the trained policy for sequential rollout only.
-\end{addedblock}
+\begin{addedtwoblock}
+Training should proceed in three stages: abstract JSSP/AIM graph training, SUMO closed-loop validation or offline fine-tuning, and smoother-integrated evaluation. The implementation should log delay reward, feasibility, mask validity, rollout length, and smoother infeasibility to distinguish graph-construction errors from policy-learning failures before deployment.
+\end{addedtwoblock}
 
 % CN summary for author review only; not visible in the compiled PDF:
-% 训练建议：先训练抽象 JSSP/AIM high-level scheduler；再接入 SUMO 做 closed-loop fine-tuning 或验证；最后接 low-level smoother，并加入 infeasible penalty、stop penalty 和 tracking error 相关指标。在线部署时只做 policy rollout，不边训练边控制车辆。
-% EN: Decide later whether the policy is graph neural network based, pointer-network based, or another architecture.
-% CN: 后续需要确定策略网络结构，例如 GNN、pointer network 或其他图调度网络。
+% 本次重写纠正了 h_v^(0) 的输入编码：不是旧的加法式编码，而是先把连续特征、binary/mask 特征、status/zone/type embedding concat 成 \tilde{x}_v，再用 \phi_enc 投影得到 h_v^(0)。
+
+
+

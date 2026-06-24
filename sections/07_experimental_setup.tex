@@ -1,5 +1,6 @@
 \section{Experimental Setup}
 \label{sec:experimental_setup}
+% CN-SECTION: 实验设置说明仿真平台、训练评估流程、对比基线和评价指标。
 % EN: Describe exactly how the method will be tested. This section should make the future results credible and reproducible.
 % CN: 本节写清楚方法如何测试，让后续结果可信且可复现。
 
@@ -16,6 +17,10 @@ The evaluation protocol separates offline learning from online deployment. The h
 \begin{addedblock}
 The planned experiments use three stages. Stage~1 evaluates whether the learned scheduler can produce feasible operation orders on generated JSSP/AIM graphs. Stage~2 connects the scheduler to SUMO and measures delay, throughput, waiting time, and computation time under unseen traffic demands. Stage~3 adds the trajectory smoother and evaluates whether the same high-level schedules remain executable while reducing stop-line waiting and acceleration variation.
 \end{addedblock}
+
+\begin{addedtwoblock}
+The scheduler evaluation should include architecture ablation: relation-aware GAT versus a non-relational GNN encoder, with and without global graph context, and with different node-feature groups removed. Reward ablation should compare the primary delay reward in \eqref{eq:delay_reward} against variants that add stop-count or smoother-infeasibility penalties.
+\end{addedtwoblock}
 
 \subsection{Scenarios and Baselines}
 % EN: Define intersection layouts, vehicle demand levels, and baseline controllers.
@@ -65,3 +70,6 @@ Computation time & Checks real-time scheduling feasibility. \\
 % 实验路线分三步：抽象 JSSP/AIM scheduler 训练；SUMO closed-loop 验证或仿真 fine-tuning；接入 low-level smoother 后评估 infeasible penalty、stop penalty、tracking error 和轨迹平滑指标。
 % EN: Later, add exact SUMO network files, route generation parameters, random seeds, and training hyperparameters.
 % CN: 后续补充 SUMO 路网、route 生成参数、随机种子和训练超参数。
+
+
+

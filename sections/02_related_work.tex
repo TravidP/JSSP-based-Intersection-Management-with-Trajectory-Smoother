@@ -1,5 +1,6 @@
 \section{Related Work}
 \label{sec:related_work}
+% CN-SECTION: 文献综述按主题说明AIM、JSSP/RL调度和轨迹平滑的已有工作及不足。
 % EN: Organize this section by research themes rather than paper-by-paper summaries. Each paragraph should end by explaining what limitation motivates this paper.
 % CN: 本节建议按主题组织，而不是逐篇论文罗列。每个主题最后说明它和本文工作的差距。
 
@@ -22,6 +23,9 @@ Reinforcement learning has been used to learn dispatching policies for combinato
 In the present framework, reinforcement learning is used to learn a constructive scheduling policy before deployment. During online intersection control, the trained policy parameters remain fixed, and the policy is queried repeatedly to complete the schedule for the active vehicle set. This distinction is important because online rollout has a clearer real-time role than continuous online training while vehicles are being controlled.
 \end{addedblock}
 
+\begin{addedtwoblock}
+The proposed scheduler uses a relation-aware graph attention encoder because the operation graph contains typed structural relations: route-precedence edges, reverse route context, and same-zone disjunctive conflicts. This design is motivated by graph attention networks, relation-aware attention, relational graph neural networks, and learning-based JSSP dispatching on disjunctive graphs \cite{velickovic2018graphattention,shaw2018selfattention,schlichtkrull2018rgcn,chen2021rgat,zhang2020learningdispatch}.
+\end{addedtwoblock}
 \subsection{Trajectory Smoothing and Stop Avoidance}
 % EN: Review velocity planning, energy-aware control, control barrier functions, and smooth crossing strategies.
 % CN: 回顾速度规划、能耗优化、控制屏障函数和平滑通过路口的方法。
@@ -31,5 +35,10 @@ Even when the passing order is optimized, vehicles still need feasible speed tra
 The scheduling and smoothing layers therefore address complementary parts of the AIM problem: the scheduler determines the discrete conflict-zone order, whereas the smoother determines whether that order can be executed with bounded acceleration, safety margins, and limited unnecessary stopping.
 \end{addedblock}
 
-% EN: Replace these TODO notes with verified citations before submission. Do not cite a paper unless its claim has been checked.
-% CN: 投稿前必须把 TODO 替换为核实过的真实文献，不要为了占位编造引用。
+% EN: Before submission, ensure every cited claim has a verified source. Do not add placeholder citations.
+% CN: 投稿前必须确认每个引用支撑相应论断，不要为了占位编造引用。
+
+
+
+
+
