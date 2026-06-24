@@ -4,6 +4,15 @@ This repository contains an IEEE-style paper draft and a planned software roadma
 
 The repository currently prioritizes the paper and design plan. The `src/`, `configs/`, and `tests/` folders are lightweight scaffolding for future implementation; they are not yet runnable software.
 
+## RL Scheduler Planning Docs
+
+The reinforcement-learning-based JSSP scheduler is currently documented as a staged implementation plan rather than runnable training code:
+
+- [RL scheduler training plan](docs/rl_jssp_scheduler_training_plan.md): three-stage training roadmap for synthetic PyTorch Geometric graph training, SUMO validation, and smoother-integrated evaluation.
+- [Project build roadmap](docs/project_build_roadmap.md): recommended package organization, implementation milestones, config layout, and test strategy.
+- [Static scheduler demo](demos/rl_jssp_scheduler_demo.html): browser-openable concept demo for operation nodes, typed edges, masks, rollout order, and generated reservations.
+- [Demo notes](demos/README.md): scope and limitations of the static demo.
+
 ## Paper Build
 
 Build the paper with the existing pdfLaTeX workflow:
@@ -178,5 +187,4 @@ Planned tests:
 - RL implementation: planned.
 - SUMO integration: planned.
 - Low-level smoother implementation: planned.
-
 

@@ -3,10 +3,17 @@
 *.bbl
 *.bcf
 *.blg
+*.dvi
 *.fdb_latexmk
 *.fls
+*.idx
+*.ilg
+*.ind
+*.loa
 *.log
+*.lol
 *.out
+*.pdfsync
 *.run.xml
 *.synctex.gz
 *.toc
@@ -16,6 +23,9 @@
 *.snm
 *.vrb
 
-# Root-level compiled paper output
-/bare_jrnl.pdf
+# Compiled paper output
 /*.pdf
+
+# Local editor/build environment
+/.vscode/
+/.texmf/

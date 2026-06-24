@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RL JSSP Scheduler Demo</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #1c2733;
+      --muted: #647181;
+      --line: #d8dde5;
+      --pre: #2468c9;
+      --disj: #bf5536;
+      --ready: #d88922;
+      --selected: #247553;
+      --pending: #7b8491;
+      --shadow: 0 12px 30px rgba(28, 39, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.45;
+    }
+
+    header {
+      padding: 28px min(5vw, 56px) 16px;
+      border-bottom: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.55rem, 2.5vw, 2.3rem);
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 980px;
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.98rem;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+      gap: 18px;
+      padding: 22px min(5vw, 56px) 34px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .graph-panel {
+      min-height: 650px;
+      padding: 18px;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .toolbar h2,
+    .side h2 {
+      margin: 0;
+      font-size: 1rem;
+      letter-spacing: 0;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    button {
+      min-height: 38px;
+      border: 1px solid #bfc7d1;
+      border-radius: 7px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 8px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.primary {
+      border-color: #1f5ca8;
+      background: #2468c9;
+      color: #ffffff;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.48;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .key {
+      width: 18px;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--pending);
+    }
+
+    .key.pre {
+      background: var(--pre);
+    }
+
+    .key.disj {
+      border-top: 3px dashed var(--disj);
+      background: transparent;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid var(--pending);
+      background: #ffffff;
+    }
+
+    .dot.ready {
+      border-color: var(--ready);
+      background: #fff4df;
+    }
+
+    .dot.selected {
+      border-color: var(--selected);
+      background: #dff3e8;
+    }
+
+    .board {
+      position: relative;
+      min-height: 550px;
+      border: 1px solid #cfd6df;
+      border-radius: 8px;
+      background:
+        linear-gradient(#ffffff, #ffffff),
+        repeating-linear-gradient(90deg, #eef1f5 0, #eef1f5 1px, transparent 1px, transparent 48px);
+      overflow: hidden;
+    }
+
+    .edges {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .node {
+      position: absolute;
+      width: 138px;
+      min-height: 74px;
+      transform: translate(-50%, -50%);
+      padding: 9px 10px;
+      border: 2px solid var(--pending);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      text-align: left;
+      box-shadow: 0 10px 18px rgba(28, 39, 51, 0.08);
+    }
+
+    .node.ready {
+      border-color: var(--ready);
+      background: #fff8ec;
+    }
+
+    .node.selected {
+      border-color: var(--selected);
+      background: #e8f6ee;
+    }
+
+    .node.blocked {
+      background: #f8f9fb;
+    }
+
+    .node strong {
+      display: block;
+      font-size: 0.98rem;
+      line-height: 1.1;
+    }
+
+    .node small {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .node .badge {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: #edf1f6;
+      color: var(--ink);
+      font-size: 0.72rem;
+    }
+
+    .node.ready .badge {
+      background: #ffe2ad;
+    }
+
+    .node.selected .badge {
+      background: #bfe8d0;
+    }
+
+    .side {
+      display: grid;
+      gap: 14px;
+    }
+
+    .side-section {
+      padding: 16px;
+    }
+
+    .metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+      background: #fbfcfd;
+    }
+
+    .metric b {
+      display: block;
+      font-size: 1.35rem;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .list {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .pill {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px 10px;
+      background: #fbfcfd;
+      font-size: 0.88rem;
+    }
+
+    .pill code {
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 0.86rem;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 8px 6px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .empty {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 920px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      .graph-panel {
+        min-height: auto;
+      }
+
+      .board {
+        min-height: 620px;
+      }
+    }
+
+    @media (max-width: 620px) {
+      header,
+      main {
+        padding-left: 14px;
+        padding-right: 14px;
+      }
+
+      .board {
+        min-height: 760px;
+      }
+
+      .node {
+        width: 124px;
+        min-height: 78px;
+      }
+
+      .metric-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>RL JSSP Scheduler Demo</h1>
+    <p class="subtitle">A static browser demo of operation-graph rollout: route precedence, same-zone conflicts, feasible action masks, selected order, and generated reservations.</p>
+  </header>
+
+  <main>
+    <section class="panel graph-panel" aria-labelledby="graph-title">
+      <div class="toolbar">
+        <h2 id="graph-title">Operation Graph</h2>
+        <div class="actions">
+          <button id="resetBtn">Reset</button>
+          <button id="stepBtn" class="primary">Policy Step</button>
+          <button id="autoBtn">Auto Rollout</button>
+        </div>
+      </div>
+
+      <div class="legend" aria-label="Legend">
+        <span><i class="key pre"></i>route precedence</span>
+        <span><i class="key disj"></i>same-zone conflict</span>
+        <span><i class="dot ready"></i>schedulable</span>
+        <span><i class="dot selected"></i>selected</span>
+      </div>
+
+      <div id="board" class="board">
+        <svg class="edges" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <defs>
+            <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L6,3 L0,6 Z" fill="#2468c9"></path>
+            </marker>
+          </defs>
+          <g id="edgeLayer"></g>
+        </svg>
+      </div>
+    </section>
+
+    <aside class="side" aria-label="Rollout details">
+      <section class="panel side-section">
+        <h2>Rollout State</h2>
+        <div class="metric-grid">
+          <div class="metric">
+            <b id="rankMetric">0</b>
+            <span>selected operations</span>
+          </div>
+          <div class="metric">
+            <b id="delayMetric">0.0</b>
+            <span>total delay</span>
+          </div>
+        </div>
+        <div id="feasibleList" class="list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel side-section">
+        <h2>Selected Order</h2>
+        <div id="orderList" class="list" aria-live="polite"></div>
+      </section>
+
+      <section class="panel side-section">
+        <h2>Reservations</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>Op</th>
+              <th>Zone</th>
+              <th>Start</th>
+              <th>End</th>
+            </tr>
+          </thead>
+          <tbody id="reservationRows"></tbody>
+        </table>
+        <p id="reservationEmpty" class="empty">No reservations generated yet.</p>
+      </section>
+    </aside>
+  </main>
+
+  <script>
+    const nodes = [
+      { id: "A1", vehicle: "A", op: 1, zone: "Z1", x: 17, y: 23, p: 2.0, ff: 0.5 },
+      { id: "A2", vehicle: "A", op: 2, zone: "Z3", x: 50, y: 23, p: 2.2, ff: 3.0 },
+      { id: "B1", vehicle: "B", op: 1, zone: "Z1", x: 17, y: 52, p: 1.8, ff: 1.2 },
+      { id: "B2", vehicle: "B", op: 2, zone: "Z2", x: 62, y: 52, p: 1.9, ff: 3.4 },
+      { id: "C1", vehicle: "C", op: 1, zone: "Z2", x: 34, y: 80, p: 2.1, ff: 0.8 },
+      { id: "C2", vehicle: "C", op: 2, zone: "Z3", x: 82, y: 80, p: 1.7, ff: 3.2 }
+    ];
+
+    const precedence = [
+      ["A1", "A2"],
+      ["B1", "B2"],
+      ["C1", "C2"]
+    ];
+
+    const disjunctive = [
+      ["A1", "B1"],
+      ["B2", "C1"],
+      ["A2", "C2"]
+    ];
+
+    const selected = [];
+    const reservations = [];
+    let autoTimer = null;
+
+    const byId = new Map(nodes.map((node) => [node.id, node]));
+
+    function predecessors(nodeId) {
+      return precedence
+        .filter((edge) => edge[1] === nodeId)
+        .map((edge) => edge[0]);
+    }
+
+    function isSelected(nodeId) {
+      return selected.includes(nodeId);
+    }
+
+    function isFeasible(nodeId) {
+      if (isSelected(nodeId)) return false;
+      return predecessors(nodeId).every(isSelected);
+    }
+
+    function feasibleNodes() {
+      return nodes.filter((node) => isFeasible(node.id));
+    }
+
+    function choosePolicyAction() {
+      const choices = feasibleNodes();
+      if (!choices.length) return null;
+      return choices
+        .slice()
+        .sort((a, b) => {
+          const zoneReadyA = lastZoneFinish(a.zone);
+          const zoneReadyB = lastZoneFinish(b.zone);
+          const scoreA = Math.max(a.ff, zoneReadyA) + a.p * 0.2;
+          const scoreB = Math.max(b.ff, zoneReadyB) + b.p * 0.2;
+          return scoreA - scoreB || a.id.localeCompare(b.id);
+        })[0];
+    }
+
+    function lastVehicleFinish(vehicle) {
+      return reservations
+        .filter((item) => item.vehicle === vehicle)
+        .reduce((max, item) => Math.max(max, item.end), 0);
+    }
+
+    function lastZoneFinish(zone) {
+      return reservations
+        .filter((item) => item.zone === zone)
+        .reduce((max, item) => Math.max(max, item.end), 0);
+    }
+
+    function selectNode(nodeId) {
+      if (!isFeasible(nodeId)) return;
+      const node = byId.get(nodeId);
+      const start = Math.max(node.ff, lastVehicleFinish(node.vehicle), lastZoneFinish(node.zone));
+      const end = start + node.p;
+      selected.push(nodeId);
+      reservations.push({
+        rank: selected.length,
+        id: node.id,
+        vehicle: node.vehicle,
+        zone: node.zone,
+        start,
+        end,
+        delay: Math.max(0, start - node.ff)
+      });
+      render();
+    }
+
+    function resetDemo() {
+      selected.splice(0, selected.length);
+      reservations.splice(0, reservations.length);
+      stopAuto();
+      render();
+    }
+
+    function stepDemo() {
+      const next = choosePolicyAction();
+      if (next) selectNode(next.id);
+      if (!next || selected.length === nodes.length) stopAuto();
+    }
+
+    function toggleAuto() {
+      if (autoTimer) {
+        stopAuto();
+        return;
+      }
+      autoTimer = window.setInterval(stepDemo, 700);
+      document.getElementById("autoBtn").textContent = "Pause";
+      stepDemo();
+    }
+
+    function stopAuto() {
+      if (autoTimer) {
+        window.clearInterval(autoTimer);
+        autoTimer = null;
+      }
+      document.getElementById("autoBtn").textContent = "Auto Rollout";
+    }
+
+    function drawEdges() {
+      const layer = document.getElementById("edgeLayer");
+      layer.innerHTML = "";
+
+      precedence.forEach(([from, to]) => {
+        const a = byId.get(from);
+        const b = byId.get(to);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", a.x + 7);
+        line.setAttribute("y1", a.y);
+        line.setAttribute("x2", b.x - 8);
+        line.setAttribute("y2", b.y);
+        line.setAttribute("stroke", "#2468c9");
+        line.setAttribute("stroke-width", "0.7");
+        line.setAttribute("marker-end", "url(#arrow)");
+        layer.appendChild(line);
+      });
+
+      disjunctive.forEach(([from, to]) => {
+        const a = byId.get(from);
+        const b = byId.get(to);
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", a.x);
+        line.setAttribute("y1", a.y + 5);
+        line.setAttribute("x2", b.x);
+        line.setAttribute("y2", b.y - 5);
+        line.setAttribute("stroke", "#bf5536");
+        line.setAttribute("stroke-width", "0.55");
+        line.setAttribute("stroke-dasharray", "2 2");
+        layer.appendChild(line);
+      });
+    }
+
+    function renderNodes() {
+      const board = document.getElementById("board");
+      board.querySelectorAll(".node").forEach((el) => el.remove());
+
+      nodes.forEach((node) => {
+        const button = document.createElement("button");
+        const state = isSelected(node.id) ? "selected" : isFeasible(node.id) ? "ready" : "blocked";
+        button.className = `node ${state}`;
+        button.style.left = `${node.x}%`;
+        button.style.top = `${node.y}%`;
+        button.disabled = state !== "ready";
+        button.setAttribute("aria-label", `${node.id} ${state}`);
+        button.innerHTML = `
+          <strong>${node.id} <span>${node.zone}</span></strong>
+          <small>vehicle ${node.vehicle}, op ${node.op}, p=${node.p.toFixed(1)}</small>
+          <span class="badge">${state}</span>
+        `;
+        button.addEventListener("click", () => selectNode(node.id));
+        board.appendChild(button);
+      });
+    }
+
+    function renderFeasible() {
+      const list = document.getElementById("feasibleList");
+      const choices = feasibleNodes();
+      list.innerHTML = "";
+      if (!choices.length) {
+        const done = document.createElement("p");
+        done.className = "empty";
+        done.textContent = selected.length === nodes.length ? "Rollout complete." : "No feasible operation.";
+        list.appendChild(done);
+        return;
+      }
+      choices.forEach((node) => {
+        const item = document.createElement("div");
+        item.className = "pill";
+        item.innerHTML = `<span>${node.id} is schedulable</span><code>${node.zone}</code>`;
+        list.appendChild(item);
+      });
+    }
+
+    function renderOrder() {
+      const list = document.getElementById("orderList");
+      list.innerHTML = "";
+      if (!selected.length) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "No operation selected yet.";
+        list.appendChild(empty);
+        return;
+      }
+      selected.forEach((id, index) => {
+        const node = byId.get(id);
+        const item = document.createElement("div");
+        item.className = "pill";
+        item.innerHTML = `<span>${index + 1}. ${id}</span><code>${node.vehicle} -> ${node.zone}</code>`;
+        list.appendChild(item);
+      });
+    }
+
+    function renderReservations() {
+      const rows = document.getElementById("reservationRows");
+      const empty = document.getElementById("reservationEmpty");
+      rows.innerHTML = "";
+      empty.style.display = reservations.length ? "none" : "block";
+
+      reservations.forEach((item) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.rank}</td>
+          <td>${item.id}</td>
+          <td>${item.zone}</td>
+          <td>${item.start.toFixed(1)}</td>
+          <td>${item.end.toFixed(1)}</td>
+        `;
+        rows.appendChild(row);
+      });
+    }
+
+    function renderMetrics() {
+      const totalDelay = reservations.reduce((sum, item) => sum + item.delay, 0);
+      document.getElementById("rankMetric").textContent = selected.length;
+      document.getElementById("delayMetric").textContent = totalDelay.toFixed(1);
+      document.getElementById("stepBtn").disabled = selected.length === nodes.length;
+    }
+
+    function render() {
+      drawEdges();
+      renderNodes();
+      renderFeasible();
+      renderOrder();
+      renderReservations();
+      renderMetrics();
+      if (selected.length === nodes.length) stopAuto();
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", resetDemo);
+    document.getElementById("stepBtn").addEventListener("click", stepDemo);
+    document.getElementById("autoBtn").addEventListener("click", toggleAuto);
+
+    render();
+  </script>
+</body>
+</html>
