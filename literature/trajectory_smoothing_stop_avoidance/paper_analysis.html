@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trajectory Smoothing And Avoidance Literature Review</title>
+  <style>
+    :root {
+      --ink: #1f2933;
+      --muted: #5f6b7a;
+      --line: #d6dde8;
+      --surface: #f6f8fb;
+      --accent: #9a4a12;
+      --blue: #1f5f8b;
+      --green: #1b7254;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; font: 14px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--ink); background: #fff; }
+    header.hero { padding: 28px 34px 18px; background: #f2f5f9; border-bottom: 1px solid var(--line); }
+    h1 { margin: 0 0 8px; font-size: 28px; }
+    .hero p { margin: 4px 0; color: var(--muted); max-width: 980px; }
+    .toolbar { position: sticky; top: 0; z-index: 5; display: grid; grid-template-columns: repeat(6, minmax(120px, 1fr)); gap: 10px; padding: 14px 34px; background: rgba(255,255,255,.96); border-bottom: 1px solid var(--line); }
+    .toolbar label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+    select, input[type="number"], button { min-height: 34px; border: 1px solid var(--line); border-radius: 6px; background: white; padding: 6px 8px; color: var(--ink); }
+    button { cursor: pointer; font-weight: 650; }
+    main { padding: 24px 34px 50px; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(120px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .stat { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: var(--surface); }
+    .stat b { display: block; font-size: 24px; color: var(--blue); }
+    .paper-card { border: 1px solid var(--line); border-radius: 8px; padding: 18px; margin: 0 0 18px; break-inside: avoid; }
+    .paper-card > header { display: grid; grid-template-columns: 88px 1fr 130px; gap: 16px; align-items: start; }
+    .paper-select { display: flex; gap: 6px; align-items: center; color: var(--muted); }
+    .meta { margin: 0 0 4px; color: var(--accent); font-weight: 700; }
+    h2 { margin: 0 0 4px; font-size: 20px; line-height: 1.25; }
+    .authors { margin: 0; color: var(--muted); }
+    .stars button { border: 0; background: transparent; color: #c4a15b; font-size: 22px; min-height: 28px; padding: 0 1px; }
+    .stars button.active { color: #a25c00; }
+    .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; padding: 12px 0; margin: 10px 0 0; border-top: 1px solid var(--line); }
+    .facts div { min-width: 0; }
+    dt { font-weight: 700; color: var(--muted); }
+    dd { margin: 0; overflow-wrap: anywhere; }
+    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .summary-grid div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; }
+    h3 { margin: 0 0 5px; font-size: 14px; color: var(--green); }
+    .summary-grid p, .venue-note { margin: 0; }
+    .venue-note { margin-top: 12px; color: var(--muted); }
+    .hidden { display: none !important; }
+    @media print {
+      .toolbar { display: none; }
+      body { font-size: 11px; }
+      header.hero { padding: 16px 20px; }
+      main { padding: 14px 20px; }
+      .paper-card { page-break-inside: avoid; }
+      .paper-card > header { grid-template-columns: 1fr; }
+      .paper-select, .stars { display: none; }
+      a { color: var(--ink); text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>Trajectory Smoothing And Avoidance Literature Review</h1>
+    <p>Fifteen recent papers selected for a JSSP/RL autonomous intersection manager with low-level smooth trajectory execution. Review date: 2026-06-26.</p>
+    <p>The list balances stop avoidance, energy/delay reduction, collision avoidance, graph scheduling, RL, and replanning.</p>
+  </header>
+  <section class="toolbar" aria-label="Filters">
+    <label>Theme
+      <select id="themeFilter"><option value="">All themes</option></select>
+    </label>
+    <label>Venue type
+      <select id="venueFilter"><option value="">All venues</option></select>
+    </label>
+    <label>Year
+      <select id="yearFilter"><option value="">All years</option></select>
+    </label>
+    <label>Minimum score
+      <input id="scoreFilter" type="number" min="0" max="100" value="0">
+    </label>
+    <button id="selectedOnly">Show selected only</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </section>
+  <main>
+    <section class="stats">
+      <div class="stat"><b>15</b>Core papers</div>
+      <div class="stat"><b>83.5</b>Average relevance</div>
+      <div class="stat"><b>6</b>High-fit papers</div>
+      <div class="stat"><b>15</b>Open PDFs</div>
+    </section>
+    <section id="papers">
+<article class="paper-card" data-year="2021" data-theme="Scheduling/resequencing + optimal control" data-venue="Preprint" data-score="94" data-pdf="open PDF downloaded from arXiv" id="P01">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P01" data-paper="P01"><label for="sel-P01">Select</label></div>
+    <div>
+      <p class="meta">P01 · 2021 · Preprint · relevance 94/100</p>
+      <h2>A Priority-Aware Replanning and Resequencing Framework for Coordination of Connected and Automated Vehicles</h2>
+      <p class="authors">Behdad Chalaki; Andreas A. Malikopoulos</p>
+    </div>
+    <div class="stars" data-paper="P01" aria-label="Star rating for P01"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Scheduling/resequencing + optimal control</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2109.05573">https://arxiv.org/abs/2109.05573</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2109.05573">https://arxiv.org/pdf/2109.05573</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Event-driven replanning and priority-aware resequencing layered on decentralized CAV optimal control at a signal-free intersection.</p></div>
+    <div><h3>Stop Avoidance</h3><p>The lower-level optimal-control trajectory is constructed so vehicles can conserve momentum rather than stop at the intersection when a feasible exit time exists.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Uses rear-end and lateral safety constraints around conflict points, with replanning when disturbances change feasibility.</p></div>
+    <div><h3>Validation</h3><p>Numerical simulation of signal-free intersection coordination under resequencing and replanning.</p></div>
+    <div><h3>Limitations</h3><p>Assumes connected automated vehicles, known paths, and simplified dynamics; the paper is closer to resequencing theory than to learned graph scheduling.</p></div>
+    <div><h3>Use In This Project</h3><p>Directly supports this project&#x27;s hierarchy: a high-level sequence or schedule provides target times, and a low-level controller checks executable motion.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Useful technical preprint from a well-known CAV optimal-control group; venue reputation not verified beyond arXiv.</p>
+</article>
+<article class="paper-card" data-year="2021" data-theme="Graph conflict modeling + passing order" data-venue="Journal / Preprint" data-score="92" data-pdf="open PDF downloaded from arXiv" id="P02">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P02" data-paper="P02"><label for="sel-P02">Select</label></div>
+    <div>
+      <p class="meta">P02 · 2021 · Journal / Preprint · relevance 92/100</p>
+      <h2>Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis</h2>
+      <p class="authors">Chaoyi Chen; Qing Xu; Mengchi Cai; Jiawei Wang; Jianqiang Wang; Biao Xu; Keqiang Li</p>
+    </div>
+    <div class="stars" data-paper="P02" aria-label="Star rating for P02"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>Transportation Research Part C: Emerging Technologies / arXiv version</dd></div>
+    <div><dt>Theme</dt><dd>Graph conflict modeling + passing order</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2107.07179">https://arxiv.org/abs/2107.07179</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2107.07179">https://arxiv.org/pdf/2107.07179</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Models trajectory conflicts as a conflict directed graph and coexisting undirected graph; solves passing order through improved depth-first spanning tree and minimum clique cover methods.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Optimizes evacuation time and average delay, using distributed control to reduce idling near the stop line.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Conflict-free graph edges represent crossing, diverging, converging, and reachability conflicts before scheduling.</p></div>
+    <div><h3>Validation</h3><p>Traffic simulations over varying vehicle counts and volumes; reports efficiency and fuel-economy improvements.</p></div>
+    <div><h3>Limitations</h3><p>Mostly longitudinal control, ideal communication, and no lane changing in this paper&#x27;s base formulation.</p></div>
+    <div><h3>Use In This Project</h3><p>Strong support for representing intersection conflicts as typed graph relations, similar to the operation graph in this manuscript.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Transportation Research Part C is a leading transportation automation journal; exact publication metadata should be checked before final submission.</p>
+</article>
+<article class="paper-card" data-year="2021" data-theme="Lane changing + arrival scheduling" data-venue="Preprint" data-score="82" data-pdf="open PDF downloaded from arXiv" id="P03">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P03" data-paper="P03"><label for="sel-P03">Select</label></div>
+    <div>
+      <p class="meta">P03 · 2021 · Preprint · relevance 82/100</p>
+      <h2>Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling</h2>
+      <p class="authors">Chaoyi Chen; Mengchi Cai; Jiawei Wang; Kai Li; Qing Xu; Jianqiang Wang; Keqiang Li</p>
+    </div>
+    <div class="stars" data-paper="P03" aria-label="Star rating for P03"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Lane changing + arrival scheduling</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2109.14175">https://arxiv.org/abs/2109.14175</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2109.14175">https://arxiv.org/pdf/2109.14175</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Improves traffic efficiency by choosing target lanes and arrival schedules that avoid unnecessary queuing.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements.</p></div>
+    <div><h3>Validation</h3><p>Numerical simulations for different vehicle counts and traffic volumes.</p></div>
+    <div><h3>Limitations</h3><p>arXiv note reports text overlap with the authors&#x27; earlier graph-based paper; use mainly for lane-changing extension context.</p></div>
+    <div><h3>Use In This Project</h3><p>Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> arXiv preprint; venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2023" data-theme="DRL cooperative trajectory optimization" data-venue="Journal" data-score="91" data-pdf="open PDF downloaded from arXiv" id="P04">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P04" data-paper="P04"><label for="sel-P04">Select</label></div>
+    <div>
+      <p class="meta">P04 · 2023 · Journal · relevance 91/100</p>
+      <h2>Real-time Cooperative Vehicle Coordination at Unsignalized Road Intersections</h2>
+      <p class="authors">Jiping Luo; Tingting Zhang; Rui Hao; Donglin Li; Chunsheng Chen; Zhenyu Na; Qinyu Zhang</p>
+    </div>
+    <div class="stars" data-paper="P04" aria-label="Star rating for P04"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>IEEE Transactions on Intelligent Transportation Systems</dd></div>
+    <div><dt>Theme</dt><dd>DRL cooperative trajectory optimization</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2205.01278">https://arxiv.org/abs/2205.01278</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2205.01278">https://arxiv.org/pdf/2205.01278</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Formulates unified cooperative trajectory optimization for unsignalized intersections and solves the sequential decision problem with TD3.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Optimizes throughput and continuous flow, reducing delay compared with conservative coordination.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Safety and long-term stability constraints are embedded in the cooperative trajectory optimization framework.</p></div>
+    <div><h3>Validation</h3><p>Simulation and practical experiments; authors report millisecond-scale computation and scalability with lane count.</p></div>
+    <div><h3>Limitations</h3><p>Centralized control-authority handoff and DRL policy behavior may be difficult to certify in mixed traffic.</p></div>
+    <div><h3>Use In This Project</h3><p>Shows why learned policies are attractive for online intersection coordination but need a structured safety/smoothing interface.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> IEEE T-ITS is a highly reputable ITS journal; DOI and journal reference verified on arXiv.</p>
+</article>
+<article class="paper-card" data-year="2022" data-theme="Eco-driving + hybrid RL" data-venue="Journal" data-score="86" data-pdf="open PDF downloaded from arXiv" id="P05">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P05" data-paper="P05"><label for="sel-P05">Select</label></div>
+    <div>
+      <p class="meta">P05 · 2022 · Journal · relevance 86/100</p>
+      <h2>Hybrid Reinforcement Learning-Based Eco-Driving Strategy for Connected and Automated Vehicles at Signalized Intersections</h2>
+      <p class="authors">Zhengwei Bai; Peng Hao; Wei Shangguan; Baigen Cai; Matthew J. Barth</p>
+    </div>
+    <div class="stars" data-paper="P05" aria-label="Star rating for P05"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>IEEE Transactions on Intelligent Transportation Systems</dd></div>
+    <div><dt>Theme</dt><dd>Eco-driving + hybrid RL</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2201.07833">https://arxiv.org/abs/2201.07833</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2201.07833">https://arxiv.org/pdf/2201.07833</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Combines a rule-based driving manager, V2I/vision features, and RL to generate longitudinal and lateral eco-driving actions.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Targets energy and travel-time reduction by smoothing approach behavior at signalized intersections.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Mixed-traffic policy includes rule-based safety management around surrounding vehicles.</p></div>
+    <div><h3>Validation</h3><p>Unity-based mixed-traffic intersection simulation; reports 12.70 percent energy reduction and 11.75 percent travel-time saving against a model-based eco-driving baseline.</p></div>
+    <div><h3>Limitations</h3><p>Signalized setting and policy-level action output differ from a scheduler-to-smoother architecture.</p></div>
+    <div><h3>Use In This Project</h3><p>Supports the argument that stop-and-go reduction and energy-aware smoothing are important low-level objectives.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> IEEE T-ITS is a highly reputable ITS journal; DOI and journal reference verified on arXiv.</p>
+</article>
+<article class="paper-card" data-year="2023" data-theme="Electric CV eco-driving + parameterized RL" data-venue="Journal / Preprint" data-score="83" data-pdf="open PDF downloaded from arXiv" id="P06">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P06" data-paper="P06"><label for="sel-P06">Select</label></div>
+    <div>
+      <p class="meta">P06 · 2023 · Journal / Preprint · relevance 83/100</p>
+      <h2>Eco-driving for Electric Connected Vehicles at Signalized Intersections: A Parameterized Reinforcement Learning Approach</h2>
+      <p class="authors">Xia Jiang; Jian Zhang; Dan Li</p>
+    </div>
+    <div class="stars" data-paper="P06" aria-label="Star rating for P06"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>Journal article related DOI / arXiv version</dd></div>
+    <div><dt>Theme</dt><dd>Electric CV eco-driving + parameterized RL</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2206.12065">https://arxiv.org/abs/2206.12065</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2206.12065">https://arxiv.org/pdf/2206.12065</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Parameterized RL combines model-based car-following, lane-changing policy, and learned longitudinal/lateral decisions.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Learns energy-saving actions around signalized intersections without interrupting surrounding HDVs.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Safety is handled through model-based car-following and lane-changing constraints around human-driven vehicles.</p></div>
+    <div><h3>Validation</h3><p>SUMO evaluation from single-vehicle and flow perspectives.</p></div>
+    <div><h3>Limitations</h3><p>Signalized intersections and electric connected vehicles rather than fully signal-free autonomous scheduling.</p></div>
+    <div><h3>Use In This Project</h3><p>Provides a SUMO-compatible example of energy and stop reduction metrics for the experimental section.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Related DOI exists on arXiv; exact journal reputation not verified in this pass.</p>
+</article>
+<article class="paper-card" data-year="2022" data-theme="Eco-driving optimal speed profile" data-venue="Conference / Preprint" data-score="81" data-pdf="open PDF downloaded from arXiv" id="P07">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P07" data-paper="P07"><label for="sel-P07">Select</label></div>
+    <div>
+      <p class="meta">P07 · 2022 · Conference / Preprint · relevance 81/100</p>
+      <h2>Cooperative Control in Eco-Driving of Electric Connected and Autonomous Vehicles in an Un-Signalized Urban Intersection</h2>
+      <p class="authors">Vinith Kumar Lakshmanan; Antonio Sciarretta; Ouafae El Ganaoui-Mourlan</p>
+    </div>
+    <div class="stars" data-paper="P07" aria-label="Star rating for P07"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>AAC 2022 submission / arXiv version</dd></div>
+    <div><dt>Theme</dt><dd>Eco-driving optimal speed profile</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2206.12360">https://arxiv.org/abs/2206.12360</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2206.12360">https://arxiv.org/pdf/2206.12360</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Single-level eco-driving optimization solved with Pontryagin&#x27;s Minimum Principle for electric CAV speed profiles at an unsignalized intersection.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Focuses directly on optimal speed profiles that reduce energy use and avoid inefficient stop-and-go behavior.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Analytical conflict cases and cooperation levels encode interaction safety among CAVs.</p></div>
+    <div><h3>Validation</h3><p>Simulation comparison of cooperative and non-cooperative eco-driving against IDM baseline.</p></div>
+    <div><h3>Limitations</h3><p>Narrower single-vehicle/eco-driving emphasis; less detail on high-level scheduling.</p></div>
+    <div><h3>Use In This Project</h3><p>Supports the smoothing objective terms for acceleration, energy proxy, and stop avoidance.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Conference/preprint status only; venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2022" data-theme="Data-driven predictive control + mixed traffic safety" data-venue="Preprint" data-score="78" data-pdf="open PDF downloaded from arXiv" id="P08">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P08" data-paper="P08"><label for="sel-P08">Select</label></div>
+    <div>
+      <p class="meta">P08 · 2022 · Preprint · relevance 78/100</p>
+      <h2>Safety-Aware and Data-Driven Predictive Control for Connected Automated Vehicles at a Mixed Traffic Signalized Intersection</h2>
+      <p class="authors">A. M. Ishtiaque Mahbub; Viet-Anh Le; Andreas A. Malikopoulos</p>
+    </div>
+    <div class="stars" data-paper="P08" aria-label="Star rating for P08"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Data-driven predictive control + mixed traffic safety</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2203.05739">https://arxiv.org/abs/2203.05739</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2203.05739">https://arxiv.org/pdf/2203.05739</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Smooths CAV response near yellow/red phases while avoiding overly conservative braking behind HDVs.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes.</p></div>
+    <div><h3>Validation</h3><p>Numerical simulation and robustness analysis.</p></div>
+    <div><h3>Limitations</h3><p>Signalized and rear-end-focused rather than conflict-zone scheduling across all movements.</p></div>
+    <div><h3>Use In This Project</h3><p>Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> arXiv preprint; venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2023" data-theme="Eco-approach + relaxed FIFO" data-venue="Preprint" data-score="84" data-pdf="open PDF downloaded from arXiv" id="P09">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P09" data-paper="P09"><label for="sel-P09">Select</label></div>
+    <div>
+      <p class="meta">P09 · 2023 · Preprint · relevance 84/100</p>
+      <h2>Overtaking-enabled Eco-approach Control at Signalized Intersections for Connected and Automated Vehicles</h2>
+      <p class="authors">Haoxuan Dong; Weichao Zhuang; Guoyuan Wu; Zhaojian Li; Guodong Yin; Ziyou Song</p>
+    </div>
+    <div class="stars" data-paper="P09" aria-label="Star rating for P09"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Eco-approach + relaxed FIFO</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2306.09736">https://arxiv.org/abs/2306.09736</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2306.09736">https://arxiv.org/pdf/2306.09736</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Receding-horizon two-stage control: dynamic-programming lane optimization followed by PMP speed trajectory optimization.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Relaxes FIFO queuing at signalized intersections to reduce driving cost, energy consumption, and delay.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Handles dynamic disturbance from preceding vehicles and lane-choice constraints.</p></div>
+    <div><h3>Validation</h3><p>Extensive simulations report average driving-cost improvements over constant-speed and regular eco-approach baselines.</p></div>
+    <div><h3>Limitations</h3><p>Signalized intersection and overtaking/lane planning assumptions are outside the current fixed-route JSSP scope.</p></div>
+    <div><h3>Use In This Project</h3><p>Supports the critique that FCFS/FIFO can be suboptimal and that speed smoothing should be coupled to sequencing.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> arXiv preprint; venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2026" data-theme="Real-world cooperative intersection management" data-venue="Magazine / Preprint" data-score="90" data-pdf="open PDF downloaded from arXiv" id="P10">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P10" data-paper="P10"><label for="sel-P10">Select</label></div>
+    <div>
+      <p class="meta">P10 · 2026 · Magazine / Preprint · relevance 90/100</p>
+      <h2>Real-World Evaluation of Two Cooperative Intersection Management Approaches</h2>
+      <p class="authors">Marvin Klimke; Max Bastian Mertens; Benjamin Volz; Michael Buchholz</p>
+    </div>
+    <div class="stars" data-paper="P10" aria-label="Star rating for P10"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>IEEE Intelligent Transportation Systems Magazine (accepted)</dd></div>
+    <div><dt>Theme</dt><dd>Real-world cooperative intersection management</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2403.16478">https://arxiv.org/abs/2403.16478</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2403.16478">https://arxiv.org/pdf/2403.16478</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Reports substantial reductions in crossing time and number of stops for cooperative maneuver planning.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Evaluates criticality metrics while operating with prototype connected automated vehicles in public traffic.</p></div>
+    <div><h3>Validation</h3><p>Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives.</p></div>
+    <div><h3>Limitations</h3><p>Focuses on cooperative maneuver planning evaluation, not a JSSP formulation.</p></div>
+    <div><h3>Use In This Project</h3><p>Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> IEEE ITS Magazine is reputable and practice-facing; accepted-publication note and DOI are verified on arXiv.</p>
+</article>
+<article class="paper-card" data-year="2025" data-theme="Spatial-domain robust trajectory planning" data-venue="Preprint" data-score="92" data-pdf="open PDF downloaded from arXiv" id="P11">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P11" data-paper="P11"><label for="sel-P11">Select</label></div>
+    <div>
+      <p class="meta">P11 · 2025 · Preprint · relevance 92/100</p>
+      <h2>A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty</h2>
+      <p class="authors">Tong Zhao; Nikolce Murgovski; Baigen Cai; Wei ShangGuan</p>
+    </div>
+    <div class="stars" data-paper="P11" aria-label="Star rating for P11"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Spatial-domain robust trajectory planning</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2412.04290">https://arxiv.org/abs/2412.04290</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2412.04290">https://arxiv.org/pdf/2412.04290</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Transforms coordinated control into a spatial-domain nonlinear program with unified linear collision-avoidance constraints and real-time iteration.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Generates smooth trajectories under state/control constraints, avoiding unnecessary braking where robust constraints permit.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Handles crossing, following, merging, and diverging conflicts under path and speed uncertainty of HDVs.</p></div>
+    <div><h3>Validation</h3><p>Simulation case studies; reported RTI computation reduction by orders of magnitude with small optimality loss.</p></div>
+    <div><h3>Limitations</h3><p>Optimization-heavy; not a learned scheduler, and publication venue beyond arXiv not verified.</p></div>
+    <div><h3>Use In This Project</h3><p>Very strong for the smoother&#x27;s feasibility and robust collision-avoidance constraints.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Recent technical arXiv preprint; venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2025" data-theme="Uncertainty-aware safe RL + HOCBF" data-venue="Preprint" data-score="84" data-pdf="open PDF downloaded from arXiv" id="P12">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P12" data-paper="P12"><label for="sel-P12">Select</label></div>
+    <div>
+      <p class="meta">P12 · 2025 · Preprint · relevance 84/100</p>
+      <h2>Uncertainty-Aware Safety-Critical Decision and Control for Autonomous Vehicles at Unsignalized Intersections</h2>
+      <p class="authors">Ran Yu; Zhuoren Li; Lu Xiong; Wei Han; Bo Leng</p>
+    </div>
+    <div class="stars" data-paper="P12" aria-label="Star rating for P12"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Uncertainty-aware safe RL + HOCBF</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2505.19939">https://arxiv.org/abs/2505.19939</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2505.19939">https://arxiv.org/pdf/2505.19939</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Risk-aware ensemble distributional RL estimates policy uncertainty, then a high-order control barrier function acts as a safety filter.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Balances safety and traffic efficiency by switching between flexible RL behavior and conservative HOCBF intervention.</p></div>
+    <div><h3>Collision Avoidance</h3><p>HOCBF safety filter dynamically adjusts constraints using joint uncertainty in unsignalized-intersection tasks.</p></div>
+    <div><h3>Validation</h3><p>Simulation tests on multiple unsignalized-intersection tasks against safety and efficiency baselines.</p></div>
+    <div><h3>Limitations</h3><p>Single-agent urban autonomous-driving framing rather than centralized conflict-zone scheduling.</p></div>
+    <div><h3>Use In This Project</h3><p>Supports adding CBF/HOCBF safety filters or fallback logic to learned policies.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Recent arXiv preprint; venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2023" data-theme="CAV control survey" data-venue="Survey / Preprint" data-score="72" data-pdf="open PDF downloaded from arXiv" id="P13">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P13" data-paper="P13"><label for="sel-P13">Select</label></div>
+    <div>
+      <p class="meta">P13 · 2023 · Survey / Preprint · relevance 72/100</p>
+      <h2>A Systematic Survey of Control Techniques and Applications in Connected and Automated Vehicles</h2>
+      <p class="authors">Wei Liu; Min Hua; Zhiyun Deng; Zonglin Meng; Yanjun Huang; Chuan Hu; Shunhui Song; Letian Gao; Changsheng Liu; Bin Shuai; Amir Khajepour; Lu Xiong; Xin Xia</p>
+    </div>
+    <div class="stars" data-paper="P13" aria-label="Star rating for P13"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv survey</dd></div>
+    <div><dt>Theme</dt><dd>CAV control survey</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2303.05665">https://arxiv.org/abs/2303.05665</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2303.05665">https://arxiv.org/pdf/2303.05665</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Systematic survey from vehicle state estimation and trajectory tracking to collaborative CAV control applications.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Frames comfort, energy saving, and transportation efficiency as central CAV control goals.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Reviews vehicle-control approaches relevant to safety and collaborative control.</p></div>
+    <div><h3>Validation</h3><p>Literature survey rather than original experiments.</p></div>
+    <div><h3>Limitations</h3><p>Broad CAV control overview; not intersection-smoothing specific.</p></div>
+    <div><h3>Use In This Project</h3><p>Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Survey preprint; broad coverage, venue reputation not verified.</p>
+</article>
+<article class="paper-card" data-year="2024" data-theme="Distributed MARL for AIM" data-venue="Workshop" data-score="70" data-pdf="open PDF downloaded from arXiv" id="P14">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P14" data-paper="P14"><label for="sel-P14">Select</label></div>
+    <div>
+      <p class="meta">P14 · 2024 · Workshop · relevance 70/100</p>
+      <h2>A Distributed Approach to Autonomous Intersection Management via Multi-Agent Reinforcement Learning</h2>
+      <p class="authors">Matteo Cederle; Marco Fabris; Gian Antonio Susto</p>
+    </div>
+    <div class="stars" data-paper="P14" aria-label="Star rating for P14"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>ATT 2024 Workshop, CEUR-WS Vol. 3813</dd></div>
+    <div><dt>Theme</dt><dd>Distributed MARL for AIM</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2405.08655">https://arxiv.org/abs/2405.08655</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2405.08655">https://arxiv.org/pdf/2405.08655</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Distributed multi-agent RL for autonomous intersection management using 3D surround-view assumptions and prioritized scenario replay.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Improves benchmark metrics in SMARTS, implying smoother flow through decentralized decisions.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Aims for accurate decentralized navigation without a central server; safety is evaluated through simulation metrics.</p></div>
+    <div><h3>Validation</h3><p>SMARTS virtual environment; accepted at ATT 2024 and available through CEUR-WS.</p></div>
+    <div><h3>Limitations</h3><p>Workshop paper; not focused on explicit trajectory smoothing or formal safety constraints.</p></div>
+    <div><h3>Use In This Project</h3><p>Useful contrast to the proposed centralized JSSP/RL rollout, showing distributed AIM as an alternative branch.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> Peer-reviewed workshop proceedings in CEUR-WS; reputable but less archival than major journals.</p>
+</article>
+<article class="paper-card" data-year="2023" data-theme="Distributed hierarchical learning for AIM" data-venue="Preprint" data-score="73" data-pdf="open PDF downloaded from arXiv" id="P15">
+  <header>
+    <div class="paper-select"><input type="checkbox" id="sel-P15" data-paper="P15"><label for="sel-P15">Select</label></div>
+    <div>
+      <p class="meta">P15 · 2023 · Preprint · relevance 73/100</p>
+      <h2>D-HAL: Distributed Hierarchical Adversarial Learning for Multi-Agent Interaction in Autonomous Intersection Management</h2>
+      <p class="authors">Guanzhou Li; Jianping Wu; Yujing He</p>
+    </div>
+    <div class="stars" data-paper="P15" aria-label="Star rating for P15"></div>
+  </header>
+  <dl class="facts">
+    <div><dt>Venue</dt><dd>arXiv preprint</dd></div>
+    <div><dt>Theme</dt><dd>Distributed hierarchical learning for AIM</dd></div>
+    <div><dt>Source</dt><dd><a href="https://arxiv.org/abs/2303.02630">https://arxiv.org/abs/2303.02630</a></dd></div>
+    <div><dt>PDF</dt><dd><a href="https://arxiv.org/pdf/2303.02630">https://arxiv.org/pdf/2303.02630</a><br>open PDF downloaded from arXiv</dd></div>
+  </dl>
+  <section class="summary-grid">
+    <div><h3>Technical Summary</h3><p>Non-RL adversarial actor/discriminator framework evaluates immediate interaction and final trajectory quality for multi-agent AIM.</p></div>
+    <div><h3>Stop Avoidance</h3><p>Targets reduced travel time and smoother interaction outcomes compared with distributed learning baselines.</p></div>
+    <div><h3>Collision Avoidance</h3><p>Immediate and final discriminators score interaction safety and trajectory outcomes.</p></div>
+    <div><h3>Validation</h3><p>Four-way six-lane intersection experiments against state-of-the-art methods.</p></div>
+    <div><h3>Limitations</h3><p>Learning framework lacks explicit optimization/smoothing formulation and formal safety guarantees.</p></div>
+    <div><h3>Use In This Project</h3><p>Useful for explaining why learned interaction policies must still be checked by a low-level feasibility/safety layer.</p></div>
+  </section>
+  <p class="venue-note"><strong>Venue/source note:</strong> arXiv preprint; venue reputation not verified.</p>
+</article></section>
+  </main>
+  <script>
+    const papers = [{"id": "P01", "bibkey": "chalaki2021priority", "title": "A Priority-Aware Replanning and Resequencing Framework for Coordination of Connected and Automated Vehicles", "authors": "Behdad Chalaki; Andreas A. Malikopoulos", "year": 2021, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2109.05573", "pdf_url": "https://arxiv.org/pdf/2109.05573", "doi": "10.48550/arXiv.2109.05573", "theme": "Scheduling/resequencing + optimal control", "method": "Event-driven replanning and priority-aware resequencing layered on decentralized CAV optimal control at a signal-free intersection.", "stop_avoidance": "The lower-level optimal-control trajectory is constructed so vehicles can conserve momentum rather than stop at the intersection when a feasible exit time exists.", "collision_avoidance": "Uses rear-end and lateral safety constraints around conflict points, with replanning when disturbances change feasibility.", "validation": "Numerical simulation of signal-free intersection coordination under resequencing and replanning.", "limitations": "Assumes connected automated vehicles, known paths, and simplified dynamics; the paper is closer to resequencing theory than to learned graph scheduling.", "support": "Directly supports this project's hierarchy: a high-level sequence or schedule provides target times, and a low-level controller checks executable motion.", "relevance": 94, "venue_reputation": "Useful technical preprint from a well-known CAV optimal-control group; venue reputation not verified beyond arXiv.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent JSSP-inspired resequencing paper with explicit schedule-to-control linkage."}, {"id": "P02", "bibkey": "chen2021conflictfree", "title": "Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis", "authors": "Chaoyi Chen; Qing Xu; Mengchi Cai; Jiawei Wang; Jianqiang Wang; Biao Xu; Keqiang Li", "year": 2021, "venue": "Transportation Research Part C: Emerging Technologies / arXiv version", "venue_type": "Journal / Preprint", "source_url": "https://arxiv.org/abs/2107.07179", "pdf_url": "https://arxiv.org/pdf/2107.07179", "doi": "10.48550/arXiv.2107.07179", "theme": "Graph conflict modeling + passing order", "method": "Models trajectory conflicts as a conflict directed graph and coexisting undirected graph; solves passing order through improved depth-first spanning tree and minimum clique cover methods.", "stop_avoidance": "Optimizes evacuation time and average delay, using distributed control to reduce idling near the stop line.", "collision_avoidance": "Conflict-free graph edges represent crossing, diverging, converging, and reachability conflicts before scheduling.", "validation": "Traffic simulations over varying vehicle counts and volumes; reports efficiency and fuel-economy improvements.", "limitations": "Mostly longitudinal control, ideal communication, and no lane changing in this paper's base formulation.", "support": "Strong support for representing intersection conflicts as typed graph relations, similar to the operation graph in this manuscript.", "relevance": 92, "venue_reputation": "Transportation Research Part C is a leading transportation automation journal; exact publication metadata should be checked before final submission.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent graph-based conflict-free scheduling paper with explicit conflict types and control execution."}, {"id": "P03", "bibkey": "chen2021lanechanging", "title": "Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling", "authors": "Chaoyi Chen; Mengchi Cai; Jiawei Wang; Kai Li; Qing Xu; Jianqiang Wang; Keqiang Li", "year": 2021, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2109.14175", "pdf_url": "https://arxiv.org/pdf/2109.14175", "doi": "10.48550/arXiv.2109.14175", "theme": "Lane changing + arrival scheduling", "method": "Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover.", "stop_avoidance": "Improves traffic efficiency by choosing target lanes and arrival schedules that avoid unnecessary queuing.", "collision_avoidance": "Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements.", "validation": "Numerical simulations for different vehicle counts and traffic volumes.", "limitations": "arXiv note reports text overlap with the authors' earlier graph-based paper; use mainly for lane-changing extension context.", "support": "Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.", "relevance": 82, "venue_reputation": "arXiv preprint; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Supporting core", "include_reason": "Extends graph scheduling toward lateral planning, which helps position the route-template assumption."}, {"id": "P04", "bibkey": "luo2023realtime", "title": "Real-time Cooperative Vehicle Coordination at Unsignalized Road Intersections", "authors": "Jiping Luo; Tingting Zhang; Rui Hao; Donglin Li; Chunsheng Chen; Zhenyu Na; Qinyu Zhang", "year": 2023, "venue": "IEEE Transactions on Intelligent Transportation Systems", "venue_type": "Journal", "source_url": "https://arxiv.org/abs/2205.01278", "pdf_url": "https://arxiv.org/pdf/2205.01278", "doi": "10.1109/TITS.2023.3243940", "theme": "DRL cooperative trajectory optimization", "method": "Formulates unified cooperative trajectory optimization for unsignalized intersections and solves the sequential decision problem with TD3.", "stop_avoidance": "Optimizes throughput and continuous flow, reducing delay compared with conservative coordination.", "collision_avoidance": "Safety and long-term stability constraints are embedded in the cooperative trajectory optimization framework.", "validation": "Simulation and practical experiments; authors report millisecond-scale computation and scalability with lane count.", "limitations": "Centralized control-authority handoff and DRL policy behavior may be difficult to certify in mixed traffic.", "support": "Shows why learned policies are attractive for online intersection coordination but need a structured safety/smoothing interface.", "relevance": 91, "venue_reputation": "IEEE T-ITS is a highly reputable ITS journal; DOI and journal reference verified on arXiv.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent high-quality DRL trajectory coordination paper for unsignalized CAV intersections."}, {"id": "P05", "bibkey": "bai2022hybrid", "title": "Hybrid Reinforcement Learning-Based Eco-Driving Strategy for Connected and Automated Vehicles at Signalized Intersections", "authors": "Zhengwei Bai; Peng Hao; Wei Shangguan; Baigen Cai; Matthew J. Barth", "year": 2022, "venue": "IEEE Transactions on Intelligent Transportation Systems", "venue_type": "Journal", "source_url": "https://arxiv.org/abs/2201.07833", "pdf_url": "https://arxiv.org/pdf/2201.07833", "doi": "10.1109/TITS.2022.3145798", "theme": "Eco-driving + hybrid RL", "method": "Combines a rule-based driving manager, V2I/vision features, and RL to generate longitudinal and lateral eco-driving actions.", "stop_avoidance": "Targets energy and travel-time reduction by smoothing approach behavior at signalized intersections.", "collision_avoidance": "Mixed-traffic policy includes rule-based safety management around surrounding vehicles.", "validation": "Unity-based mixed-traffic intersection simulation; reports 12.70 percent energy reduction and 11.75 percent travel-time saving against a model-based eco-driving baseline.", "limitations": "Signalized setting and policy-level action output differ from a scheduler-to-smoother architecture.", "support": "Supports the argument that stop-and-go reduction and energy-aware smoothing are important low-level objectives.", "relevance": 86, "venue_reputation": "IEEE T-ITS is a highly reputable ITS journal; DOI and journal reference verified on arXiv.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Strong recent source for smoothing/eco-driving benefits at intersections."}, {"id": "P06", "bibkey": "jiang2023ecodriving", "title": "Eco-driving for Electric Connected Vehicles at Signalized Intersections: A Parameterized Reinforcement Learning Approach", "authors": "Xia Jiang; Jian Zhang; Dan Li", "year": 2023, "venue": "Journal article related DOI / arXiv version", "venue_type": "Journal / Preprint", "source_url": "https://arxiv.org/abs/2206.12065", "pdf_url": "https://arxiv.org/pdf/2206.12065", "doi": "10.1080/21680566.2023.2215957", "theme": "Electric CV eco-driving + parameterized RL", "method": "Parameterized RL combines model-based car-following, lane-changing policy, and learned longitudinal/lateral decisions.", "stop_avoidance": "Learns energy-saving actions around signalized intersections without interrupting surrounding HDVs.", "collision_avoidance": "Safety is handled through model-based car-following and lane-changing constraints around human-driven vehicles.", "validation": "SUMO evaluation from single-vehicle and flow perspectives.", "limitations": "Signalized intersections and electric connected vehicles rather than fully signal-free autonomous scheduling.", "support": "Provides a SUMO-compatible example of energy and stop reduction metrics for the experimental section.", "relevance": 83, "venue_reputation": "Related DOI exists on arXiv; exact journal reputation not verified in this pass.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent RL eco-driving paper with SUMO validation and safety-aware mixed-traffic behavior."}, {"id": "P07", "bibkey": "lakshmanan2022cooperative", "title": "Cooperative Control in Eco-Driving of Electric Connected and Autonomous Vehicles in an Un-Signalized Urban Intersection", "authors": "Vinith Kumar Lakshmanan; Antonio Sciarretta; Ouafae El Ganaoui-Mourlan", "year": 2022, "venue": "AAC 2022 submission / arXiv version", "venue_type": "Conference / Preprint", "source_url": "https://arxiv.org/abs/2206.12360", "pdf_url": "https://arxiv.org/pdf/2206.12360", "doi": "10.48550/arXiv.2206.12360", "theme": "Eco-driving optimal speed profile", "method": "Single-level eco-driving optimization solved with Pontryagin's Minimum Principle for electric CAV speed profiles at an unsignalized intersection.", "stop_avoidance": "Focuses directly on optimal speed profiles that reduce energy use and avoid inefficient stop-and-go behavior.", "collision_avoidance": "Analytical conflict cases and cooperation levels encode interaction safety among CAVs.", "validation": "Simulation comparison of cooperative and non-cooperative eco-driving against IDM baseline.", "limitations": "Narrower single-vehicle/eco-driving emphasis; less detail on high-level scheduling.", "support": "Supports the smoothing objective terms for acceleration, energy proxy, and stop avoidance.", "relevance": 81, "venue_reputation": "Conference/preprint status only; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Directly relevant to no-stop and energy-aware speed smoothing at unsignalized intersections."}, {"id": "P08", "bibkey": "mahbub2022safety", "title": "Safety-Aware and Data-Driven Predictive Control for Connected Automated Vehicles at a Mixed Traffic Signalized Intersection", "authors": "A. M. Ishtiaque Mahbub; Viet-Anh Le; Andreas A. Malikopoulos", "year": 2022, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2203.05739", "pdf_url": "https://arxiv.org/pdf/2203.05739", "doi": "10.48550/arXiv.2203.05739", "theme": "Data-driven predictive control + mixed traffic safety", "method": "Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time.", "stop_avoidance": "Smooths CAV response near yellow/red phases while avoiding overly conservative braking behind HDVs.", "collision_avoidance": "Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes.", "validation": "Numerical simulation and robustness analysis.", "limitations": "Signalized and rear-end-focused rather than conflict-zone scheduling across all movements.", "support": "Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.", "relevance": 78, "venue_reputation": "arXiv preprint; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Strong safety-focused predictive-control source for collision avoidance near intersections."}, {"id": "P09", "bibkey": "dong2023overtaking", "title": "Overtaking-enabled Eco-approach Control at Signalized Intersections for Connected and Automated Vehicles", "authors": "Haoxuan Dong; Weichao Zhuang; Guoyuan Wu; Zhaojian Li; Guodong Yin; Ziyou Song", "year": 2023, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2306.09736", "pdf_url": "https://arxiv.org/pdf/2306.09736", "doi": "10.48550/arXiv.2306.09736", "theme": "Eco-approach + relaxed FIFO", "method": "Receding-horizon two-stage control: dynamic-programming lane optimization followed by PMP speed trajectory optimization.", "stop_avoidance": "Relaxes FIFO queuing at signalized intersections to reduce driving cost, energy consumption, and delay.", "collision_avoidance": "Handles dynamic disturbance from preceding vehicles and lane-choice constraints.", "validation": "Extensive simulations report average driving-cost improvements over constant-speed and regular eco-approach baselines.", "limitations": "Signalized intersection and overtaking/lane planning assumptions are outside the current fixed-route JSSP scope.", "support": "Supports the critique that FCFS/FIFO can be suboptimal and that speed smoothing should be coupled to sequencing.", "relevance": 84, "venue_reputation": "arXiv preprint; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent source connecting FIFO relaxation, speed optimization, delay, and energy."}, {"id": "P10", "bibkey": "klimke2026realworld", "title": "Real-World Evaluation of Two Cooperative Intersection Management Approaches", "authors": "Marvin Klimke; Max Bastian Mertens; Benjamin Volz; Michael Buchholz", "year": 2026, "venue": "IEEE Intelligent Transportation Systems Magazine (accepted)", "venue_type": "Magazine / Preprint", "source_url": "https://arxiv.org/abs/2403.16478", "pdf_url": "https://arxiv.org/pdf/2403.16478", "doi": "10.1109/MITS.2025.3643199", "theme": "Real-world cooperative intersection management", "method": "Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives.", "stop_avoidance": "Reports substantial reductions in crossing time and number of stops for cooperative maneuver planning.", "collision_avoidance": "Evaluates criticality metrics while operating with prototype connected automated vehicles in public traffic.", "validation": "Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives.", "limitations": "Focuses on cooperative maneuver planning evaluation, not a JSSP formulation.", "support": "Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.", "relevance": 90, "venue_reputation": "IEEE ITS Magazine is reputable and practice-facing; accepted-publication note and DOI are verified on arXiv.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent real-world evaluation directly reports stop-count reduction and criticality metrics."}, {"id": "P11", "bibkey": "zhao2025spatial", "title": "A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty", "authors": "Tong Zhao; Nikolce Murgovski; Baigen Cai; Wei ShangGuan", "year": 2025, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2412.04290", "pdf_url": "https://arxiv.org/pdf/2412.04290", "doi": "10.48550/arXiv.2412.04290", "theme": "Spatial-domain robust trajectory planning", "method": "Transforms coordinated control into a spatial-domain nonlinear program with unified linear collision-avoidance constraints and real-time iteration.", "stop_avoidance": "Generates smooth trajectories under state/control constraints, avoiding unnecessary braking where robust constraints permit.", "collision_avoidance": "Handles crossing, following, merging, and diverging conflicts under path and speed uncertainty of HDVs.", "validation": "Simulation case studies; reported RTI computation reduction by orders of magnitude with small optimality loss.", "limitations": "Optimization-heavy; not a learned scheduler, and publication venue beyond arXiv not verified.", "support": "Very strong for the smoother's feasibility and robust collision-avoidance constraints.", "relevance": 92, "venue_reputation": "Recent technical arXiv preprint; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Most directly relevant recent robust trajectory-planning paper for unsignalized mixed traffic."}, {"id": "P12", "bibkey": "yu2025uncertainty", "title": "Uncertainty-Aware Safety-Critical Decision and Control for Autonomous Vehicles at Unsignalized Intersections", "authors": "Ran Yu; Zhuoren Li; Lu Xiong; Wei Han; Bo Leng", "year": 2025, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2505.19939", "pdf_url": "https://arxiv.org/pdf/2505.19939", "doi": "10.48550/arXiv.2505.19939", "theme": "Uncertainty-aware safe RL + HOCBF", "method": "Risk-aware ensemble distributional RL estimates policy uncertainty, then a high-order control barrier function acts as a safety filter.", "stop_avoidance": "Balances safety and traffic efficiency by switching between flexible RL behavior and conservative HOCBF intervention.", "collision_avoidance": "HOCBF safety filter dynamically adjusts constraints using joint uncertainty in unsignalized-intersection tasks.", "validation": "Simulation tests on multiple unsignalized-intersection tasks against safety and efficiency baselines.", "limitations": "Single-agent urban autonomous-driving framing rather than centralized conflict-zone scheduling.", "support": "Supports adding CBF/HOCBF safety filters or fallback logic to learned policies.", "relevance": 84, "venue_reputation": "Recent arXiv preprint; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Core", "include_reason": "Recent safety-filter paper directly relevant to collision avoidance under learned decisions."}, {"id": "P13", "bibkey": "liu2023systematic", "title": "A Systematic Survey of Control Techniques and Applications in Connected and Automated Vehicles", "authors": "Wei Liu; Min Hua; Zhiyun Deng; Zonglin Meng; Yanjun Huang; Chuan Hu; Shunhui Song; Letian Gao; Changsheng Liu; Bin Shuai; Amir Khajepour; Lu Xiong; Xin Xia", "year": 2023, "venue": "arXiv survey", "venue_type": "Survey / Preprint", "source_url": "https://arxiv.org/abs/2303.05665", "pdf_url": "https://arxiv.org/pdf/2303.05665", "doi": "10.48550/arXiv.2303.05665", "theme": "CAV control survey", "method": "Systematic survey from vehicle state estimation and trajectory tracking to collaborative CAV control applications.", "stop_avoidance": "Frames comfort, energy saving, and transportation efficiency as central CAV control goals.", "collision_avoidance": "Reviews vehicle-control approaches relevant to safety and collaborative control.", "validation": "Literature survey rather than original experiments.", "limitations": "Broad CAV control overview; not intersection-smoothing specific.", "support": "Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.", "relevance": 72, "venue_reputation": "Survey preprint; broad coverage, venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Context", "include_reason": "Recent control survey to ground terminology and broader CAV-control trends."}, {"id": "P14", "bibkey": "cederle2024distributed", "title": "A Distributed Approach to Autonomous Intersection Management via Multi-Agent Reinforcement Learning", "authors": "Matteo Cederle; Marco Fabris; Gian Antonio Susto", "year": 2024, "venue": "ATT 2024 Workshop, CEUR-WS Vol. 3813", "venue_type": "Workshop", "source_url": "https://arxiv.org/abs/2405.08655", "pdf_url": "https://arxiv.org/pdf/2405.08655", "doi": "10.48550/arXiv.2405.08655", "theme": "Distributed MARL for AIM", "method": "Distributed multi-agent RL for autonomous intersection management using 3D surround-view assumptions and prioritized scenario replay.", "stop_avoidance": "Improves benchmark metrics in SMARTS, implying smoother flow through decentralized decisions.", "collision_avoidance": "Aims for accurate decentralized navigation without a central server; safety is evaluated through simulation metrics.", "validation": "SMARTS virtual environment; accepted at ATT 2024 and available through CEUR-WS.", "limitations": "Workshop paper; not focused on explicit trajectory smoothing or formal safety constraints.", "support": "Useful contrast to the proposed centralized JSSP/RL rollout, showing distributed AIM as an alternative branch.", "relevance": 70, "venue_reputation": "Peer-reviewed workshop proceedings in CEUR-WS; reputable but less archival than major journals.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Context", "include_reason": "Recent AIM learning paper for contrasting centralized and distributed control choices."}, {"id": "P15", "bibkey": "li2023dhal", "title": "D-HAL: Distributed Hierarchical Adversarial Learning for Multi-Agent Interaction in Autonomous Intersection Management", "authors": "Guanzhou Li; Jianping Wu; Yujing He", "year": 2023, "venue": "arXiv preprint", "venue_type": "Preprint", "source_url": "https://arxiv.org/abs/2303.02630", "pdf_url": "https://arxiv.org/pdf/2303.02630", "doi": "10.48550/arXiv.2303.02630", "theme": "Distributed hierarchical learning for AIM", "method": "Non-RL adversarial actor/discriminator framework evaluates immediate interaction and final trajectory quality for multi-agent AIM.", "stop_avoidance": "Targets reduced travel time and smoother interaction outcomes compared with distributed learning baselines.", "collision_avoidance": "Immediate and final discriminators score interaction safety and trajectory outcomes.", "validation": "Four-way six-lane intersection experiments against state-of-the-art methods.", "limitations": "Learning framework lacks explicit optimization/smoothing formulation and formal safety guarantees.", "support": "Useful for explaining why learned interaction policies must still be checked by a low-level feasibility/safety layer.", "relevance": 73, "venue_reputation": "arXiv preprint; venue reputation not verified.", "pdf_status": "open PDF downloaded from arXiv", "review_status": "Context", "include_reason": "Recent learning-based AIM source with safety/travel-time claims for positioning the RL scheduler."}];
+    const stateKey = "trajectory-smoothing-review-state-v1";
+    const state = JSON.parse(localStorage.getItem(stateKey) || "{}");
+    const save = () => localStorage.setItem(stateKey, JSON.stringify(state));
+    function unique(field) { return [...new Set(papers.map(p => p[field]))].sort(); }
+    function fillSelect(id, values) {
+      const el = document.getElementById(id);
+      values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v; opt.textContent = v; el.appendChild(opt);
+      });
+    }
+    fillSelect("themeFilter", unique("theme"));
+    fillSelect("venueFilter", unique("venue_type"));
+    fillSelect("yearFilter", unique("year"));
+    let selectedOnly = false;
+    document.querySelectorAll(".stars").forEach(box => {
+      const id = box.dataset.paper;
+      state[id] ||= { selected: false, stars: 0 };
+      for (let i = 1; i <= 5; i++) {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.textContent = "★";
+        b.title = `${i} star${i > 1 ? "s" : ""}`;
+        b.onclick = () => { state[id].stars = i; save(); renderState(); };
+        box.appendChild(b);
+      }
+    });
+    document.querySelectorAll("input[type='checkbox'][data-paper]").forEach(cb => {
+      const id = cb.dataset.paper;
+      cb.checked = !!state[id]?.selected;
+      cb.onchange = () => { state[id] ||= { stars: 0 }; state[id].selected = cb.checked; save(); filterCards(); };
+    });
+    function renderState() {
+      document.querySelectorAll(".stars").forEach(box => {
+        const rating = state[box.dataset.paper]?.stars || 0;
+        [...box.children].forEach((b, idx) => b.classList.toggle("active", idx < rating));
+      });
+    }
+    function filterCards() {
+      const theme = document.getElementById("themeFilter").value;
+      const venue = document.getElementById("venueFilter").value;
+      const year = document.getElementById("yearFilter").value;
+      const score = Number(document.getElementById("scoreFilter").value || 0);
+      document.querySelectorAll(".paper-card").forEach(card => {
+        const id = card.id;
+        const show = (!theme || card.dataset.theme === theme)
+          && (!venue || card.dataset.venue === venue)
+          && (!year || card.dataset.year === year)
+          && Number(card.dataset.score) >= score
+          && (!selectedOnly || state[id]?.selected);
+        card.classList.toggle("hidden", !show);
+      });
+    }
+    ["themeFilter", "venueFilter", "yearFilter", "scoreFilter"].forEach(id => document.getElementById(id).addEventListener("input", filterCards));
+    document.getElementById("selectedOnly").onclick = () => {
+      selectedOnly = !selectedOnly;
+      document.getElementById("selectedOnly").textContent = selectedOnly ? "Show all papers" : "Show selected only";
+      filterCards();
+    };
+    renderState();
+    filterCards();
+  </script>
+</body>
+</html>

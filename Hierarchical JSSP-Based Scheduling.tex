@@ -23,10 +23,13 @@
 \definecolor{addedblue}{RGB}{0,73,171}
 \definecolor{summarygreen}{RGB}{0,115,72}
 \definecolor{revisionpurple}{RGB}{112,48,160}
+\definecolor{revisiontodayorange}{RGB}{154,74,18} % 2026-06-26 literature review additions
 \DeclareRobustCommand{\added}[1]{\textcolor{addedblue}{#1}}
 \DeclareRobustCommand{\addedtwo}[1]{\textcolor{revisionpurple}{#1}}
+\DeclareRobustCommand{\addedtoday}[1]{\textcolor{revisiontodayorange}{#1}}
 \newenvironment{addedblock}{\begingroup\color{addedblue}}{\endgroup}
 \newenvironment{addedtwoblock}{\begingroup\color{revisionpurple}}{\endgroup}
+\newenvironment{addedtodayblock}{\begingroup\color{revisiontodayorange}}{\endgroup}
 \newcommand{\featureencodingpdfcomment}{%
   \makebox[0pt][l]{\raisebox{1.1ex}{%
     \pdfannot width 10pt height 10pt depth 0pt {%
@@ -109,5 +112,4 @@ The author would like to thank collaborators and supervisors who provide feedbac
 \bibliography{references}
 
 \end{document}
-
 

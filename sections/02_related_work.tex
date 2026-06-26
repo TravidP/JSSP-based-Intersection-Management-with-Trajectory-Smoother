@@ -29,15 +29,18 @@ The proposed scheduler uses a relation-aware graph attention encoder because the
 \subsection{Trajectory Smoothing and Stop Avoidance}
 % EN: Review velocity planning, energy-aware control, control barrier functions, and smooth crossing strategies.
 % CN: 回顾速度规划、能耗优化、控制屏障函数和平滑通过路口的方法。
-Even when the passing order is optimized, vehicles still need feasible speed trajectories to execute the schedule. Stop-line waiting is simple but may increase delay, acceleration variation, and energy consumption. Smooth trajectory planning methods adjust vehicle speed before reaching the intersection so that vehicles can arrive at conflict zones close to their assigned time. This paper follows this direction and treats low-level smoothing as an execution layer below the learned scheduler.
+\begin{addedtodayblock}
+Recent work shows that intersection efficiency depends not only on the discrete passing order but also on whether the assigned order can be executed by dynamically feasible vehicle trajectories. Graph-based CAV cooperation methods model crossing, diverging, converging, and reachability conflicts before selecting a passing order, which is close in spirit to representing conflict zones as shared scheduling resources \cite{chen2021conflictfree,chen2021lanechanging}. Priority-aware resequencing further shows that strict FCFS/FIFO decision orders can be relaxed through replanning while still passing target times to a lower-level optimal controller \cite{chalaki2021priority}. These studies motivate the scheduling layer in this paper, but they usually rely on handcrafted graph algorithms or analytic resequencing rather than an offline-trained graph policy.
 
-\begin{addedblock}
-The scheduling and smoothing layers therefore address complementary parts of the AIM problem: the scheduler determines the discrete conflict-zone order, whereas the smoother determines whether that order can be executed with bounded acceleration, safety margins, and limited unnecessary stopping.
-\end{addedblock}
+Trajectory-level studies address the complementary question of how a vehicle should move after a desired crossing time, phase, or maneuver has been selected. Eco-driving and eco-approach controllers use reinforcement learning, Pontryagin-minimum-principle solutions, or hybrid rule-learning structures to reduce energy consumption, delay, and unnecessary acceleration near intersections \cite{bai2022hybrid,jiang2023ecodriving,lakshmanan2022cooperative,dong2023overtaking}. These papers support the use of stop count, acceleration variation, and energy proxy metrics in the evaluation, because stop-line waiting is not merely a delay phenomenon but also changes the smoothness and energy profile of the vehicle trajectory.
+
+Safety-oriented trajectory planning adds constraints that the high-level schedule alone cannot guarantee. Predictive-control and spatial-domain formulations derive trajectories under rear-end, crossing, merging, diverging, and mixed-traffic uncertainty constraints \cite{mahbub2022safety,zhao2025spatial}. Learning-based AIM approaches can improve flexibility and travel time, but recent work also emphasizes that learned decisions need explicit safety evaluation or filtering, such as uncertainty-aware high-order control barrier functions \cite{luo2023realtime,yu2025uncertainty,cederle2024distributed,li2023dhal}. A broad CAV-control survey similarly identifies trajectory tracking, collaborative control, safety, comfort, and energy saving as coupled requirements rather than independent design goals \cite{liu2023systematic}.
+
+The proposed framework follows this schedule-to-trajectory view. The high-level JSSP/RL scheduler determines the conflict-zone order and target entry times, while the low-level smoother treats those times as references to be tracked under speed, acceleration, jerk, and safety constraints. If the smoother cannot track the assigned reservations without violating collision-avoidance or comfort bounds, it reports infeasibility and triggers replanning or conservative stop-line fallback. This feedback interface is the main distinction from methods that optimize only the passing order or only the vehicle trajectory in isolation.
+\end{addedtodayblock}
 
 % EN: Before submission, ensure every cited claim has a verified source. Do not add placeholder citations.
 % CN: 投稿前必须确认每个引用支撑相应论断，不要为了占位编造引用。
-
 
 
 
