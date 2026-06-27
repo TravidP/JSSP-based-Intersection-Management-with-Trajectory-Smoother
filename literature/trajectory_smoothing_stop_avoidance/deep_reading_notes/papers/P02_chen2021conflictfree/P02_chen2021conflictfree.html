@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P02 Deep Reading Notes</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#657386; --line:#d9e1ea; --soft:#f6f8fb; --accent:#1f6f61; --warn:#8a4b0f; --blue:#1f5f8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif; color:var(--ink); background:#fff; }
+    header.hero { padding:28px 34px 18px; border-bottom:1px solid var(--line); background:#f3f6fa; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 10px; font-size:22px; }
+    h3 { margin:18px 0 8px; font-size:17px; color:var(--accent); }
+    p { margin:7px 0; }
+    a { color:var(--blue); }
+    .meta { color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar { position:sticky; top:0; z-index:2; display:flex; gap:8px; align-items:center; padding:10px 34px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    button, .back { border:1px solid var(--line); border-radius:6px; background:white; padding:7px 10px; color:var(--ink); text-decoration:none; cursor:pointer; }
+    main { display:grid; grid-template-columns:260px minmax(0,1fr); gap:28px; padding:24px 34px 60px; }
+    nav { position:sticky; top:58px; align-self:start; border-right:1px solid var(--line); padding-right:18px; }
+    nav a { display:block; padding:7px 0; color:var(--ink); text-decoration:none; }
+    section.panel { border-bottom:1px solid var(--line); padding:0 0 22px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .card, details, .reviewer-note { border:1px solid var(--line); border-radius:8px; padding:14px; background:var(--soft); }
+    .reviewer-note { border-left:4px solid var(--warn); background:#fffaf3; }
+    table { width:100%; border-collapse:collapse; margin:10px 0; }
+    th, td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    th { background:#eef3f7; text-align:left; }
+    .formula { overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }
+    .section-map { display:grid; gap:10px; }
+    .section-map article { border:1px solid var(--line); border-radius:8px; padding:12px; }
+    .viz { display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }
+    canvas { width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }
+    input[type=range] { width:100%; }
+    body.zh-only .en { display:none; }
+    body.en-only .zh { display:none; }
+    @media (max-width: 860px) { main { grid-template-columns:1fr; } nav { position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; } .grid,.viz { grid-template-columns:1fr; } }
+    @media print { .toolbar, nav, .interactive-only { display:none; } main { display:block; padding:12px 18px; } header.hero { padding:16px 18px; } body { font-size:11px; } section.panel { break-inside:avoid; } a { color:var(--ink); text-decoration:none; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>P02. Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis</h1>
+    <div class="meta">
+      <span>Chaoyi Chen; Qing Xu; Mengchi Cai; Jiawei Wang; Jianqiang Wang; Biao Xu; Keqiang Li</span>
+      <span>2021</span>
+      <span>Transportation Research Part C: Emerging Technologies / arXiv version</span>
+      <span>PDF pages: 19</span>
+      <span>Relevance: 92/100</span>
+    </div>
+  </header>
+  <div class="toolbar interactive-only">
+    <a class="back" href="../../index.html">Index</a>
+    <button onclick="document.body.className=''">双语 / Bilingual</button>
+    <button onclick="document.body.className='zh-only'">中文</button>
+    <button onclick="document.body.className='en-only'">English</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </div>
+  <main>
+    <nav>
+      <a href="#overview">1. 全景速览</a>
+      <a href="#method">2. 理论方法</a>
+      <a href="#experiment">3. 实验评判</a>
+      <a href="#critique">4. 批判与拓展</a>
+      <a href="#viz">5. 交互蓝图</a>
+      <a href="#anchors">来源锚点</a>
+    </nav>
+    <div>
+      <section id="overview" class="panel">
+        <h2>1. 论文全景速览与核心贡献 / High-Level Overview & Core Contributions</h2>
+        <div class="grid">
+          <div class="card"><h3>研究背景与痛点 / Background & Pain Points</h3><p class="zh">这篇论文位于“Graph conflict modeling + passing order”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。</p><p class="en">The paper belongs to the theme of Graph conflict modeling + passing order. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.</p><p>Mostly longitudinal control, ideal communication, and no lane changing in this paper&#x27;s base formulation.</p></div>
+          <div class="card"><h3>核心科学问题 / Core Scientific Question</h3><p class="zh">如何把无信号交叉口中复杂的相交、跟驰、合流和分流关系转化为可求解的图排序问题？</p><p class="en">How can heterogeneous vehicle conflicts at an unsignalized intersection be encoded as graph relations that yield a conflict-free passing order?</p></div>
+        </div>
+        <h3>科学贡献 / Scientific Contributions</h3>
+        <ul><li>方法贡献 (method contribution)：Models trajectory conflicts as a conflict directed graph and coexisting undirected graph; solves passing order through improved depth-first spanning tree and minimum clique cover methods.</li><li>安全/避碰贡献 (safety contribution)：Conflict-free graph edges represent crossing, diverging, converging, and reachability conflicts before scheduling.</li><li>平滑/停止避免贡献 (smoothing contribution)：Optimizes evacuation time and average delay, using distributed control to reduce idling near the stop line.</li><li>创新力度评判 (reviewer judgement)：较强：图建模把交通冲突类型显式化，便于和 JSSP 的机器冲突/工序约束建立同构关系。</li></ul>
+        <h3>核心概念对照 / Core Concepts</h3>
+        <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr><tr><td>自动交叉口管理</td><td>Autonomous Intersection Management</td><td>把信号控制替换为车辆级调度与控制。</td></tr><tr><td>轨迹平滑</td><td>Trajectory Smoothing</td><td>减少急加减速、停车和能耗峰值。</td></tr><tr><td>安全约束</td><td>Safety Constraints</td><td>把碰撞风险写成距离、时间间隔或屏障函数。</td></tr><tr><td>Conflict graph + optimal passing order</td><td>冲突图与最优通行顺序</td><td>该论文的核心方法族。</td></tr></table>
+      </section>
+      <section id="method" class="panel">
+        <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
+        <h3>问题数学建模 / Mathematical Formulation</h3>
+        <p><b>冲突图与排序目标 / Conflict graph and sequencing objective</b></p>
+        <div class="formula">$$
+G=(V,E_d,E_u),\quad \min_{\pi}\; C_{\max}(\pi)=\max_{i\in V} t_i^{out}\quad \text{s.t.}\; (i,j)\in E_d\Rightarrow i\prec_\pi j
+$$</div>
+        <table><tr><th>Symbol / 符号</th><th>含义</th><th>Meaning</th><th>Role / 建模作用</th></tr><tr><td><code>V</code></td><td>车辆节点集合</td><td>vehicle-node set</td><td>每辆车对应一个调度实体</td></tr><tr><td><code>E_d</code></td><td>有向冲突/可达边</td><td>directed conflict/reachability edges</td><td>表达必须先后通过的约束</td></tr><tr><td><code>E_u</code></td><td>无向共存/冲突边</td><td>undirected coexistence/conflict edges</td><td>表达是否可同批通过或需分组</td></tr><tr><td><code>pi</code></td><td>通行序列</td><td>passing permutation</td><td>调度算法的核心决策变量</td></tr><tr><td><code>C_max</code></td><td>最大清空时间</td><td>makespan / evacuation time</td><td>衡量路口整体效率</td></tr></table>
+        <h3>核心算法架构 / Core Algorithm Layout</h3>
+        <p class="zh">先依据几何轨迹和时间可达性构建冲突有向图与共存无向图；再用改进深度优先生成树和最小团覆盖等图算法求通行组与顺序；最后由分布式控制保证每辆车按序到达冲突区。</p>
+        <p class="en">The method builds directed and undirected graph relations from trajectory conflicts, solves groups and orders with graph algorithms, and executes the resulting order via distributed vehicle control.</p>
+        <div class="reviewer-note"><b>收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility</b><p class="zh">图约束先把不安全组合排除，控制层只需执行已筛选的顺序。实时性取决于图规模和团覆盖求解，但比直接连续优化全车轨迹更结构化。</p><p class="en">Safety is front-loaded into graph constraints; tractability improves because the continuous-control layer receives a filtered sequence rather than solving all interactions jointly.</p></div>
+        <h3>潜在假设与边界条件 / Assumptions & Boundary Conditions</h3>
+        <ul><li>车辆轨迹模板和冲突点可提前计算。</li><li>车辆遵守分配的通行顺序，通信近似理想。</li><li>主要聚焦纵向控制，横向变道不是核心问题。</li></ul>
+      </section>
+      <section id="experiment" class="panel">
+        <h2>3. 实验验证与结果评判 / Experimental Validation & Result Evaluation</h2>
+        <div class="grid">
+          <div class="card"><h3>基准对比与环境 / Baselines & Environment</h3><p>常见基准包括 FCFS、交通灯控制、无协同控制和其他图排序策略。</p><p>Traffic simulations over varying vehicle counts and volumes; reports efficiency and fuel-economy improvements.</p></div>
+          <div class="card"><h3>核心指标 / Metrics</h3><p>平均延误 (average delay)、总清空时间 (evacuation time)、吞吐量 (throughput)、燃油/能耗代理和停车次数。</p></div>
+          <div class="card"><h3>消融实验 / Ablation</h3><p>图关系本身有可解释性，但仍需更系统地拆分：仅有向图、仅无向图、不同团覆盖策略和不同交通流密度下的鲁棒性。</p></div>
+          <div class="card"><h3>博士阅读提醒 / Reading Reminder</h3><p>阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.</p></div>
+        </div>
+        <h3>图表阅读线索 / Figure and Table Reading Cues</h3>
+        <p>PDF extraction detected approximately 61 figure references and 7 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.</p>
+        <table><tr><th>图表名称</th><th>Figure/Table Name</th><th>Reading focus / 阅读重点</th></tr><tr><td>系统框架图</td><td>system framework diagram</td><td>先确认输入、决策层、控制层和安全约束之间的数据流。</td></tr><tr><td>冲突关系图 / 通行顺序图</td><td>conflict-relation or passing-order graph</td><td>把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。</td></tr><tr><td>实验指标对比图表</td><td>experimental metric comparison plots/tables</td><td>重点看平均值之外的密度变化、失败场景、计算时间和方差。</td></tr></table>
+      </section>
+      <section id="critique" class="panel">
+        <h2>4. 审稿人视角：批判性思考与未来方向 / Critical Thinking & Future Directions</h2>
+        <div class="grid">
+          <div><h3>论文局限性 / Limitations & Weaknesses</h3><ul><li>图构造依赖精确几何和预测，异常驾驶会导致边集失真。</li><li>团覆盖/排序在大规模密集车流下可能成为瓶颈。</li><li>模型偏重全 CAV 场景，对低渗透率混合交通支持不足。</li></ul></div>
+          <div><h3>博士课题拓展点 / Research Extensions for PhD</h3><ul class="research-idea"><li>把图边类型作为异构图 (heterogeneous graph) 特征，训练 GNN 调度器。</li><li>将最小团覆盖与 JSSP disjunctive graph 融合，建立可证明安全的调度层。</li><li>引入不确定边权，做分布鲁棒通行排序 (distributionally robust sequencing)。</li></ul></div>
+        </div>
+        <div class="reviewer-note"><b>如何服务当前课题 / Use in This Project</b><p>Strong support for representing intersection conflicts as typed graph relations, similar to the operation graph in this manuscript.</p></div>
+      </section>
+      <section id="viz" class="panel">
+        <h2>5. 交互式可视化与 PDF 排版蓝图 / Interactive Visualization & PDF Layout Blueprint</h2>
+        <div class="viz">
+          <div class="card">
+            <h3>动态参数探索 / Parameter Exploration</h3>
+            <label>冲突边密度 / Conflict-edge density: <b id="paramValue"></b> </label>
+            <input id="param" type="range" min="0.1" max="0.9" value="0.45" step="0.01">
+            <p class="zh">边密度升高会减少可并行通行组，通常增大清空时间。</p>
+            <p class="en">Higher edge density reduces parallel passing groups and increases evacuation time.</p>
+          </div>
+          <canvas id="chart" width="720" height="320"></canvas>
+        </div>
+        <h3>HTML 结构化布局建议 / HTML Structuring</h3>
+        <ul><li>顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。</li><li>左侧目录/section navigator，右侧为五大精读模块。</li><li>公式卡片使用 &lt;pre&gt; 或 LaTeX block，紧跟符号表。</li><li>审稿人批注用 reviewer-note block，博士拓展用 research-idea list。</li><li>交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。</li></ul>
+      </section>
+      <section id="anchors" class="panel">
+        <h2>来源锚点与逐节阅读路径 / Source Anchors & Section-by-Section Reading Map</h2>
+        <p>以下锚点来自本地 PDF 抽取，用于回到原文复核；笔记不保存论文全文。</p>
+        <table><tr><th>Page</th><th>Extracted heading</th></tr><tr><td>p.1</td><td>I. INTRODUCTION</td></tr><tr><td>p.2</td><td>II. PROBLEM STATEMENT</td></tr><tr><td>p.11</td><td>IV. SIMULATION</td></tr></table>
+        <div class="section-map"><article><b>p.1 · I. INTRODUCTION</b><p class='zh'>定位问题背景、研究缺口和为什么现有保守/非协同方法不足。</p><p class='en'>Frames the motivation, research gap, and limits of conservative or non-cooperative methods.</p></article><article><b>p.2 · II. PROBLEM STATEMENT</b><p class='zh'>把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。</p><p class='en'>Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.</p></article><article><b>p.4 · III. METHODOLOGY</b><p class='zh'>给出算法流程和求解机制，应重点追踪输入、输出和安全接口。</p><p class='en'>Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.</p></article><article><b>p.11 · IV. SIMULATION</b><p class='zh'>检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。</p><p class='en'>Tests efficiency, safety, or energy claims; inspect whether baselines are fair.</p></article><article><b>p.17 · V. CONCLUSION</b><p class='zh'>总结贡献和未来方向，也常暴露作者承认的边界条件。</p><p class='en'>Summarizes contributions and often reveals author-recognized boundaries.</p></article><article><b>p.19 · 2014 IEEE Intelligent Vehicle Symposium, the Best Paper Award in the 14th</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const min = 0.1, max = 0.9;
+    const slider = document.getElementById('param');
+    const value = document.getElementById('paramValue');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    function response(x) {
+      const z = (x - min) / (max - min || 1);
+      const delay = Math.min(1, 0.18 + 0.82 * Math.pow(z, 1.25));
+      const safety = Math.max(0, Math.min(1, 0.15 + 0.75 * (1 - Math.exp(-2.2 * z))));
+      const compute = Math.min(1, 0.10 + 0.88 * z * z);
+      return {delay, safety, compute};
+    }
+    function draw() {
+      const x = parseFloat(slider.value);
+      value.textContent = x.toFixed(2);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = '#d9e1ea'; ctx.lineWidth = 1;
+      for (let i=0;i<6;i++) { const y=40+i*45; ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(690,y); ctx.stroke(); }
+      const series = [
+        ['Efficiency pressure / 效率压力', '#1f5f8b', 'delay'],
+        ['Safety margin / 安全裕度', '#1f6f61', 'safety'],
+        ['Compute load / 计算负载', '#8a4b0f', 'compute']
+      ];
+      for (const [label,color,key] of series) {
+        ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i=0;i<=120;i++) {
+          const xx = min + (max-min)*i/120;
+          const yy = response(xx)[key];
+          const px = 50 + i/120*640;
+          const py = 270 - yy*210;
+          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      const px = 50 + ((x-min)/(max-min||1))*640;
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px,35); ctx.lineTo(px,285); ctx.stroke();
+      ctx.font = '15px -apple-system, sans-serif'; ctx.fillStyle = '#1d2733';
+      series.forEach((s,i)=>{ ctx.fillStyle=s[1]; ctx.fillRect(58,20+i*22,12,12); ctx.fillStyle='#1d2733'; ctx.fillText(s[0],78,31+i*22); });
+    }
+    slider.addEventListener('input', draw);
+    draw();
+  </script>
+</body>
+</html>

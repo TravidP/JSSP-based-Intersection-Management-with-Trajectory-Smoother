@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P11 Deep Reading Notes</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#657386; --line:#d9e1ea; --soft:#f6f8fb; --accent:#1f6f61; --warn:#8a4b0f; --blue:#1f5f8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif; color:var(--ink); background:#fff; }
+    header.hero { padding:28px 34px 18px; border-bottom:1px solid var(--line); background:#f3f6fa; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 10px; font-size:22px; }
+    h3 { margin:18px 0 8px; font-size:17px; color:var(--accent); }
+    p { margin:7px 0; }
+    a { color:var(--blue); }
+    .meta { color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar { position:sticky; top:0; z-index:2; display:flex; gap:8px; align-items:center; padding:10px 34px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    button, .back { border:1px solid var(--line); border-radius:6px; background:white; padding:7px 10px; color:var(--ink); text-decoration:none; cursor:pointer; }
+    main { display:grid; grid-template-columns:260px minmax(0,1fr); gap:28px; padding:24px 34px 60px; }
+    nav { position:sticky; top:58px; align-self:start; border-right:1px solid var(--line); padding-right:18px; }
+    nav a { display:block; padding:7px 0; color:var(--ink); text-decoration:none; }
+    section.panel { border-bottom:1px solid var(--line); padding:0 0 22px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .card, details, .reviewer-note { border:1px solid var(--line); border-radius:8px; padding:14px; background:var(--soft); }
+    .reviewer-note { border-left:4px solid var(--warn); background:#fffaf3; }
+    table { width:100%; border-collapse:collapse; margin:10px 0; }
+    th, td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    th { background:#eef3f7; text-align:left; }
+    .formula { overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }
+    .section-map { display:grid; gap:10px; }
+    .section-map article { border:1px solid var(--line); border-radius:8px; padding:12px; }
+    .viz { display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }
+    canvas { width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }
+    input[type=range] { width:100%; }
+    body.zh-only .en { display:none; }
+    body.en-only .zh { display:none; }
+    @media (max-width: 860px) { main { grid-template-columns:1fr; } nav { position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; } .grid,.viz { grid-template-columns:1fr; } }
+    @media print { .toolbar, nav, .interactive-only { display:none; } main { display:block; padding:12px 18px; } header.hero { padding:16px 18px; } body { font-size:11px; } section.panel { break-inside:avoid; } a { color:var(--ink); text-decoration:none; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>P11. A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty</h1>
+    <div class="meta">
+      <span>Tong Zhao; Nikolce Murgovski; Baigen Cai; Wei ShangGuan</span>
+      <span>2025</span>
+      <span>arXiv preprint</span>
+      <span>PDF pages: 15</span>
+      <span>Relevance: 92/100</span>
+    </div>
+  </header>
+  <div class="toolbar interactive-only">
+    <a class="back" href="../../index.html">Index</a>
+    <button onclick="document.body.className=''">双语 / Bilingual</button>
+    <button onclick="document.body.className='zh-only'">中文</button>
+    <button onclick="document.body.className='en-only'">English</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </div>
+  <main>
+    <nav>
+      <a href="#overview">1. 全景速览</a>
+      <a href="#method">2. 理论方法</a>
+      <a href="#experiment">3. 实验评判</a>
+      <a href="#critique">4. 批判与拓展</a>
+      <a href="#viz">5. 交互蓝图</a>
+      <a href="#anchors">来源锚点</a>
+    </nav>
+    <div>
+      <section id="overview" class="panel">
+        <h2>1. 论文全景速览与核心贡献 / High-Level Overview & Core Contributions</h2>
+        <div class="grid">
+          <div class="card"><h3>研究背景与痛点 / Background & Pain Points</h3><p class="zh">这篇论文位于“Spatial-domain robust trajectory planning”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。</p><p class="en">The paper belongs to the theme of Spatial-domain robust trajectory planning. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.</p><p>Optimization-heavy; not a learned scheduler, and publication venue beyond arXiv not verified.</p></div>
+          <div class="card"><h3>核心科学问题 / Core Scientific Question</h3><p class="zh">在路径和速度存在不确定性时，如何把交叉口多类型冲突统一成可实时求解的空间域约束？</p><p class="en">How can crossing, following, merging, and diverging conflicts be unified as real-time spatial-domain constraints under motion uncertainty?</p></div>
+        </div>
+        <h3>科学贡献 / Scientific Contributions</h3>
+        <ul><li>方法贡献 (method contribution)：Transforms coordinated control into a spatial-domain nonlinear program with unified linear collision-avoidance constraints and real-time iteration.</li><li>安全/避碰贡献 (safety contribution)：Handles crossing, following, merging, and diverging conflicts under path and speed uncertainty of HDVs.</li><li>平滑/停止避免贡献 (smoothing contribution)：Generates smooth trajectories under state/control constraints, avoiding unnecessary braking where robust constraints permit.</li><li>创新力度评判 (reviewer judgement)：很强：空间域建模和统一线性碰撞约束对低层 smoother 安全可行性极有价值。</li></ul>
+        <h3>核心概念对照 / Core Concepts</h3>
+        <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr><tr><td>自动交叉口管理</td><td>Autonomous Intersection Management</td><td>把信号控制替换为车辆级调度与控制。</td></tr><tr><td>轨迹平滑</td><td>Trajectory Smoothing</td><td>减少急加减速、停车和能耗峰值。</td></tr><tr><td>安全约束</td><td>Safety Constraints</td><td>把碰撞风险写成距离、时间间隔或屏障函数。</td></tr><tr><td>Spatial-domain robust MPC</td><td>空间域鲁棒模型预测控制</td><td>该论文的核心方法族。</td></tr></table>
+      </section>
+      <section id="method" class="panel">
+        <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
+        <h3>问题数学建模 / Mathematical Formulation</h3>
+        <p><b>空间域动力学与鲁棒碰撞约束 / Spatial-domain dynamics and robust collision constraints</b></p>
+        <div class="formula">$$
+\frac{dt_i}{ds}=\frac{1}{v_i(s)},\quad \min_{u_i(s)}\sum_i\int \left(w_t\frac{1}{v_i(s)}+w_u u_i(s)^2\right)ds,\quad h_{ij}(s,\Delta)\ge d_{safe}
+$$</div>
+        <table><tr><th>Symbol / 符号</th><th>含义</th><th>Meaning</th><th>Role / 建模作用</th></tr><tr><td><code>s</code></td><td>空间路径坐标</td><td>spatial path coordinate</td><td>把时间规划转成沿路径规划</td></tr><tr><td><code>v_i(s)</code></td><td>空间域速度</td><td>speed over path coordinate</td><td>决定到达时间和安全间隔</td></tr><tr><td><code>h_ij</code></td><td>车辆 i,j 的冲突间隔函数</td><td>conflict-separation function</td><td>统一多种冲突类型</td></tr><tr><td><code>Delta</code></td><td>运动不确定性</td><td>motion uncertainty</td><td>路径/速度误差集合</td></tr><tr><td><code>d_safe</code></td><td>安全距离阈值</td><td>safe-distance threshold</td><td>鲁棒约束下界</td></tr></table>
+        <h3>核心算法架构 / Core Algorithm Layout</h3>
+        <p class="zh">论文把轨迹规划从时间域转为空间域，针对 crossing/following/merging/diverging 构造统一线性化安全约束，再用集中式 MPC 和实时迭代求解，以较小最优性损失换取计算速度。</p>
+        <p class="en">The method transforms coordination into a spatial-domain nonlinear program, linearizes unified collision-avoidance constraints, and solves it with real-time MPC iterations.</p>
+        <div class="reviewer-note"><b>收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility</b><p class="zh">鲁棒性来自显式不确定集合与安全约束，实时性来自空间域简化和 RTI。相比纯学习策略，这类 smoother 更容易给审稿人安全信心。</p><p class="en">Robustness comes from explicit uncertainty sets and safety constraints; RTI makes the spatial-domain MPC viable online.</p></div>
+        <h3>潜在假设与边界条件 / Assumptions & Boundary Conditions</h3>
+        <ul><li>车辆路径可用空间坐标参数化。</li><li>不确定性集合边界可估计且不严重失真。</li><li>集中式求解器可在控制周期内完成。</li></ul>
+      </section>
+      <section id="experiment" class="panel">
+        <h2>3. 实验验证与结果评判 / Experimental Validation & Result Evaluation</h2>
+        <div class="grid">
+          <div class="card"><h3>基准对比与环境 / Baselines & Environment</h3><p>时间域 MPC、非鲁棒控制、保守安全间隔策略和不同 RTI 近似。</p><p>Simulation case studies; reported RTI computation reduction by orders of magnitude with small optimality loss.</p></div>
+          <div class="card"><h3>核心指标 / Metrics</h3><p>求解时间、最优性损失、碰撞约束余量、通行时间、速度平滑性和不确定性敏感性。</p></div>
+          <div class="card"><h3>消融实验 / Ablation</h3><p>很适合做鲁棒半径、RTI 次数、统一约束 vs 分类型约束的消融。</p></div>
+          <div class="card"><h3>博士阅读提醒 / Reading Reminder</h3><p>阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.</p></div>
+        </div>
+        <h3>图表阅读线索 / Figure and Table Reading Cues</h3>
+        <p>PDF extraction detected approximately 41 figure references and 5 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.</p>
+        <table><tr><th>图表名称</th><th>Figure/Table Name</th><th>Reading focus / 阅读重点</th></tr><tr><td>系统框架图</td><td>system framework diagram</td><td>先确认输入、决策层、控制层和安全约束之间的数据流。</td></tr><tr><td>控制框架/轨迹曲线图</td><td>control-framework or trajectory-profile plots</td><td>关注约束激活位置、速度/加速度曲线和安全裕度是否平滑。</td></tr><tr><td>实验指标对比图表</td><td>experimental metric comparison plots/tables</td><td>重点看平均值之外的密度变化、失败场景、计算时间和方差。</td></tr></table>
+      </section>
+      <section id="critique" class="panel">
+        <h2>4. 审稿人视角：批判性思考与未来方向 / Critical Thinking & Future Directions</h2>
+        <div class="grid">
+          <div><h3>论文局限性 / Limitations & Weaknesses</h3><ul><li>优化问题仍可能在大规模车辆数下变重。</li><li>不确定集合若估计过小会失去安全性，过大则过于保守。</li><li>高层排序/优先级选择不是主要贡献。</li></ul></div>
+          <div><h3>博士课题拓展点 / Research Extensions for PhD</h3><ul class="research-idea"><li>将 JSSP 调度输出作为 MPC 的目标时间或优先级约束。</li><li>用学习模型预测不确定集合大小，实现自适应鲁棒性。</li><li>把空间域安全约束封装成调度动作可行性检查器。</li></ul></div>
+        </div>
+        <div class="reviewer-note"><b>如何服务当前课题 / Use in This Project</b><p>Very strong for the smoother&#x27;s feasibility and robust collision-avoidance constraints.</p></div>
+      </section>
+      <section id="viz" class="panel">
+        <h2>5. 交互式可视化与 PDF 排版蓝图 / Interactive Visualization & PDF Layout Blueprint</h2>
+        <div class="viz">
+          <div class="card">
+            <h3>动态参数探索 / Parameter Exploration</h3>
+            <label>不确定性半径 / Uncertainty radius: <b id="paramValue"></b> m</label>
+            <input id="param" type="range" min="0.0" max="3.0" value="0.8" step="0.01">
+            <p class="zh">半径越大，安全裕度越高但轨迹越保守、延误越大。</p>
+            <p class="en">A larger uncertainty radius improves safety margin but increases conservatism.</p>
+          </div>
+          <canvas id="chart" width="720" height="320"></canvas>
+        </div>
+        <h3>HTML 结构化布局建议 / HTML Structuring</h3>
+        <ul><li>顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。</li><li>左侧目录/section navigator，右侧为五大精读模块。</li><li>公式卡片使用 &lt;pre&gt; 或 LaTeX block，紧跟符号表。</li><li>审稿人批注用 reviewer-note block，博士拓展用 research-idea list。</li><li>交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。</li></ul>
+      </section>
+      <section id="anchors" class="panel">
+        <h2>来源锚点与逐节阅读路径 / Source Anchors & Section-by-Section Reading Map</h2>
+        <p>以下锚点来自本地 PDF 抽取，用于回到原文复核；笔记不保存论文全文。</p>
+        <table><tr><th>Page</th><th>Extracted heading</th></tr><tr><td>p.1</td><td>I. INTRODUCTION</td></tr><tr><td>p.3</td><td>II. PROBLEM FORMULATION</td></tr><tr><td>p.8</td><td>V. SIMULATION RESULTS</td></tr></table>
+        <div class="section-map"><article><b>p.1 · I. INTRODUCTION</b><p class='zh'>定位问题背景、研究缺口和为什么现有保守/非协同方法不足。</p><p class='en'>Frames the motivation, research gap, and limits of conservative or non-cooperative methods.</p></article><article><b>p.3 · II. PROBLEM FORMULATION</b><p class='zh'>把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。</p><p class='en'>Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.</p></article><article><b>p.4 · III. M ODELING OF CONFLICT RESOLUTION CONSIDERING</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.7 · IV. C ENTRALIZED MODEL PREDICTIVE CONTROL AND</b><p class='zh'>把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。</p><p class='en'>Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.</p></article><article><b>p.8 · V. SIMULATION RESULTS</b><p class='zh'>检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。</p><p class='en'>Tests efficiency, safety, or energy claims; inspect whether baselines are fair.</p></article><article><b>p.10 · 6. The shaded space shows the motion uncertainty of HDV 4, where the X-Y</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.10 · 1. Each CA V fulfills the speed and acceleration limits in all cases.</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.13 · VI. CONCLUSION AND FUTURE WORK</b><p class='zh'>总结贡献和未来方向，也常暴露作者承认的边界条件。</p><p class='en'>Summarizes contributions and often reveals author-recognized boundaries.</p></article></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const min = 0.0, max = 3.0;
+    const slider = document.getElementById('param');
+    const value = document.getElementById('paramValue');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    function response(x) {
+      const z = (x - min) / (max - min || 1);
+      const delay = Math.min(1, 0.18 + 0.82 * Math.pow(z, 1.25));
+      const safety = Math.max(0, Math.min(1, 0.15 + 0.75 * (1 - Math.exp(-2.2 * z))));
+      const compute = Math.min(1, 0.10 + 0.88 * z * z);
+      return {delay, safety, compute};
+    }
+    function draw() {
+      const x = parseFloat(slider.value);
+      value.textContent = x.toFixed(2);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = '#d9e1ea'; ctx.lineWidth = 1;
+      for (let i=0;i<6;i++) { const y=40+i*45; ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(690,y); ctx.stroke(); }
+      const series = [
+        ['Efficiency pressure / 效率压力', '#1f5f8b', 'delay'],
+        ['Safety margin / 安全裕度', '#1f6f61', 'safety'],
+        ['Compute load / 计算负载', '#8a4b0f', 'compute']
+      ];
+      for (const [label,color,key] of series) {
+        ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i=0;i<=120;i++) {
+          const xx = min + (max-min)*i/120;
+          const yy = response(xx)[key];
+          const px = 50 + i/120*640;
+          const py = 270 - yy*210;
+          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      const px = 50 + ((x-min)/(max-min||1))*640;
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px,35); ctx.lineTo(px,285); ctx.stroke();
+      ctx.font = '15px -apple-system, sans-serif'; ctx.fillStyle = '#1d2733';
+      series.forEach((s,i)=>{ ctx.fillStyle=s[1]; ctx.fillRect(58,20+i*22,12,12); ctx.fillStyle='#1d2733'; ctx.fillText(s[0],78,31+i*22); });
+    }
+    slider.addEventListener('input', draw);
+    draw();
+  </script>
+</body>
+</html>

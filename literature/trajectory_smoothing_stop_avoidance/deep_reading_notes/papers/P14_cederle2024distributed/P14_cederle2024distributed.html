@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P14 Deep Reading Notes</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#657386; --line:#d9e1ea; --soft:#f6f8fb; --accent:#1f6f61; --warn:#8a4b0f; --blue:#1f5f8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif; color:var(--ink); background:#fff; }
+    header.hero { padding:28px 34px 18px; border-bottom:1px solid var(--line); background:#f3f6fa; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 10px; font-size:22px; }
+    h3 { margin:18px 0 8px; font-size:17px; color:var(--accent); }
+    p { margin:7px 0; }
+    a { color:var(--blue); }
+    .meta { color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar { position:sticky; top:0; z-index:2; display:flex; gap:8px; align-items:center; padding:10px 34px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    button, .back { border:1px solid var(--line); border-radius:6px; background:white; padding:7px 10px; color:var(--ink); text-decoration:none; cursor:pointer; }
+    main { display:grid; grid-template-columns:260px minmax(0,1fr); gap:28px; padding:24px 34px 60px; }
+    nav { position:sticky; top:58px; align-self:start; border-right:1px solid var(--line); padding-right:18px; }
+    nav a { display:block; padding:7px 0; color:var(--ink); text-decoration:none; }
+    section.panel { border-bottom:1px solid var(--line); padding:0 0 22px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .card, details, .reviewer-note { border:1px solid var(--line); border-radius:8px; padding:14px; background:var(--soft); }
+    .reviewer-note { border-left:4px solid var(--warn); background:#fffaf3; }
+    table { width:100%; border-collapse:collapse; margin:10px 0; }
+    th, td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    th { background:#eef3f7; text-align:left; }
+    .formula { overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }
+    .section-map { display:grid; gap:10px; }
+    .section-map article { border:1px solid var(--line); border-radius:8px; padding:12px; }
+    .viz { display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }
+    canvas { width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }
+    input[type=range] { width:100%; }
+    body.zh-only .en { display:none; }
+    body.en-only .zh { display:none; }
+    @media (max-width: 860px) { main { grid-template-columns:1fr; } nav { position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; } .grid,.viz { grid-template-columns:1fr; } }
+    @media print { .toolbar, nav, .interactive-only { display:none; } main { display:block; padding:12px 18px; } header.hero { padding:16px 18px; } body { font-size:11px; } section.panel { break-inside:avoid; } a { color:var(--ink); text-decoration:none; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>P14. A Distributed Approach to Autonomous Intersection Management via Multi-Agent Reinforcement Learning</h1>
+    <div class="meta">
+      <span>Matteo Cederle; Marco Fabris; Gian Antonio Susto</span>
+      <span>2024</span>
+      <span>ATT 2024 Workshop, CEUR-WS Vol. 3813</span>
+      <span>PDF pages: 15</span>
+      <span>Relevance: 70/100</span>
+    </div>
+  </header>
+  <div class="toolbar interactive-only">
+    <a class="back" href="../../index.html">Index</a>
+    <button onclick="document.body.className=''">双语 / Bilingual</button>
+    <button onclick="document.body.className='zh-only'">中文</button>
+    <button onclick="document.body.className='en-only'">English</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </div>
+  <main>
+    <nav>
+      <a href="#overview">1. 全景速览</a>
+      <a href="#method">2. 理论方法</a>
+      <a href="#experiment">3. 实验评判</a>
+      <a href="#critique">4. 批判与拓展</a>
+      <a href="#viz">5. 交互蓝图</a>
+      <a href="#anchors">来源锚点</a>
+    </nav>
+    <div>
+      <section id="overview" class="panel">
+        <h2>1. 论文全景速览与核心贡献 / High-Level Overview & Core Contributions</h2>
+        <div class="grid">
+          <div class="card"><h3>研究背景与痛点 / Background & Pain Points</h3><p class="zh">这篇论文位于“Distributed MARL for AIM”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。</p><p class="en">The paper belongs to the theme of Distributed MARL for AIM. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.</p><p>Workshop paper; not focused on explicit trajectory smoothing or formal safety constraints.</p></div>
+          <div class="card"><h3>核心科学问题 / Core Scientific Question</h3><p class="zh">没有中心服务器时，多车能否通过分布式 MARL 学会安全高效地穿越交叉口？</p><p class="en">Can vehicles learn decentralized intersection traversal policies through MARL without a central coordinator?</p></div>
+        </div>
+        <h3>科学贡献 / Scientific Contributions</h3>
+        <ul><li>方法贡献 (method contribution)：Distributed multi-agent RL for autonomous intersection management using 3D surround-view assumptions and prioritized scenario replay.</li><li>安全/避碰贡献 (safety contribution)：Aims for accurate decentralized navigation without a central server; safety is evaluated through simulation metrics.</li><li>平滑/停止避免贡献 (smoothing contribution)：Improves benchmark metrics in SMARTS, implying smoother flow through decentralized decisions.</li><li>创新力度评判 (reviewer judgement)：中等：分布式 AIM 方向重要，但 workshop 论文更适合作为对比路线而非核心证据。</li></ul>
+        <h3>核心概念对照 / Core Concepts</h3>
+        <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr><tr><td>自动交叉口管理</td><td>Autonomous Intersection Management</td><td>把信号控制替换为车辆级调度与控制。</td></tr><tr><td>轨迹平滑</td><td>Trajectory Smoothing</td><td>减少急加减速、停车和能耗峰值。</td></tr><tr><td>安全约束</td><td>Safety Constraints</td><td>把碰撞风险写成距离、时间间隔或屏障函数。</td></tr><tr><td>Distributed MARL for AIM</td><td>分布式多智能体强化学习交叉口管理</td><td>该论文的核心方法族。</td></tr></table>
+      </section>
+      <section id="method" class="panel">
+        <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
+        <h3>问题数学建模 / Mathematical Formulation</h3>
+        <p><b>去中心化 Markov game 与 DDQN 损失 / Decentralized Markov game and DDQN loss</b></p>
+        <div class="formula">$$
+L_i(\theta_i)=\mathbb{E}\left[\left(r_i+\gamma Q_{\bar\theta_i}(o_i&#x27;,\arg\max_a Q_{\theta_i}(o_i&#x27;,a))-Q_{\theta_i}(o_i,a_i)\right)^2\right]
+$$</div>
+        <table><tr><th>Symbol / 符号</th><th>含义</th><th>Meaning</th><th>Role / 建模作用</th></tr><tr><td><code>o_i</code></td><td>智能体 i 的局部观测</td><td>local observation of agent i</td><td>分布式策略的信息输入</td></tr><tr><td><code>a_i</code></td><td>智能体动作</td><td>agent action</td><td>车辆局部决策</td></tr><tr><td><code>r_i</code></td><td>局部奖励</td><td>local reward</td><td>安全与效率反馈</td></tr><tr><td><code>Q_theta</code></td><td>DQN 价值网络</td><td>DQN value network</td><td>估计离散动作价值</td></tr><tr><td><code>gamma</code></td><td>折扣因子</td><td>discount factor</td><td>长期协同收益权重</td></tr></table>
+        <h3>核心算法架构 / Core Algorithm Layout</h3>
+        <p class="zh">每辆车基于局部/环视观测做决策，使用 dueling double DQN 和 prioritized scenario replay 提升训练效率。它代表与集中式 JSSP 调度相反的技术路线。</p>
+        <p class="en">Each vehicle acts from local observations using dueling double DQN and prioritized scenario replay, forming a decentralized alternative to centralized scheduling.</p>
+        <div class="reviewer-note"><b>收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility</b><p class="zh">MARL 的难点是非平稳性、信用分配和安全验证。分布式策略可扩展，但缺少中心协调时冲突消解更依赖奖励塑形和训练覆盖。</p><p class="en">MARL faces non-stationarity, credit assignment, and safety-certification challenges; scalability improves, but conflict resolution becomes empirical.</p></div>
+        <h3>潜在假设与边界条件 / Assumptions & Boundary Conditions</h3>
+        <ul><li>局部观测足以推断危险交互。</li><li>仿真训练覆盖足够多场景。</li><li>车辆之间无需高可靠中心通信。</li></ul>
+      </section>
+      <section id="experiment" class="panel">
+        <h2>3. 实验验证与结果评判 / Experimental Validation & Result Evaluation</h2>
+        <div class="grid">
+          <div class="card"><h3>基准对比与环境 / Baselines & Environment</h3><p>SMARTS 基准策略、规则控制、单智能体/普通 DQN 和集中式方法。</p><p>SMARTS virtual environment; accepted at ATT 2024 and available through CEUR-WS.</p></div>
+          <div class="card"><h3>核心指标 / Metrics</h3><p>成功率、碰撞率、平均速度、通行效率、奖励和训练稳定性。</p></div>
+          <div class="card"><h3>消融实验 / Ablation</h3><p>应检验 dueling、double Q、prioritized replay 和观测范围的贡献。</p></div>
+          <div class="card"><h3>博士阅读提醒 / Reading Reminder</h3><p>阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.</p></div>
+        </div>
+        <h3>图表阅读线索 / Figure and Table Reading Cues</h3>
+        <p>PDF extraction detected approximately 7 figure references and 6 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.</p>
+        <table><tr><th>图表名称</th><th>Figure/Table Name</th><th>Reading focus / 阅读重点</th></tr><tr><td>系统框架图</td><td>system framework diagram</td><td>先确认输入、决策层、控制层和安全约束之间的数据流。</td></tr><tr><td>策略网络/训练流程图</td><td>policy-network or training-pipeline diagram</td><td>检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。</td></tr><tr><td>实验指标对比图表</td><td>experimental metric comparison plots/tables</td><td>重点看平均值之外的密度变化、失败场景、计算时间和方差。</td></tr></table>
+      </section>
+      <section id="critique" class="panel">
+        <h2>4. 审稿人视角：批判性思考与未来方向 / Critical Thinking & Future Directions</h2>
+        <div class="grid">
+          <div><h3>论文局限性 / Limitations & Weaknesses</h3><ul><li>安全主要靠仿真经验，形式化约束不足。</li><li>极端密集交通和低可观测性下可能不稳定。</li><li>论文级别偏 workshop，实验深度有限。</li></ul></div>
+          <div><h3>博士课题拓展点 / Research Extensions for PhD</h3><ul class="research-idea"><li>把 MARL 作为 centralized JSSP 的对照组，强调可证明调度的优势。</li><li>加入图通信或注意力机制，缓解局部观测不足。</li><li>用安全层过滤每个智能体动作，比较 decentralized shield 与 centralized shield。</li></ul></div>
+        </div>
+        <div class="reviewer-note"><b>如何服务当前课题 / Use in This Project</b><p>Useful contrast to the proposed centralized JSSP/RL rollout, showing distributed AIM as an alternative branch.</p></div>
+      </section>
+      <section id="viz" class="panel">
+        <h2>5. 交互式可视化与 PDF 排版蓝图 / Interactive Visualization & PDF Layout Blueprint</h2>
+        <div class="viz">
+          <div class="card">
+            <h3>动态参数探索 / Parameter Exploration</h3>
+            <label>观测半径 / Observation radius: <b id="paramValue"></b> m</label>
+            <input id="param" type="range" min="10" max="120" value="50" step="0.01">
+            <p class="zh">半径越大信息越充分，但通信/感知负担增加。</p>
+            <p class="en">A larger observation radius improves information but increases sensing/communication load.</p>
+          </div>
+          <canvas id="chart" width="720" height="320"></canvas>
+        </div>
+        <h3>HTML 结构化布局建议 / HTML Structuring</h3>
+        <ul><li>顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。</li><li>左侧目录/section navigator，右侧为五大精读模块。</li><li>公式卡片使用 &lt;pre&gt; 或 LaTeX block，紧跟符号表。</li><li>审稿人批注用 reviewer-note block，博士拓展用 research-idea list。</li><li>交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。</li></ul>
+      </section>
+      <section id="anchors" class="panel">
+        <h2>来源锚点与逐节阅读路径 / Source Anchors & Section-by-Section Reading Map</h2>
+        <p>以下锚点来自本地 PDF 抽取，用于回到原文复核；笔记不保存论文全文。</p>
+        <table><tr><th>Page</th><th>Extracted heading</th></tr><tr><td>p.1</td><td>Abstract</td></tr><tr><td>p.1</td><td>1. Introduction</td></tr><tr><td>p.7</td><td>4. Experiments on virtual environments</td></tr></table>
+        <div class="section-map"><article><b>p.1 · Abstract</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.1 · 1. Introduction</b><p class='zh'>定位问题背景、研究缺口和为什么现有保守/非协同方法不足。</p><p class='en'>Frames the motivation, research gap, and limits of conservative or non-cooperative methods.</p></article><article><b>p.3 · 2. Theoretical background</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.3 · 2.1. Basic notions of reinforcement learning</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.4 · 2.2. Q-Learning and Deep Q-Networks</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.4 · 2.3. Multi-agent reinforcement learning</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.5 · 3. Multi-Agent Decentralised Dueling Double Deep Q-Networks with Prioritized Scen-</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.5 · 3.1. System modelling and design</b><p class='zh'>把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。</p><p class='en'>Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.</p></article></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const min = 10, max = 120;
+    const slider = document.getElementById('param');
+    const value = document.getElementById('paramValue');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    function response(x) {
+      const z = (x - min) / (max - min || 1);
+      const delay = Math.min(1, 0.18 + 0.82 * Math.pow(z, 1.25));
+      const safety = Math.max(0, Math.min(1, 0.15 + 0.75 * (1 - Math.exp(-2.2 * z))));
+      const compute = Math.min(1, 0.10 + 0.88 * z * z);
+      return {delay, safety, compute};
+    }
+    function draw() {
+      const x = parseFloat(slider.value);
+      value.textContent = x.toFixed(2);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = '#d9e1ea'; ctx.lineWidth = 1;
+      for (let i=0;i<6;i++) { const y=40+i*45; ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(690,y); ctx.stroke(); }
+      const series = [
+        ['Efficiency pressure / 效率压力', '#1f5f8b', 'delay'],
+        ['Safety margin / 安全裕度', '#1f6f61', 'safety'],
+        ['Compute load / 计算负载', '#8a4b0f', 'compute']
+      ];
+      for (const [label,color,key] of series) {
+        ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i=0;i<=120;i++) {
+          const xx = min + (max-min)*i/120;
+          const yy = response(xx)[key];
+          const px = 50 + i/120*640;
+          const py = 270 - yy*210;
+          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      const px = 50 + ((x-min)/(max-min||1))*640;
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px,35); ctx.lineTo(px,285); ctx.stroke();
+      ctx.font = '15px -apple-system, sans-serif'; ctx.fillStyle = '#1d2733';
+      series.forEach((s,i)=>{ ctx.fillStyle=s[1]; ctx.fillRect(58,20+i*22,12,12); ctx.fillStyle='#1d2733'; ctx.fillText(s[0],78,31+i*22); });
+    }
+    slider.addEventListener('input', draw);
+    draw();
+  </script>
+</body>
+</html>

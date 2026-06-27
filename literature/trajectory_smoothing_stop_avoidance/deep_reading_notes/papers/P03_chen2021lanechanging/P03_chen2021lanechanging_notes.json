@@ -1,0 +1,260 @@
+{
+  "id": "P03",
+  "bibkey": "chen2021lanechanging",
+  "title": "Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling",
+  "authors": "Chaoyi Chen; Mengchi Cai; Jiawei Wang; Kai Li; Qing Xu; Jianqiang Wang; Keqiang Li",
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": "10.48550/arXiv.2109.14175",
+  "source_url": "https://arxiv.org/abs/2109.14175",
+  "pdf_url": "https://arxiv.org/pdf/2109.14175",
+  "theme": "Lane changing + arrival scheduling",
+  "relevance": 82,
+  "method_family": "Lane assignment + arrival scheduling / 车道分配与到达调度",
+  "source_facts": {
+    "pdf_file": "P03_chen2021lanechanging.pdf",
+    "page_count": 14,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. T WO-STAGE COOPERATION FRAMEWORK",
+        "page": 2
+      },
+      {
+        "heading": "III. M ULTI-VEHICLE TARGET ASSIGNMENT AND PATH",
+        "page": 3
+      },
+      {
+        "heading": "1. However, we",
+        "page": 6
+      },
+      {
+        "heading": "IV. CAV S CHEDULING AT UNSIGNALIZED INTERSECTIONS",
+        "page": 7
+      },
+      {
+        "heading": "4. This also indicates that the theoretical evacuation times",
+        "page": 9
+      },
+      {
+        "heading": "6. We have proved that this can be solved by exchanging the",
+        "page": 9
+      },
+      {
+        "heading": "V. SIMULATIONS",
+        "page": 10
+      },
+      {
+        "heading": "VI. CONCLUSIONS",
+        "page": 13
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. T WO-STAGE COOPERATION FRAMEWORK",
+        "page": 2
+      },
+      {
+        "heading": "V. SIMULATIONS",
+        "page": 10
+      }
+    ],
+    "figure_reference_count": 44,
+    "table_reference_count": 6,
+    "equation_reference_count": 33
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Lane assignment + arrival scheduling",
+      "车道分配与到达调度",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 2,
+      "heading": "II. T WO-STAGE COOPERATION FRAMEWORK",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    },
+    {
+      "page": 3,
+      "heading": "III. M ULTI-VEHICLE TARGET ASSIGNMENT AND PATH",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 6,
+      "heading": "1. However, we",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 7,
+      "heading": "IV. CAV S CHEDULING AT UNSIGNALIZED INTERSECTIONS",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 9,
+      "heading": "4. This also indicates that the theoretical evacuation times",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 9,
+      "heading": "6. We have proved that this can be solved by exchanging the",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 10,
+      "heading": "V. SIMULATIONS",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Lane changing + arrival scheduling”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Lane changing + arrival scheduling. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "arXiv note reports text overlap with the authors' earlier graph-based paper; use mainly for lane-changing extension context.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "当车辆可以变道或选择目标车道时，如何联合决定路径/车道与无冲突到达时间？",
+    "core_question_en": "How should target-lane assignment and conflict-free arrival scheduling be coupled when vehicles may change lanes before the intersection?",
+    "contributions": [
+      "方法贡献 (method contribution)：Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover.",
+      "安全/避碰贡献 (safety contribution)：Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements.",
+      "平滑/停止避免贡献 (smoothing contribution)：Improves traffic efficiency by choosing target lanes and arrival schedules that avoid unnecessary queuing.",
+      "创新力度评判 (reviewer judgement)：中等：在 P02 图排序基础上加入横向决策，扩展性有价值，但理论新颖性主要来自组合而非新算法。"
+    ]
+  },
+  "methodology": {
+    "model_name": "联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling",
+    "formula": "\\min_{l_i,t_i}\\; \\sum_{i\\in V}\\left(\\alpha\\,d_i(l_i)+\\beta\\,|t_i-t_i^{des}|\\right)\\quad \\text{s.t.}\\; (i,j)\\in E(l)\\Rightarrow |t_i-t_j|\\ge \\tau_{ij}",
+    "symbols": [
+      [
+        "l_i",
+        "目标车道",
+        "target lane",
+        "横向规划决策变量"
+      ],
+      [
+        "t_i",
+        "车辆到达冲突区时间",
+        "arrival time at conflict zone",
+        "纵向调度决策变量"
+      ],
+      [
+        "d_i(l_i)",
+        "变道代价",
+        "lane-changing cost",
+        "衡量横向操作复杂度"
+      ],
+      [
+        "E(l)",
+        "由车道选择诱导的冲突边集",
+        "lane-induced conflict edges",
+        "说明横向选择会改变调度约束"
+      ],
+      [
+        "tau_ij",
+        "安全时间间隔",
+        "safety headway",
+        "保证冲突车辆时间分离"
+      ]
+    ],
+    "algorithm_zh": "框架先求多车目标分配与路径规划，再基于最终路径构建冲突图并求到达时间。这样横向变道改变冲突关系，纵向调度再处理被改变后的路口资源竞争。",
+    "algorithm_en": "The framework first assigns target lanes/paths, then constructs a conflict graph for those paths and computes a conflict-free arrival schedule.",
+    "stability_zh": "分阶段设计提高实时性，但牺牲联合最优性；如果第一阶段车道选择失误，第二阶段只能在较差冲突结构上补救。",
+    "stability_en": "The two-stage decomposition is tractable but not globally optimal; poor lane assignment can constrain the downstream scheduler.",
+    "assumptions": [
+      "车辆可执行规划出的变道动作，周围交通允许形成编队。",
+      "车道级地图和目标车道需求已知。",
+      "变道安全约束可以被简化成可规划的路径/队形约束。"
+    ]
+  },
+  "experiments": {
+    "validation": "Numerical simulations for different vehicle counts and traffic volumes.",
+    "baselines": "固定车道策略、无变道调度、FCFS 和基于图的到达调度。",
+    "metrics": "平均延误、总行程时间、完成变道比例、冲突避免成功率和交通量敏感性。",
+    "ablation": "最关键消融是去掉 lane-changing stage，对比是否真的改善调度；还应测试高密度下变道失败的退化策略。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "冲突关系图 / 通行顺序图",
+        "en": "conflict-relation or passing-order graph",
+        "reading": "把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "文本与同作者早期图调度工作高度相关，独立贡献需谨慎引用。",
+      "横向控制细节和人类驾驶干扰不足。",
+      "两阶段解耦可能错过更优的路径-时间联合解。"
+    ],
+    "extensions": [
+      "用双层优化 (bi-level optimization) 同时学习车道选择和 JSSP 排序。",
+      "为变道失败设计可恢复调度 (recoverable scheduling)，让路口管理器在线回滚目标车道。",
+      "把车道选择看成 route-template selection，扩展当前固定路线假设。"
+    ],
+    "project_use": "Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "可变道车辆比例",
+      "label_en": "Lane-change-enabled ratio",
+      "min_value": 0,
+      "max_value": 1,
+      "default": 0.35,
+      "unit": "",
+      "response_zh": "比例增加会提高调度自由度，但过高时变道冲突和局部扰动也会增加。",
+      "response_en": "More lane-change freedom improves scheduling flexibility but can add lateral conflicts."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

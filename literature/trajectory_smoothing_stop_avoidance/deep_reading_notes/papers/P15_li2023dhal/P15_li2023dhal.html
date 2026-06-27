@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P15 Deep Reading Notes</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#657386; --line:#d9e1ea; --soft:#f6f8fb; --accent:#1f6f61; --warn:#8a4b0f; --blue:#1f5f8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif; color:var(--ink); background:#fff; }
+    header.hero { padding:28px 34px 18px; border-bottom:1px solid var(--line); background:#f3f6fa; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 10px; font-size:22px; }
+    h3 { margin:18px 0 8px; font-size:17px; color:var(--accent); }
+    p { margin:7px 0; }
+    a { color:var(--blue); }
+    .meta { color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar { position:sticky; top:0; z-index:2; display:flex; gap:8px; align-items:center; padding:10px 34px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    button, .back { border:1px solid var(--line); border-radius:6px; background:white; padding:7px 10px; color:var(--ink); text-decoration:none; cursor:pointer; }
+    main { display:grid; grid-template-columns:260px minmax(0,1fr); gap:28px; padding:24px 34px 60px; }
+    nav { position:sticky; top:58px; align-self:start; border-right:1px solid var(--line); padding-right:18px; }
+    nav a { display:block; padding:7px 0; color:var(--ink); text-decoration:none; }
+    section.panel { border-bottom:1px solid var(--line); padding:0 0 22px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .card, details, .reviewer-note { border:1px solid var(--line); border-radius:8px; padding:14px; background:var(--soft); }
+    .reviewer-note { border-left:4px solid var(--warn); background:#fffaf3; }
+    table { width:100%; border-collapse:collapse; margin:10px 0; }
+    th, td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    th { background:#eef3f7; text-align:left; }
+    .formula { overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }
+    .section-map { display:grid; gap:10px; }
+    .section-map article { border:1px solid var(--line); border-radius:8px; padding:12px; }
+    .viz { display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }
+    canvas { width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }
+    input[type=range] { width:100%; }
+    body.zh-only .en { display:none; }
+    body.en-only .zh { display:none; }
+    @media (max-width: 860px) { main { grid-template-columns:1fr; } nav { position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; } .grid,.viz { grid-template-columns:1fr; } }
+    @media print { .toolbar, nav, .interactive-only { display:none; } main { display:block; padding:12px 18px; } header.hero { padding:16px 18px; } body { font-size:11px; } section.panel { break-inside:avoid; } a { color:var(--ink); text-decoration:none; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>P15. D-HAL: Distributed Hierarchical Adversarial Learning for Multi-Agent Interaction in Autonomous Intersection Management</h1>
+    <div class="meta">
+      <span>Guanzhou Li; Jianping Wu; Yujing He</span>
+      <span>2023</span>
+      <span>arXiv preprint</span>
+      <span>PDF pages: 17</span>
+      <span>Relevance: 73/100</span>
+    </div>
+  </header>
+  <div class="toolbar interactive-only">
+    <a class="back" href="../../index.html">Index</a>
+    <button onclick="document.body.className=''">双语 / Bilingual</button>
+    <button onclick="document.body.className='zh-only'">中文</button>
+    <button onclick="document.body.className='en-only'">English</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </div>
+  <main>
+    <nav>
+      <a href="#overview">1. 全景速览</a>
+      <a href="#method">2. 理论方法</a>
+      <a href="#experiment">3. 实验评判</a>
+      <a href="#critique">4. 批判与拓展</a>
+      <a href="#viz">5. 交互蓝图</a>
+      <a href="#anchors">来源锚点</a>
+    </nav>
+    <div>
+      <section id="overview" class="panel">
+        <h2>1. 论文全景速览与核心贡献 / High-Level Overview & Core Contributions</h2>
+        <div class="grid">
+          <div class="card"><h3>研究背景与痛点 / Background & Pain Points</h3><p class="zh">这篇论文位于“Distributed hierarchical learning for AIM”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。</p><p class="en">The paper belongs to the theme of Distributed hierarchical learning for AIM. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.</p><p>Learning framework lacks explicit optimization/smoothing formulation and formal safety guarantees.</p></div>
+          <div class="card"><h3>核心科学问题 / Core Scientific Question</h3><p class="zh">如何用层次化长期/短期判别机制改进多智能体交叉口交互策略学习？</p><p class="en">How can hierarchical long-term and short-term adversarial discrimination improve multi-agent interaction learning for AIM?</p></div>
+        </div>
+        <h3>科学贡献 / Scientific Contributions</h3>
+        <ul><li>方法贡献 (method contribution)：Non-RL adversarial actor/discriminator framework evaluates immediate interaction and final trajectory quality for multi-agent AIM.</li><li>安全/避碰贡献 (safety contribution)：Immediate and final discriminators score interaction safety and trajectory outcomes.</li><li>平滑/停止避免贡献 (smoothing contribution)：Targets reduced travel time and smoother interaction outcomes compared with distributed learning baselines.</li><li>创新力度评判 (reviewer judgement)：中等偏强：层次化对抗学习有新意，但安全和可解释性仍弱于约束优化方法。</li></ul>
+        <h3>核心概念对照 / Core Concepts</h3>
+        <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr><tr><td>自动交叉口管理</td><td>Autonomous Intersection Management</td><td>把信号控制替换为车辆级调度与控制。</td></tr><tr><td>轨迹平滑</td><td>Trajectory Smoothing</td><td>减少急加减速、停车和能耗峰值。</td></tr><tr><td>安全约束</td><td>Safety Constraints</td><td>把碰撞风险写成距离、时间间隔或屏障函数。</td></tr><tr><td>Distributed hierarchical adversarial learning</td><td>分布式层次化对抗学习</td><td>该论文的核心方法族。</td></tr></table>
+      </section>
+      <section id="method" class="panel">
+        <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
+        <h3>问题数学建模 / Mathematical Formulation</h3>
+        <p><b>层次对抗学习目标 / Hierarchical adversarial-learning objective</b></p>
+        <div class="formula">$$
+\min_{\pi}\max_{D_L,D_S}\; \mathbb{E}_{\tau\sim\pi_E}[\log D(\tau)]+\mathbb{E}_{\tau\sim\pi}[\log(1-D(\tau))]-\lambda J_{RL}(\pi)
+$$</div>
+        <table><tr><th>Symbol / 符号</th><th>含义</th><th>Meaning</th><th>Role / 建模作用</th></tr><tr><td><code>pi</code></td><td>多智能体策略</td><td>multi-agent policy</td><td>学习车辆交互行为</td></tr><tr><td><code>D_L</code></td><td>长期判别器</td><td>long-term discriminator</td><td>评价轨迹级行为质量</td></tr><tr><td><code>D_S</code></td><td>短期判别器</td><td>short-term discriminator</td><td>评价局部交互动作</td></tr><tr><td><code>tau</code></td><td>轨迹片段</td><td>trajectory segment</td><td>对抗学习样本</td></tr><tr><td><code>J_RL</code></td><td>强化学习收益</td><td>RL return</td><td>保留任务奖励优化目标</td></tr></table>
+        <h3>核心算法架构 / Core Algorithm Layout</h3>
+        <p class="zh">D-HAL 通过长期和短期判别器引导策略学习，让智能体既模仿/区分整体交互轨迹，又修正局部短时动作。层次化目标试图改善多智能体交互中的稀疏奖励和非平稳性。</p>
+        <p class="en">D-HAL uses long-term and short-term discriminators to shape multi-agent policies, improving interaction learning under sparse rewards and non-stationarity.</p>
+        <div class="reviewer-note"><b>收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility</b><p class="zh">对抗训练可能提升样本效率，但也会带来训练不稳定；安全仍主要通过奖励或环境终止惩罚表达，缺少硬约束。</p><p class="en">Adversarial training can improve sample efficiency but may be unstable; safety is still mostly reward-based unless paired with constraints.</p></div>
+        <h3>潜在假设与边界条件 / Assumptions & Boundary Conditions</h3>
+        <ul><li>专家轨迹或高质量行为分布可用于判别学习。</li><li>长期/短期判别目标与真实交通安全效率一致。</li><li>仿真环境足以覆盖多智能体交互复杂性。</li></ul>
+      </section>
+      <section id="experiment" class="panel">
+        <h2>3. 实验验证与结果评判 / Experimental Validation & Result Evaluation</h2>
+        <div class="grid">
+          <div class="card"><h3>基准对比与环境 / Baselines & Environment</h3><p>普通 MARL、模仿学习、无层次判别器版本、无对抗损失版本。</p><p>Four-way six-lane intersection experiments against state-of-the-art methods.</p></div>
+          <div class="card"><h3>核心指标 / Metrics</h3><p>碰撞率、平均延误、通行效率、成功率、奖励曲线和训练样本效率。</p></div>
+          <div class="card"><h3>消融实验 / Ablation</h3><p>必须拆分长期判别器、短期判别器、对抗损失和 RL 任务损失；否则难以证明层次结构必要。</p></div>
+          <div class="card"><h3>博士阅读提醒 / Reading Reminder</h3><p>阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.</p></div>
+        </div>
+        <h3>图表阅读线索 / Figure and Table Reading Cues</h3>
+        <p>PDF extraction detected approximately 8 figure references and 6 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.</p>
+        <table><tr><th>图表名称</th><th>Figure/Table Name</th><th>Reading focus / 阅读重点</th></tr><tr><td>系统框架图</td><td>system framework diagram</td><td>先确认输入、决策层、控制层和安全约束之间的数据流。</td></tr><tr><td>策略网络/训练流程图</td><td>policy-network or training-pipeline diagram</td><td>检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。</td></tr><tr><td>实验指标对比图表</td><td>experimental metric comparison plots/tables</td><td>重点看平均值之外的密度变化、失败场景、计算时间和方差。</td></tr></table>
+      </section>
+      <section id="critique" class="panel">
+        <h2>4. 审稿人视角：批判性思考与未来方向 / Critical Thinking & Future Directions</h2>
+        <div class="grid">
+          <div><h3>论文局限性 / Limitations & Weaknesses</h3><ul><li>对抗训练难调参，复现实验成本高。</li><li>策略可解释性弱，审稿人会追问安全证书。</li><li>分布式学习结果可能依赖仿真器和奖励设置。</li></ul></div>
+          <div><h3>博士课题拓展点 / Research Extensions for PhD</h3><ul class="research-idea"><li>用 JSSP 求解器生成专家排序轨迹，训练 imitation/adversarial scheduler。</li><li>把判别器输出作为调度质量估计，而不是直接控制车辆。</li><li>在对抗学习外加 CBF/MPC 安全约束，分离效率学习与安全保证。</li></ul></div>
+        </div>
+        <div class="reviewer-note"><b>如何服务当前课题 / Use in This Project</b><p>Useful for explaining why learned interaction policies must still be checked by a low-level feasibility/safety layer.</p></div>
+      </section>
+      <section id="viz" class="panel">
+        <h2>5. 交互式可视化与 PDF 排版蓝图 / Interactive Visualization & PDF Layout Blueprint</h2>
+        <div class="viz">
+          <div class="card">
+            <h3>动态参数探索 / Parameter Exploration</h3>
+            <label>对抗损失权重 / Adversarial loss weight: <b id="paramValue"></b> </label>
+            <input id="param" type="range" min="0" max="3" value="0.9" step="0.01">
+            <p class="zh">权重适中可提升交互拟合，过高会牺牲任务奖励稳定性。</p>
+            <p class="en">Moderate weight improves interaction shaping; too much can destabilize RL.</p>
+          </div>
+          <canvas id="chart" width="720" height="320"></canvas>
+        </div>
+        <h3>HTML 结构化布局建议 / HTML Structuring</h3>
+        <ul><li>顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。</li><li>左侧目录/section navigator，右侧为五大精读模块。</li><li>公式卡片使用 &lt;pre&gt; 或 LaTeX block，紧跟符号表。</li><li>审稿人批注用 reviewer-note block，博士拓展用 research-idea list。</li><li>交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。</li></ul>
+      </section>
+      <section id="anchors" class="panel">
+        <h2>来源锚点与逐节阅读路径 / Source Anchors & Section-by-Section Reading Map</h2>
+        <p>以下锚点来自本地 PDF 抽取，用于回到原文复核；笔记不保存论文全文。</p>
+        <table><tr><th>Page</th><th>Extracted heading</th></tr><tr><td>p.1</td><td>1 Introduction</td></tr><tr><td>p.2</td><td>2. Potential energy method is applied to balance speed acquisition (efﬁciency) and conﬂict-avoidance (safety) in</td></tr><tr><td>p.9</td><td>4 Experiments</td></tr></table>
+        <div class="section-map"><article><b>p.1 · 1 Introduction</b><p class='zh'>定位问题背景、研究缺口和为什么现有保守/非协同方法不足。</p><p class='en'>Frames the motivation, research gap, and limits of conservative or non-cooperative methods.</p></article><article><b>p.2 · 1. A hierarchical adversarial learning by long-term and short-term discrimination is adopted to realize the</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.2 · 2. Potential energy method is applied to balance speed acquisition (efﬁciency) and conﬂict-avoidance (safety) in</b><p class='zh'>给出算法流程和求解机制，应重点追踪输入、输出和安全接口。</p><p class='en'>Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.</p></article><article><b>p.2 · 2 Literature Review</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.4 · 3 Methodology</b><p class='zh'>给出算法流程和求解机制，应重点追踪输入、输出和安全接口。</p><p class='en'>Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.</p></article><article><b>p.4 · 3.1 Problem Statement</b><p class='zh'>把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。</p><p class='en'>Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.</p></article><article><b>p.5 · 3.3 Reservation Mechanism</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.6 · 3.4 Hierarchical Adversarial Learning</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const min = 0, max = 3;
+    const slider = document.getElementById('param');
+    const value = document.getElementById('paramValue');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    function response(x) {
+      const z = (x - min) / (max - min || 1);
+      const delay = Math.min(1, 0.18 + 0.82 * Math.pow(z, 1.25));
+      const safety = Math.max(0, Math.min(1, 0.15 + 0.75 * (1 - Math.exp(-2.2 * z))));
+      const compute = Math.min(1, 0.10 + 0.88 * z * z);
+      return {delay, safety, compute};
+    }
+    function draw() {
+      const x = parseFloat(slider.value);
+      value.textContent = x.toFixed(2);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = '#d9e1ea'; ctx.lineWidth = 1;
+      for (let i=0;i<6;i++) { const y=40+i*45; ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(690,y); ctx.stroke(); }
+      const series = [
+        ['Efficiency pressure / 效率压力', '#1f5f8b', 'delay'],
+        ['Safety margin / 安全裕度', '#1f6f61', 'safety'],
+        ['Compute load / 计算负载', '#8a4b0f', 'compute']
+      ];
+      for (const [label,color,key] of series) {
+        ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i=0;i<=120;i++) {
+          const xx = min + (max-min)*i/120;
+          const yy = response(xx)[key];
+          const px = 50 + i/120*640;
+          const py = 270 - yy*210;
+          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      const px = 50 + ((x-min)/(max-min||1))*640;
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px,35); ctx.lineTo(px,285); ctx.stroke();
+      ctx.font = '15px -apple-system, sans-serif'; ctx.fillStyle = '#1d2733';
+      series.forEach((s,i)=>{ ctx.fillStyle=s[1]; ctx.fillRect(58,20+i*22,12,12); ctx.fillStyle='#1d2733'; ctx.fillText(s[0],78,31+i*22); });
+    }
+    slider.addEventListener('input', draw);
+    draw();
+  </script>
+</body>
+</html>

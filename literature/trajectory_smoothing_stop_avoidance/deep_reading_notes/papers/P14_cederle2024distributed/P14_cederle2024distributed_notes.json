@@ -1,0 +1,280 @@
+{
+  "id": "P14",
+  "bibkey": "cederle2024distributed",
+  "title": "A Distributed Approach to Autonomous Intersection Management via Multi-Agent Reinforcement Learning",
+  "authors": "Matteo Cederle; Marco Fabris; Gian Antonio Susto",
+  "year": 2024,
+  "venue": "ATT 2024 Workshop, CEUR-WS Vol. 3813",
+  "doi": "10.48550/arXiv.2405.08655",
+  "source_url": "https://arxiv.org/abs/2405.08655",
+  "pdf_url": "https://arxiv.org/pdf/2405.08655",
+  "theme": "Distributed MARL for AIM",
+  "relevance": 70,
+  "method_family": "Distributed MARL for AIM / 分布式多智能体强化学习交叉口管理",
+  "source_facts": {
+    "pdf_file": "P14_cederle2024distributed.pdf",
+    "page_count": 15,
+    "section_headings": [
+      {
+        "heading": "Abstract",
+        "page": 1
+      },
+      {
+        "heading": "1. Introduction",
+        "page": 1
+      },
+      {
+        "heading": "2. Theoretical background",
+        "page": 3
+      },
+      {
+        "heading": "2.1. Basic notions of reinforcement learning",
+        "page": 3
+      },
+      {
+        "heading": "2.2. Q-Learning and Deep Q-Networks",
+        "page": 4
+      },
+      {
+        "heading": "2.3. Multi-agent reinforcement learning",
+        "page": 4
+      },
+      {
+        "heading": "3. Multi-Agent Decentralised Dueling Double Deep Q-Networks with Prioritized Scen-",
+        "page": 5
+      },
+      {
+        "heading": "3.1. System modelling and design",
+        "page": 5
+      },
+      {
+        "heading": "3.2. Learning Strategy",
+        "page": 6
+      },
+      {
+        "heading": "3.3. The prioritised scenario replay strategy",
+        "page": 7
+      },
+      {
+        "heading": "4. Experiments on virtual environments",
+        "page": 7
+      },
+      {
+        "heading": "4.1. Baselines",
+        "page": 9
+      },
+      {
+        "heading": "4.2. Results",
+        "page": 10
+      },
+      {
+        "heading": "5. Conclusions and future directions",
+        "page": 12
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "Abstract",
+        "page": 1
+      },
+      {
+        "heading": "1. Introduction",
+        "page": 1
+      },
+      {
+        "heading": "4. Experiments on virtual environments",
+        "page": 7
+      }
+    ],
+    "figure_reference_count": 7,
+    "table_reference_count": 6,
+    "equation_reference_count": 29
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Distributed MARL for AIM",
+      "分布式多智能体强化学习交叉口管理",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "Abstract",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 1,
+      "heading": "1. Introduction",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 3,
+      "heading": "2. Theoretical background",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 3,
+      "heading": "2.1. Basic notions of reinforcement learning",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 4,
+      "heading": "2.2. Q-Learning and Deep Q-Networks",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 4,
+      "heading": "2.3. Multi-agent reinforcement learning",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 5,
+      "heading": "3. Multi-Agent Decentralised Dueling Double Deep Q-Networks with Prioritized Scen-",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 5,
+      "heading": "3.1. System modelling and design",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Distributed MARL for AIM”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Distributed MARL for AIM. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Workshop paper; not focused on explicit trajectory smoothing or formal safety constraints.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "没有中心服务器时，多车能否通过分布式 MARL 学会安全高效地穿越交叉口？",
+    "core_question_en": "Can vehicles learn decentralized intersection traversal policies through MARL without a central coordinator?",
+    "contributions": [
+      "方法贡献 (method contribution)：Distributed multi-agent RL for autonomous intersection management using 3D surround-view assumptions and prioritized scenario replay.",
+      "安全/避碰贡献 (safety contribution)：Aims for accurate decentralized navigation without a central server; safety is evaluated through simulation metrics.",
+      "平滑/停止避免贡献 (smoothing contribution)：Improves benchmark metrics in SMARTS, implying smoother flow through decentralized decisions.",
+      "创新力度评判 (reviewer judgement)：中等：分布式 AIM 方向重要，但 workshop 论文更适合作为对比路线而非核心证据。"
+    ]
+  },
+  "methodology": {
+    "model_name": "去中心化 Markov game 与 DDQN 损失 / Decentralized Markov game and DDQN loss",
+    "formula": "L_i(\\theta_i)=\\mathbb{E}\\left[\\left(r_i+\\gamma Q_{\\bar\\theta_i}(o_i',\\arg\\max_a Q_{\\theta_i}(o_i',a))-Q_{\\theta_i}(o_i,a_i)\\right)^2\\right]",
+    "symbols": [
+      [
+        "o_i",
+        "智能体 i 的局部观测",
+        "local observation of agent i",
+        "分布式策略的信息输入"
+      ],
+      [
+        "a_i",
+        "智能体动作",
+        "agent action",
+        "车辆局部决策"
+      ],
+      [
+        "r_i",
+        "局部奖励",
+        "local reward",
+        "安全与效率反馈"
+      ],
+      [
+        "Q_theta",
+        "DQN 价值网络",
+        "DQN value network",
+        "估计离散动作价值"
+      ],
+      [
+        "gamma",
+        "折扣因子",
+        "discount factor",
+        "长期协同收益权重"
+      ]
+    ],
+    "algorithm_zh": "每辆车基于局部/环视观测做决策，使用 dueling double DQN 和 prioritized scenario replay 提升训练效率。它代表与集中式 JSSP 调度相反的技术路线。",
+    "algorithm_en": "Each vehicle acts from local observations using dueling double DQN and prioritized scenario replay, forming a decentralized alternative to centralized scheduling.",
+    "stability_zh": "MARL 的难点是非平稳性、信用分配和安全验证。分布式策略可扩展，但缺少中心协调时冲突消解更依赖奖励塑形和训练覆盖。",
+    "stability_en": "MARL faces non-stationarity, credit assignment, and safety-certification challenges; scalability improves, but conflict resolution becomes empirical.",
+    "assumptions": [
+      "局部观测足以推断危险交互。",
+      "仿真训练覆盖足够多场景。",
+      "车辆之间无需高可靠中心通信。"
+    ]
+  },
+  "experiments": {
+    "validation": "SMARTS virtual environment; accepted at ATT 2024 and available through CEUR-WS.",
+    "baselines": "SMARTS 基准策略、规则控制、单智能体/普通 DQN 和集中式方法。",
+    "metrics": "成功率、碰撞率、平均速度、通行效率、奖励和训练稳定性。",
+    "ablation": "应检验 dueling、double Q、prioritized replay 和观测范围的贡献。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "策略网络/训练流程图",
+        "en": "policy-network or training-pipeline diagram",
+        "reading": "检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "安全主要靠仿真经验，形式化约束不足。",
+      "极端密集交通和低可观测性下可能不稳定。",
+      "论文级别偏 workshop，实验深度有限。"
+    ],
+    "extensions": [
+      "把 MARL 作为 centralized JSSP 的对照组，强调可证明调度的优势。",
+      "加入图通信或注意力机制，缓解局部观测不足。",
+      "用安全层过滤每个智能体动作，比较 decentralized shield 与 centralized shield。"
+    ],
+    "project_use": "Useful contrast to the proposed centralized JSSP/RL rollout, showing distributed AIM as an alternative branch."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "观测半径",
+      "label_en": "Observation radius",
+      "min_value": 10,
+      "max_value": 120,
+      "default": 50,
+      "unit": "m",
+      "response_zh": "半径越大信息越充分，但通信/感知负担增加。",
+      "response_en": "A larger observation radius improves information but increases sensing/communication load."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

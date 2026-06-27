@@ -1,0 +1,284 @@
+{
+  "id": "P06",
+  "bibkey": "jiang2023ecodriving",
+  "title": "Eco-driving for Electric Connected Vehicles at Signalized Intersections: A Parameterized Reinforcement Learning Approach",
+  "authors": "Xia Jiang; Jian Zhang; Dan Li",
+  "year": 2023,
+  "venue": "Journal article related DOI / arXiv version",
+  "doi": "10.1080/21680566.2023.2215957",
+  "source_url": "https://arxiv.org/abs/2206.12065",
+  "pdf_url": "https://arxiv.org/pdf/2206.12065",
+  "theme": "Electric CV eco-driving + parameterized RL",
+  "relevance": 83,
+  "method_family": "Parameterized reinforcement learning / 参数化强化学习",
+  "source_facts": {
+    "pdf_file": "P06_jiang2023ecodriving.pdf",
+    "page_count": 27,
+    "section_headings": [
+      {
+        "heading": "1. Introduction",
+        "page": 1
+      },
+      {
+        "heading": "2. Background of Reinforcement Learning",
+        "page": 5
+      },
+      {
+        "heading": "3. Methodology",
+        "page": 6
+      },
+      {
+        "heading": "3.1. Scenario description",
+        "page": 6
+      },
+      {
+        "heading": "3.2. Agent framework",
+        "page": 7
+      },
+      {
+        "heading": "4. PRL for eco-driving",
+        "page": 10
+      },
+      {
+        "heading": "4.1. Reinforcement Learning in Hybrid Action Space",
+        "page": 10
+      },
+      {
+        "heading": "4.2. PRL algorithm",
+        "page": 12
+      },
+      {
+        "heading": "5. Simulation and discussion",
+        "page": 15
+      },
+      {
+        "heading": "5.1. Simulation conﬁguration",
+        "page": 15
+      },
+      {
+        "heading": "5.2. Training phase discussion",
+        "page": 16
+      },
+      {
+        "heading": "5.3. Overall performance of single vehicle",
+        "page": 18
+      },
+      {
+        "heading": "5.4. Lateral performance of single vehicle",
+        "page": 21
+      },
+      {
+        "heading": "5.5. Performance of mixed traﬃc",
+        "page": 21
+      },
+      {
+        "heading": "6. Conclusions",
+        "page": 23
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "1. Introduction",
+        "page": 1
+      },
+      {
+        "heading": "3. Methodology",
+        "page": 6
+      },
+      {
+        "heading": "5. Simulation and discussion",
+        "page": 15
+      }
+    ],
+    "figure_reference_count": 33,
+    "table_reference_count": 8,
+    "equation_reference_count": 37
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Parameterized reinforcement learning",
+      "参数化强化学习",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "1. Introduction",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 5,
+      "heading": "2. Background of Reinforcement Learning",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 6,
+      "heading": "3. Methodology",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    },
+    {
+      "page": 6,
+      "heading": "3.1. Scenario description",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 7,
+      "heading": "3.2. Agent framework",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    },
+    {
+      "page": 10,
+      "heading": "4. PRL for eco-driving",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 10,
+      "heading": "4.1. Reinforcement Learning in Hybrid Action Space",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 12,
+      "heading": "4.2. PRL algorithm",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Electric CV eco-driving + parameterized RL”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Electric CV eco-driving + parameterized RL. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Signalized intersections and electric connected vehicles rather than fully signal-free autonomous scheduling.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "如何同时处理离散驾驶决策和连续控制参数，使电动网联车在信号交叉口实现节能通行？",
+    "core_question_en": "How can discrete maneuver choices and continuous control parameters be learned jointly for EV eco-driving at signalized intersections?",
+    "contributions": [
+      "方法贡献 (method contribution)：Parameterized RL combines model-based car-following, lane-changing policy, and learned longitudinal/lateral decisions.",
+      "安全/避碰贡献 (safety contribution)：Safety is handled through model-based car-following and lane-changing constraints around human-driven vehicles.",
+      "平滑/停止避免贡献 (smoothing contribution)：Learns energy-saving actions around signalized intersections without interrupting surrounding HDVs.",
+      "创新力度评判 (reviewer judgement)：中等偏强：参数化动作空间贴合驾驶决策结构，对混合离散-连续调度有启发。"
+    ]
+  },
+  "methodology": {
+    "model_name": "参数化动作 MDP / Parameterized-action MDP",
+    "formula": "a_t=(d_t,\\xi_t),\\quad d_t\\in\\mathcal{D},\\;\\xi_t\\in\\mathbb{R}^{m(d_t)},\\quad Q(s_t,d_t,\\xi_t)\\approx \\mathbb{E}[R_t]",
+    "symbols": [
+      [
+        "d_t",
+        "离散驾驶决策",
+        "discrete driving decision",
+        "如保持、变道、跟驰模式"
+      ],
+      [
+        "xi_t",
+        "连续动作参数",
+        "continuous action parameter",
+        "如目标速度或加速度幅值"
+      ],
+      [
+        "D",
+        "离散动作集合",
+        "discrete action set",
+        "描述可选机动"
+      ],
+      [
+        "Q",
+        "动作价值函数",
+        "action-value function",
+        "评价离散-连续组合收益"
+      ],
+      [
+        "R_t",
+        "回报",
+        "return",
+        "累积能耗、效率和安全目标"
+      ]
+    ],
+    "algorithm_zh": "参数化 RL 把驾驶行为拆成离散模式和对应连续参数，结合模型式跟驰/变道规则处理周围 HDV，再用学习策略选择节能动作。该结构很适合未来把高层调度选择和低层连续轨迹合并。",
+    "algorithm_en": "Parameterized RL separates maneuver selection from continuous parameter control, combining learned decisions with model-based car-following and lane-changing constraints.",
+    "stability_zh": "模型式规则给安全留出底线，学习器主要优化效率和能耗；但混合动作空间训练难度较高，参数边界设计会影响收敛。",
+    "stability_en": "Model-based constraints provide a safety floor, while the learner optimizes energy and efficiency; convergence depends strongly on action parameterization.",
+    "assumptions": [
+      "周围车辆行为可由跟驰/变道模型近似。",
+      "电动车能耗模型可靠，且可用于仿真奖励。",
+      "信号灯信息和车辆状态可观测。"
+    ]
+  },
+  "experiments": {
+    "validation": "SUMO evaluation from single-vehicle and flow perspectives.",
+    "baselines": "传统生态驾驶、普通 DQN/DDPG、规则驾驶、无参数化 RL 和 IDM。",
+    "metrics": "电耗、平均速度、延误、停车次数、舒适性和混合交通影响。",
+    "ablation": "应比较参数化 RL 与纯离散、纯连续动作策略；还应测试参数边界和模型式安全规则的贡献。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "策略网络/训练流程图",
+        "en": "policy-network or training-pipeline diagram",
+        "reading": "检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "信号交叉口和电动车设定使结论不完全适用于无信号 CAV 调度。",
+      "参数化动作设计依赖专家经验。",
+      "混合交通中 HDV 模型错误可能传播到策略学习。"
+    ],
+    "extensions": [
+      "把 JSSP 的车辆排序作为离散动作，把目标时间/速度作为连续参数。",
+      "加入不确定 HDV 模型集合，做鲁棒参数化 RL。",
+      "用分层策略把 lane choice、arrival time 和 speed profile 分别建模。"
+    ],
+    "project_use": "Provides a SUMO-compatible example of energy and stop reduction metrics for the experimental section."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "CAV渗透率",
+      "label_en": "CAV penetration rate",
+      "min_value": 0.05,
+      "max_value": 1.0,
+      "default": 0.5,
+      "unit": "",
+      "response_zh": "渗透率提高通常增强节能协同，但低渗透率下收益受 HDV 约束明显。",
+      "response_en": "Higher penetration improves eco-coordination, while low penetration is constrained by HDVs."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

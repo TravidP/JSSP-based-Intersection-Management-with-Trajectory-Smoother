@@ -1,0 +1,179 @@
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
+\definecolor{notegray}{RGB}{246,248,251}
+\title{P13. A Systematic Survey of Control Techniques and Applications in Connected and Automated Vehicles\\中英双语博士精读笔记}
+\author{Wei Liu; Min Hua; Zhiyun Deng; Zonglin Meng; Yanjun Huang; Chuan Hu; Shunhui Song; Letian Gao; Changsheng Liu; Bin Shuai; Amir Khajepour; Lu Xiong; Xin Xia}
+\date{2023 · arXiv survey}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Theme / 主题：} CAV control survey\\
+\textbf{Method family / 方法族：} Systematic survey of CAV control / CAV 控制技术系统综述\\
+\textbf{PDF pages / 页数：} 32 \quad
+\textbf{Relevance / 相关度：} 72/100\\
+\textbf{Source / 来源：} \url{https://arxiv.org/abs/2303.05665}
+
+\section{论文全景速览与核心贡献 / High-Level Overview \& Core Contributions}
+\subsection{研究背景与痛点 / Background \& Pain Points}
+这篇论文位于“CAV control survey”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。
+
+The paper belongs to the theme of CAV control survey. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.
+
+\textbf{Pain point / 痛点：} Broad CAV control overview; not intersection-smoothing specific.
+
+\subsection{核心科学问题 / Core Scientific Question}
+CAV 控制从状态估计、轨迹跟踪到协同控制有哪些主线方法，它们如何支撑交叉口协同研究？
+
+What are the main CAV control families from state estimation to trajectory tracking and cooperative control, and how do they frame intersection research?
+
+\subsection{科学贡献 / Scientific Contributions}
+\begin{itemize}
+\item 方法贡献 (method contribution)：Systematic survey from vehicle state estimation and trajectory tracking to collaborative CAV control applications.
+\item 安全/避碰贡献 (safety contribution)：Reviews vehicle-control approaches relevant to safety and collaborative control.
+\item 平滑/停止避免贡献 (smoothing contribution)：Frames comfort, energy saving, and transportation efficiency as central CAV control goals.
+\item 创新力度评判 (reviewer judgement)：综述价值强但原创方法弱：适合作为背景和分类框架引用，不应当作为核心算法依据。
+\end{itemize}
+
+
+\subsection{核心概念对照 / Core Concepts}
+\begin{longtable}{p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}}
+\toprule
+中文概念 & English Concept & Role / 学术作用\\
+\midrule
+自动交叉口管理 & Autonomous Intersection Management & 把信号控制替换为车辆级调度与控制。 \\
+轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
+安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
+Systematic survey of CAV control & CAV 控制技术系统综述 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{理论方法论深度解构 / Methodology \& Theoretical Framework}
+\subsection{问题数学建模 / Mathematical Formulation}
+\textbf{通用车辆控制闭环 / Generic vehicle-control loop}
+\[
+\dot x=f(x,u,w),\quad y=g(x)+\eta,\quad u=\kappa(\hat x,r),\quad e=r-y
+\]
+\begin{longtable}{p{0.16\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.25\linewidth}}
+\toprule
+Symbol / 符号 & 含义 & Meaning & Role / 建模作用\\
+\midrule
+x & 车辆状态 & vehicle state & 控制系统内部变量 \\
+u & 控制输入 & control input & 转向、加速度或制动力 \\
+w & 外部扰动 & external disturbance & 道路、交通和模型误差 \\
+hat x & 估计状态 & estimated state & 状态估计模块输出 \\
+r & 参考轨迹 & reference trajectory & 轨迹规划/调度层给定目标 \\
+\bottomrule
+\end{longtable}
+
+\subsection{核心算法架构 / Core Algorithm Layout}
+作为综述，它按估计、跟踪、路径规划、协同控制等层次整理方法。对本项目最有价值的是把 comfort、safety、energy、efficiency 放入同一个 CAV 控制目标谱系。
+
+As a survey, it organizes estimation, tracking, planning, and cooperative-control techniques, framing safety, comfort, energy, and efficiency as connected CAV objectives.
+
+\subsection{收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility}
+综述不提供单个算法的收敛证明，但能帮助你定位不同方法的理论依据，如鲁棒控制、MPC、学习控制和协同控制。
+
+It does not certify one algorithm, but it maps the theoretical families used to justify robust control, MPC, learning control, and cooperative control.
+
+\subsection{潜在假设与边界条件 / Assumptions \& Boundary Conditions}
+\begin{itemize}
+\item 文献覆盖广但不可避免存在选择偏差。
+\item 不同控制任务和应用场景的指标不可直接比较。
+\item 综述结论需要回到具体论文验证。
+\end{itemize}
+
+
+\section{实验验证与结果评判 / Experimental Validation \& Result Evaluation}
+\textbf{Baselines \& Environment / 基准与环境：} 不适用原始实验；基准是分类完整性、代表性文献覆盖和趋势判断。
+
+\textbf{Validation / 验证：} Literature survey rather than original experiments.
+
+\textbf{Metrics / 指标：} 综述质量、分类清晰度、引用覆盖、应用关联度和未来方向启发。
+
+\textbf{Ablation / 消融：} 综述没有消融；阅读时应做你自己的 taxonomy cross-check：是否遗漏 intersection scheduling、formal safety、mixed traffic。
+
+\textbf{Reviewer reading / 审稿式阅读提醒：} 阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.
+
+\subsection{图表阅读线索 / Figure and Table Reading Cues}
+PDF extraction detected approximately 20 figure references and 0 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.
+
+\begin{longtable}{p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}}
+\toprule
+图表名称 & Figure/Table Name & Reading focus / 阅读重点\\
+\midrule
+系统框架图 & system framework diagram & 先确认输入、决策层、控制层和安全约束之间的数据流。 \\
+控制框架/轨迹曲线图 & control-framework or trajectory-profile plots & 关注约束激活位置、速度/加速度曲线和安全裕度是否平滑。 \\
+实验指标对比图表 & experimental metric comparison plots/tables & 重点看平均值之外的密度变化、失败场景、计算时间和方差。 \\
+\bottomrule
+\end{longtable}
+
+\section{审稿人视角：批判性思考与未来方向 / Critical Thinking \& Future Directions}
+\subsection{论文局限性 / Limitations \& Weaknesses}
+\begin{itemize}
+\item 范围太广，交叉口轨迹平滑不是焦点。
+\item 综述时效性随新 RL/CBF/GNN 文献快速下降。
+\item 缺少统一实验平台比较。
+\end{itemize}
+
+
+\subsection{博士课题拓展点 / Research Extensions for PhD}
+\begin{itemize}
+\item 把综述分类裁剪成你的 thesis taxonomy：scheduler、smoother、safety filter、evaluation。
+\item 建立一张 CAV 控制方法与 JSSP/RL/AIM 的映射表。
+\item 用它支持引言中 safety-comfort-energy-efficiency 多目标论证。
+\end{itemize}
+
+
+\subsection{如何服务当前课题 / Use in This Project}
+Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.
+
+\section{交互式可视化与 PDF 排版蓝图 / Interactive Visualization \& PDF Layout Blueprint}
+\textbf{动态参数 / Parameter：} 方法成熟度 / Method maturity, range [0, 1] .
+
+成熟度越高可验证性越强，但探索性和性能上限可能较低。
+
+Higher maturity improves certifiability but may reduce exploratory performance.
+
+\subsection{HTML 结构化布局建议 / HTML Structuring}
+\begin{itemize}
+\item 顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。
+\item 左侧目录/section navigator，右侧为五大精读模块。
+\item 公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。
+\item 审稿人批注用 reviewer-note block，博士拓展用 research-idea list。
+\item 交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。
+\end{itemize}
+
+
+\section{来源锚点与逐节阅读路径 / Source Anchors \& Section-by-Section Reading Map}
+\begin{longtable}{p{0.14\linewidth}p{0.76\linewidth}}
+\toprule
+Page & Extracted heading\\
+\midrule
+p.1 & I. INTRODUCTION \\
+p.3 & II. V EHICLE SIDESLIP ANGLE ESTIMATION \\
+p.18 & V. CONCLUSION AND FUTURE WORKS \\
+\bottomrule
+\end{longtable}
+
+\paragraph{p.1 I. INTRODUCTION}定位问题背景、研究缺口和为什么现有保守/非协同方法不足。 / Frames the motivation, research gap, and limits of conservative or non-cooperative methods.
+
+\paragraph{p.3 II. V EHICLE SIDESLIP ANGLE ESTIMATION}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.8 III. T RAJECTORY TRACKING CONTROL OF AVS}给出算法流程和求解机制，应重点追踪输入、输出和安全接口。 / Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.
+
+\paragraph{p.13 IV. C OLLABORATIVE CONTROL OF CAVS}给出算法流程和求解机制，应重点追踪输入、输出和安全接口。 / Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.
+
+\paragraph{p.18 V. CONCLUSION AND FUTURE WORKS}总结贡献和未来方向，也常暴露作者承认的边界条件。 / Summarizes contributions and often reveals author-recognized boundaries.
+
+\paragraph{p.20 X. Wang, “Federated vehicular transformers and their}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.23 2022 IEEE 25th International Conference on Intelligent}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.23 X. Cao, P. Zhang, Y . Cao, L. Qi, et al. , “Multi-}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+
+\end{document}

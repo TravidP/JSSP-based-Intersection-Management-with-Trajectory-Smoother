@@ -1,0 +1,175 @@
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
+\definecolor{notegray}{RGB}{246,248,251}
+\title{P02. Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis\\中英双语博士精读笔记}
+\author{Chaoyi Chen; Qing Xu; Mengchi Cai; Jiawei Wang; Jianqiang Wang; Biao Xu; Keqiang Li}
+\date{2021 · Transportation Research Part C: Emerging Technologies / arXiv version}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Theme / 主题：} Graph conflict modeling + passing order\\
+\textbf{Method family / 方法族：} Conflict graph + optimal passing order / 冲突图与最优通行顺序\\
+\textbf{PDF pages / 页数：} 19 \quad
+\textbf{Relevance / 相关度：} 92/100\\
+\textbf{Source / 来源：} \url{https://arxiv.org/abs/2107.07179}
+
+\section{论文全景速览与核心贡献 / High-Level Overview \& Core Contributions}
+\subsection{研究背景与痛点 / Background \& Pain Points}
+这篇论文位于“Graph conflict modeling + passing order”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。
+
+The paper belongs to the theme of Graph conflict modeling + passing order. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.
+
+\textbf{Pain point / 痛点：} Mostly longitudinal control, ideal communication, and no lane changing in this paper's base formulation.
+
+\subsection{核心科学问题 / Core Scientific Question}
+如何把无信号交叉口中复杂的相交、跟驰、合流和分流关系转化为可求解的图排序问题？
+
+How can heterogeneous vehicle conflicts at an unsignalized intersection be encoded as graph relations that yield a conflict-free passing order?
+
+\subsection{科学贡献 / Scientific Contributions}
+\begin{itemize}
+\item 方法贡献 (method contribution)：Models trajectory conflicts as a conflict directed graph and coexisting undirected graph; solves passing order through improved depth-first spanning tree and minimum clique cover methods.
+\item 安全/避碰贡献 (safety contribution)：Conflict-free graph edges represent crossing, diverging, converging, and reachability conflicts before scheduling.
+\item 平滑/停止避免贡献 (smoothing contribution)：Optimizes evacuation time and average delay, using distributed control to reduce idling near the stop line.
+\item 创新力度评判 (reviewer judgement)：较强：图建模把交通冲突类型显式化，便于和 JSSP 的机器冲突/工序约束建立同构关系。
+\end{itemize}
+
+
+\subsection{核心概念对照 / Core Concepts}
+\begin{longtable}{p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}}
+\toprule
+中文概念 & English Concept & Role / 学术作用\\
+\midrule
+自动交叉口管理 & Autonomous Intersection Management & 把信号控制替换为车辆级调度与控制。 \\
+轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
+安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
+Conflict graph + optimal passing order & 冲突图与最优通行顺序 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{理论方法论深度解构 / Methodology \& Theoretical Framework}
+\subsection{问题数学建模 / Mathematical Formulation}
+\textbf{冲突图与排序目标 / Conflict graph and sequencing objective}
+\[
+G=(V,E_d,E_u),\quad \min_{\pi}\; C_{\max}(\pi)=\max_{i\in V} t_i^{out}\quad \text{s.t.}\; (i,j)\in E_d\Rightarrow i\prec_\pi j
+\]
+\begin{longtable}{p{0.16\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.25\linewidth}}
+\toprule
+Symbol / 符号 & 含义 & Meaning & Role / 建模作用\\
+\midrule
+V & 车辆节点集合 & vehicle-node set & 每辆车对应一个调度实体 \\
+E\_d & 有向冲突/可达边 & directed conflict/reachability edges & 表达必须先后通过的约束 \\
+E\_u & 无向共存/冲突边 & undirected coexistence/conflict edges & 表达是否可同批通过或需分组 \\
+pi & 通行序列 & passing permutation & 调度算法的核心决策变量 \\
+C\_max & 最大清空时间 & makespan / evacuation time & 衡量路口整体效率 \\
+\bottomrule
+\end{longtable}
+
+\subsection{核心算法架构 / Core Algorithm Layout}
+先依据几何轨迹和时间可达性构建冲突有向图与共存无向图；再用改进深度优先生成树和最小团覆盖等图算法求通行组与顺序；最后由分布式控制保证每辆车按序到达冲突区。
+
+The method builds directed and undirected graph relations from trajectory conflicts, solves groups and orders with graph algorithms, and executes the resulting order via distributed vehicle control.
+
+\subsection{收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility}
+图约束先把不安全组合排除，控制层只需执行已筛选的顺序。实时性取决于图规模和团覆盖求解，但比直接连续优化全车轨迹更结构化。
+
+Safety is front-loaded into graph constraints; tractability improves because the continuous-control layer receives a filtered sequence rather than solving all interactions jointly.
+
+\subsection{潜在假设与边界条件 / Assumptions \& Boundary Conditions}
+\begin{itemize}
+\item 车辆轨迹模板和冲突点可提前计算。
+\item 车辆遵守分配的通行顺序，通信近似理想。
+\item 主要聚焦纵向控制，横向变道不是核心问题。
+\end{itemize}
+
+
+\section{实验验证与结果评判 / Experimental Validation \& Result Evaluation}
+\textbf{Baselines \& Environment / 基准与环境：} 常见基准包括 FCFS、交通灯控制、无协同控制和其他图排序策略。
+
+\textbf{Validation / 验证：} Traffic simulations over varying vehicle counts and volumes; reports efficiency and fuel-economy improvements.
+
+\textbf{Metrics / 指标：} 平均延误 (average delay)、总清空时间 (evacuation time)、吞吐量 (throughput)、燃油/能耗代理和停车次数。
+
+\textbf{Ablation / 消融：} 图关系本身有可解释性，但仍需更系统地拆分：仅有向图、仅无向图、不同团覆盖策略和不同交通流密度下的鲁棒性。
+
+\textbf{Reviewer reading / 审稿式阅读提醒：} 阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.
+
+\subsection{图表阅读线索 / Figure and Table Reading Cues}
+PDF extraction detected approximately 61 figure references and 7 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.
+
+\begin{longtable}{p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}}
+\toprule
+图表名称 & Figure/Table Name & Reading focus / 阅读重点\\
+\midrule
+系统框架图 & system framework diagram & 先确认输入、决策层、控制层和安全约束之间的数据流。 \\
+冲突关系图 / 通行顺序图 & conflict-relation or passing-order graph & 把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。 \\
+实验指标对比图表 & experimental metric comparison plots/tables & 重点看平均值之外的密度变化、失败场景、计算时间和方差。 \\
+\bottomrule
+\end{longtable}
+
+\section{审稿人视角：批判性思考与未来方向 / Critical Thinking \& Future Directions}
+\subsection{论文局限性 / Limitations \& Weaknesses}
+\begin{itemize}
+\item 图构造依赖精确几何和预测，异常驾驶会导致边集失真。
+\item 团覆盖/排序在大规模密集车流下可能成为瓶颈。
+\item 模型偏重全 CAV 场景，对低渗透率混合交通支持不足。
+\end{itemize}
+
+
+\subsection{博士课题拓展点 / Research Extensions for PhD}
+\begin{itemize}
+\item 把图边类型作为异构图 (heterogeneous graph) 特征，训练 GNN 调度器。
+\item 将最小团覆盖与 JSSP disjunctive graph 融合，建立可证明安全的调度层。
+\item 引入不确定边权，做分布鲁棒通行排序 (distributionally robust sequencing)。
+\end{itemize}
+
+
+\subsection{如何服务当前课题 / Use in This Project}
+Strong support for representing intersection conflicts as typed graph relations, similar to the operation graph in this manuscript.
+
+\section{交互式可视化与 PDF 排版蓝图 / Interactive Visualization \& PDF Layout Blueprint}
+\textbf{动态参数 / Parameter：} 冲突边密度 / Conflict-edge density, range [0.1, 0.9] .
+
+边密度升高会减少可并行通行组，通常增大清空时间。
+
+Higher edge density reduces parallel passing groups and increases evacuation time.
+
+\subsection{HTML 结构化布局建议 / HTML Structuring}
+\begin{itemize}
+\item 顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。
+\item 左侧目录/section navigator，右侧为五大精读模块。
+\item 公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。
+\item 审稿人批注用 reviewer-note block，博士拓展用 research-idea list。
+\item 交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。
+\end{itemize}
+
+
+\section{来源锚点与逐节阅读路径 / Source Anchors \& Section-by-Section Reading Map}
+\begin{longtable}{p{0.14\linewidth}p{0.76\linewidth}}
+\toprule
+Page & Extracted heading\\
+\midrule
+p.1 & I. INTRODUCTION \\
+p.2 & II. PROBLEM STATEMENT \\
+p.11 & IV. SIMULATION \\
+\bottomrule
+\end{longtable}
+
+\paragraph{p.1 I. INTRODUCTION}定位问题背景、研究缺口和为什么现有保守/非协同方法不足。 / Frames the motivation, research gap, and limits of conservative or non-cooperative methods.
+
+\paragraph{p.2 II. PROBLEM STATEMENT}把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。 / Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.
+
+\paragraph{p.4 III. METHODOLOGY}给出算法流程和求解机制，应重点追踪输入、输出和安全接口。 / Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.
+
+\paragraph{p.11 IV. SIMULATION}检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。 / Tests efficiency, safety, or energy claims; inspect whether baselines are fair.
+
+\paragraph{p.17 V. CONCLUSION}总结贡献和未来方向，也常暴露作者承认的边界条件。 / Summarizes contributions and often reveals author-recognized boundaries.
+
+\paragraph{p.19 2014 IEEE Intelligent Vehicle Symposium, the Best Paper Award in the 14th}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+
+\end{document}

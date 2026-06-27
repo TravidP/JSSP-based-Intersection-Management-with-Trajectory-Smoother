@@ -1,0 +1,276 @@
+{
+  "id": "P10",
+  "bibkey": "klimke2026realworld",
+  "title": "Real-World Evaluation of Two Cooperative Intersection Management Approaches",
+  "authors": "Marvin Klimke; Max Bastian Mertens; Benjamin Volz; Michael Buchholz",
+  "year": 2026,
+  "venue": "IEEE Intelligent Transportation Systems Magazine (accepted)",
+  "doi": "10.1109/MITS.2025.3643199",
+  "source_url": "https://arxiv.org/abs/2403.16478",
+  "pdf_url": "https://arxiv.org/pdf/2403.16478",
+  "theme": "Real-world cooperative intersection management",
+  "relevance": 90,
+  "method_family": "Real-world cooperative maneuver planning evaluation / 真实道路协同机动规划评估",
+  "source_facts": {
+    "pdf_file": "P10_klimke2026realworld.pdf",
+    "page_count": 11,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "101069547. Views and opinions expressed are however those of the authors",
+        "page": 1
+      },
+      {
+        "heading": "2 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+        "page": 2
+      },
+      {
+        "heading": "II. RELATEDWORK",
+        "page": 2
+      },
+      {
+        "heading": "III. COOPERATIVEMANEUVERPLANNINGMODULES",
+        "page": 3
+      },
+      {
+        "heading": "4 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+        "page": 4
+      },
+      {
+        "heading": "IV. SIMULATIONAPPROACH",
+        "page": 5
+      },
+      {
+        "heading": "6 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+        "page": 6
+      },
+      {
+        "heading": "V. SIMULATIONEVALUATIONRESULTS",
+        "page": 6
+      },
+      {
+        "heading": "8 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+        "page": 8
+      },
+      {
+        "heading": "VI. REAL-WORLDEXPERIMENTS",
+        "page": 8
+      },
+      {
+        "heading": "VII. CONCLUSION",
+        "page": 9
+      },
+      {
+        "heading": "10 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+        "page": 10
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "101069547. Views and opinions expressed are however those of the authors",
+        "page": 1
+      },
+      {
+        "heading": "IV. SIMULATIONAPPROACH",
+        "page": 5
+      }
+    ],
+    "figure_reference_count": 33,
+    "table_reference_count": 4,
+    "equation_reference_count": 4
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Real-world cooperative maneuver planning evaluation",
+      "真实道路协同机动规划评估",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 1,
+      "heading": "101069547. Views and opinions expressed are however those of the authors",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 2,
+      "heading": "2 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 2,
+      "heading": "II. RELATEDWORK",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 3,
+      "heading": "III. COOPERATIVEMANEUVERPLANNINGMODULES",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 4,
+      "heading": "4 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 5,
+      "heading": "IV. SIMULATIONAPPROACH",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    },
+    {
+      "page": 6,
+      "heading": "6 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Real-world cooperative intersection management”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Real-world cooperative intersection management. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Focuses on cooperative maneuver planning evaluation, not a JSSP formulation.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "协同交叉口管理方法在混合交通仿真与真实原型车测试中是否仍能减少停车和通行时间？",
+    "core_question_en": "Do cooperative intersection-management approaches reduce stops and crossing time in both mixed-traffic simulation and real prototype drives?",
+    "contributions": [
+      "方法贡献 (method contribution)：Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives.",
+      "安全/避碰贡献 (safety contribution)：Evaluates criticality metrics while operating with prototype connected automated vehicles in public traffic.",
+      "平滑/停止避免贡献 (smoothing contribution)：Reports substantial reductions in crossing time and number of stops for cooperative maneuver planning.",
+      "创新力度评判 (reviewer judgement)：强验证价值：真实道路评估稀缺，是论文实验设计和指标选择的优质参考。"
+    ]
+  },
+  "methodology": {
+    "model_name": "评估指标聚合 / Evaluation-metric aggregation",
+    "formula": "S=\\frac{1}{M}\\sum_{m=1}^{M} n_m^{stop},\\quad T=\\frac{1}{M}\\sum_{m=1}^{M}(t_m^{out}-t_m^{in}),\\quad K=\\max_m \\kappa_m",
+    "symbols": [
+      [
+        "S",
+        "平均停车次数",
+        "average number of stops",
+        "衡量 stop avoidance 的直接指标"
+      ],
+      [
+        "T",
+        "平均穿越时间",
+        "average crossing time",
+        "衡量效率"
+      ],
+      [
+        "K",
+        "最大关键性",
+        "maximum criticality",
+        "表示最危险场景风险"
+      ],
+      [
+        "M",
+        "评估运行次数",
+        "number of evaluation runs",
+        "仿真或真实试验样本量"
+      ],
+      [
+        "kappa_m",
+        "关键性指标",
+        "criticality measure",
+        "安全评估变量"
+      ]
+    ],
+    "algorithm_zh": "论文不是提出单一新控制算法，而是比较多场景预测和图强化学习等协同机动规划模块，在混合交通仿真与真实车辆中评估停车、时间和关键性。",
+    "algorithm_en": "Rather than only proposing a controller, the paper evaluates cooperative maneuver-planning modules in simulation and real-world prototype drives.",
+    "stability_zh": "贡献在验证闭环：真实车辆实验暴露通信、定位、感知和人类交通干扰。它为仿真论文提供“哪些指标必须走向真实”的标尺。",
+    "stability_en": "Its value is validation realism: real drives reveal communication, localization, perception, and mixed-traffic issues hidden in pure simulation.",
+    "assumptions": [
+      "原型系统中的通信与感知可支持协同机动规划。",
+      "真实测试场景代表性足以支持初步结论。",
+      "关键性指标可近似反映真实安全风险。"
+    ]
+  },
+  "experiments": {
+    "validation": "Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives.",
+    "baselines": "不同协同机动规划模块、非协同驾驶、仿真基线和真实驾驶对照。",
+    "metrics": "穿越时间、停车次数、关键性/风险、成功率和真实系统运行稳定性。",
+    "ablation": "作为评估论文，模块消融不一定充分；最需要的是同一交通需求下的模块替换、传感器/通信降级和 HDV 行为差异测试。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "策略网络/训练流程图",
+        "en": "policy-network or training-pipeline diagram",
+        "reading": "检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "样本规模和场景覆盖通常小于大规模仿真。",
+      "不是 JSSP 建模论文，理论调度贡献有限。",
+      "真实测试条件可能较温和，极端场景不足。"
+    ],
+    "extensions": [
+      "把你的 JSSP scheduler 输出转化为相同停车/穿越时间/关键性指标，形成可对标实验。",
+      "设计 sim-to-real gap 表格：仿真中通过的策略在真实系统中哪些环节会失效。",
+      "加入通信延迟、定位噪声和 HDV 插入，复现实验鲁棒性。"
+    ],
+    "project_use": "Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "通信延迟",
+      "label_en": "Communication latency",
+      "min_value": 0,
+      "max_value": 500,
+      "default": 80,
+      "unit": "ms",
+      "response_zh": "延迟上升会降低协同收益，并增加保守安全缓冲。",
+      "response_en": "Higher latency reduces coordination benefit and increases safety buffers."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

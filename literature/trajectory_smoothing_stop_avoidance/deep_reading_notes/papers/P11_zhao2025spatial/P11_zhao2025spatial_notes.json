@@ -1,0 +1,260 @@
+{
+  "id": "P11",
+  "bibkey": "zhao2025spatial",
+  "title": "A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty",
+  "authors": "Tong Zhao; Nikolce Murgovski; Baigen Cai; Wei ShangGuan",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": "10.48550/arXiv.2412.04290",
+  "source_url": "https://arxiv.org/abs/2412.04290",
+  "pdf_url": "https://arxiv.org/pdf/2412.04290",
+  "theme": "Spatial-domain robust trajectory planning",
+  "relevance": 92,
+  "method_family": "Spatial-domain robust MPC / 空间域鲁棒模型预测控制",
+  "source_facts": {
+    "pdf_file": "P11_zhao2025spatial.pdf",
+    "page_count": 15,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. PROBLEM FORMULATION",
+        "page": 3
+      },
+      {
+        "heading": "III. M ODELING OF CONFLICT RESOLUTION CONSIDERING",
+        "page": 4
+      },
+      {
+        "heading": "IV. C ENTRALIZED MODEL PREDICTIVE CONTROL AND",
+        "page": 7
+      },
+      {
+        "heading": "V. SIMULATION RESULTS",
+        "page": 8
+      },
+      {
+        "heading": "6. The shaded space shows the motion uncertainty of HDV 4, where the X-Y",
+        "page": 10
+      },
+      {
+        "heading": "1. Each CA V fulfills the speed and acceleration limits in all cases.",
+        "page": 10
+      },
+      {
+        "heading": "VI. CONCLUSION AND FUTURE WORK",
+        "page": 13
+      },
+      {
+        "heading": "2017 American Control Conference (ACC) . IEEE, 2017, pp. 4920–",
+        "page": 14
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. PROBLEM FORMULATION",
+        "page": 3
+      },
+      {
+        "heading": "V. SIMULATION RESULTS",
+        "page": 8
+      }
+    ],
+    "figure_reference_count": 41,
+    "table_reference_count": 5,
+    "equation_reference_count": 76
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Spatial-domain robust MPC",
+      "空间域鲁棒模型预测控制",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 3,
+      "heading": "II. PROBLEM FORMULATION",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "III. M ODELING OF CONFLICT RESOLUTION CONSIDERING",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 7,
+      "heading": "IV. C ENTRALIZED MODEL PREDICTIVE CONTROL AND",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 8,
+      "heading": "V. SIMULATION RESULTS",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    },
+    {
+      "page": 10,
+      "heading": "6. The shaded space shows the motion uncertainty of HDV 4, where the X-Y",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 10,
+      "heading": "1. Each CA V fulfills the speed and acceleration limits in all cases.",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 13,
+      "heading": "VI. CONCLUSION AND FUTURE WORK",
+      "zh": "总结贡献和未来方向，也常暴露作者承认的边界条件。",
+      "en": "Summarizes contributions and often reveals author-recognized boundaries."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Spatial-domain robust trajectory planning”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Spatial-domain robust trajectory planning. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Optimization-heavy; not a learned scheduler, and publication venue beyond arXiv not verified.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "在路径和速度存在不确定性时，如何把交叉口多类型冲突统一成可实时求解的空间域约束？",
+    "core_question_en": "How can crossing, following, merging, and diverging conflicts be unified as real-time spatial-domain constraints under motion uncertainty?",
+    "contributions": [
+      "方法贡献 (method contribution)：Transforms coordinated control into a spatial-domain nonlinear program with unified linear collision-avoidance constraints and real-time iteration.",
+      "安全/避碰贡献 (safety contribution)：Handles crossing, following, merging, and diverging conflicts under path and speed uncertainty of HDVs.",
+      "平滑/停止避免贡献 (smoothing contribution)：Generates smooth trajectories under state/control constraints, avoiding unnecessary braking where robust constraints permit.",
+      "创新力度评判 (reviewer judgement)：很强：空间域建模和统一线性碰撞约束对低层 smoother 安全可行性极有价值。"
+    ]
+  },
+  "methodology": {
+    "model_name": "空间域动力学与鲁棒碰撞约束 / Spatial-domain dynamics and robust collision constraints",
+    "formula": "\\frac{dt_i}{ds}=\\frac{1}{v_i(s)},\\quad \\min_{u_i(s)}\\sum_i\\int \\left(w_t\\frac{1}{v_i(s)}+w_u u_i(s)^2\\right)ds,\\quad h_{ij}(s,\\Delta)\\ge d_{safe}",
+    "symbols": [
+      [
+        "s",
+        "空间路径坐标",
+        "spatial path coordinate",
+        "把时间规划转成沿路径规划"
+      ],
+      [
+        "v_i(s)",
+        "空间域速度",
+        "speed over path coordinate",
+        "决定到达时间和安全间隔"
+      ],
+      [
+        "h_ij",
+        "车辆 i,j 的冲突间隔函数",
+        "conflict-separation function",
+        "统一多种冲突类型"
+      ],
+      [
+        "Delta",
+        "运动不确定性",
+        "motion uncertainty",
+        "路径/速度误差集合"
+      ],
+      [
+        "d_safe",
+        "安全距离阈值",
+        "safe-distance threshold",
+        "鲁棒约束下界"
+      ]
+    ],
+    "algorithm_zh": "论文把轨迹规划从时间域转为空间域，针对 crossing/following/merging/diverging 构造统一线性化安全约束，再用集中式 MPC 和实时迭代求解，以较小最优性损失换取计算速度。",
+    "algorithm_en": "The method transforms coordination into a spatial-domain nonlinear program, linearizes unified collision-avoidance constraints, and solves it with real-time MPC iterations.",
+    "stability_zh": "鲁棒性来自显式不确定集合与安全约束，实时性来自空间域简化和 RTI。相比纯学习策略，这类 smoother 更容易给审稿人安全信心。",
+    "stability_en": "Robustness comes from explicit uncertainty sets and safety constraints; RTI makes the spatial-domain MPC viable online.",
+    "assumptions": [
+      "车辆路径可用空间坐标参数化。",
+      "不确定性集合边界可估计且不严重失真。",
+      "集中式求解器可在控制周期内完成。"
+    ]
+  },
+  "experiments": {
+    "validation": "Simulation case studies; reported RTI computation reduction by orders of magnitude with small optimality loss.",
+    "baselines": "时间域 MPC、非鲁棒控制、保守安全间隔策略和不同 RTI 近似。",
+    "metrics": "求解时间、最优性损失、碰撞约束余量、通行时间、速度平滑性和不确定性敏感性。",
+    "ablation": "很适合做鲁棒半径、RTI 次数、统一约束 vs 分类型约束的消融。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "控制框架/轨迹曲线图",
+        "en": "control-framework or trajectory-profile plots",
+        "reading": "关注约束激活位置、速度/加速度曲线和安全裕度是否平滑。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "优化问题仍可能在大规模车辆数下变重。",
+      "不确定集合若估计过小会失去安全性，过大则过于保守。",
+      "高层排序/优先级选择不是主要贡献。"
+    ],
+    "extensions": [
+      "将 JSSP 调度输出作为 MPC 的目标时间或优先级约束。",
+      "用学习模型预测不确定集合大小，实现自适应鲁棒性。",
+      "把空间域安全约束封装成调度动作可行性检查器。"
+    ],
+    "project_use": "Very strong for the smoother's feasibility and robust collision-avoidance constraints."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "不确定性半径",
+      "label_en": "Uncertainty radius",
+      "min_value": 0.0,
+      "max_value": 3.0,
+      "default": 0.8,
+      "unit": "m",
+      "response_zh": "半径越大，安全裕度越高但轨迹越保守、延误越大。",
+      "response_en": "A larger uncertainty radius improves safety margin but increases conservatism."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

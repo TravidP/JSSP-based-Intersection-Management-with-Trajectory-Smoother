@@ -1,0 +1,179 @@
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
+\definecolor{notegray}{RGB}{246,248,251}
+\title{P11. A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty\\中英双语博士精读笔记}
+\author{Tong Zhao; Nikolce Murgovski; Baigen Cai; Wei ShangGuan}
+\date{2025 · arXiv preprint}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Theme / 主题：} Spatial-domain robust trajectory planning\\
+\textbf{Method family / 方法族：} Spatial-domain robust MPC / 空间域鲁棒模型预测控制\\
+\textbf{PDF pages / 页数：} 15 \quad
+\textbf{Relevance / 相关度：} 92/100\\
+\textbf{Source / 来源：} \url{https://arxiv.org/abs/2412.04290}
+
+\section{论文全景速览与核心贡献 / High-Level Overview \& Core Contributions}
+\subsection{研究背景与痛点 / Background \& Pain Points}
+这篇论文位于“Spatial-domain robust trajectory planning”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。
+
+The paper belongs to the theme of Spatial-domain robust trajectory planning. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.
+
+\textbf{Pain point / 痛点：} Optimization-heavy; not a learned scheduler, and publication venue beyond arXiv not verified.
+
+\subsection{核心科学问题 / Core Scientific Question}
+在路径和速度存在不确定性时，如何把交叉口多类型冲突统一成可实时求解的空间域约束？
+
+How can crossing, following, merging, and diverging conflicts be unified as real-time spatial-domain constraints under motion uncertainty?
+
+\subsection{科学贡献 / Scientific Contributions}
+\begin{itemize}
+\item 方法贡献 (method contribution)：Transforms coordinated control into a spatial-domain nonlinear program with unified linear collision-avoidance constraints and real-time iteration.
+\item 安全/避碰贡献 (safety contribution)：Handles crossing, following, merging, and diverging conflicts under path and speed uncertainty of HDVs.
+\item 平滑/停止避免贡献 (smoothing contribution)：Generates smooth trajectories under state/control constraints, avoiding unnecessary braking where robust constraints permit.
+\item 创新力度评判 (reviewer judgement)：很强：空间域建模和统一线性碰撞约束对低层 smoother 安全可行性极有价值。
+\end{itemize}
+
+
+\subsection{核心概念对照 / Core Concepts}
+\begin{longtable}{p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}}
+\toprule
+中文概念 & English Concept & Role / 学术作用\\
+\midrule
+自动交叉口管理 & Autonomous Intersection Management & 把信号控制替换为车辆级调度与控制。 \\
+轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
+安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
+Spatial-domain robust MPC & 空间域鲁棒模型预测控制 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{理论方法论深度解构 / Methodology \& Theoretical Framework}
+\subsection{问题数学建模 / Mathematical Formulation}
+\textbf{空间域动力学与鲁棒碰撞约束 / Spatial-domain dynamics and robust collision constraints}
+\[
+\frac{dt_i}{ds}=\frac{1}{v_i(s)},\quad \min_{u_i(s)}\sum_i\int \left(w_t\frac{1}{v_i(s)}+w_u u_i(s)^2\right)ds,\quad h_{ij}(s,\Delta)\ge d_{safe}
+\]
+\begin{longtable}{p{0.16\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.25\linewidth}}
+\toprule
+Symbol / 符号 & 含义 & Meaning & Role / 建模作用\\
+\midrule
+s & 空间路径坐标 & spatial path coordinate & 把时间规划转成沿路径规划 \\
+v\_i(s) & 空间域速度 & speed over path coordinate & 决定到达时间和安全间隔 \\
+h\_ij & 车辆 i,j 的冲突间隔函数 & conflict-separation function & 统一多种冲突类型 \\
+Delta & 运动不确定性 & motion uncertainty & 路径/速度误差集合 \\
+d\_safe & 安全距离阈值 & safe-distance threshold & 鲁棒约束下界 \\
+\bottomrule
+\end{longtable}
+
+\subsection{核心算法架构 / Core Algorithm Layout}
+论文把轨迹规划从时间域转为空间域，针对 crossing/following/merging/diverging 构造统一线性化安全约束，再用集中式 MPC 和实时迭代求解，以较小最优性损失换取计算速度。
+
+The method transforms coordination into a spatial-domain nonlinear program, linearizes unified collision-avoidance constraints, and solves it with real-time MPC iterations.
+
+\subsection{收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility}
+鲁棒性来自显式不确定集合与安全约束，实时性来自空间域简化和 RTI。相比纯学习策略，这类 smoother 更容易给审稿人安全信心。
+
+Robustness comes from explicit uncertainty sets and safety constraints; RTI makes the spatial-domain MPC viable online.
+
+\subsection{潜在假设与边界条件 / Assumptions \& Boundary Conditions}
+\begin{itemize}
+\item 车辆路径可用空间坐标参数化。
+\item 不确定性集合边界可估计且不严重失真。
+\item 集中式求解器可在控制周期内完成。
+\end{itemize}
+
+
+\section{实验验证与结果评判 / Experimental Validation \& Result Evaluation}
+\textbf{Baselines \& Environment / 基准与环境：} 时间域 MPC、非鲁棒控制、保守安全间隔策略和不同 RTI 近似。
+
+\textbf{Validation / 验证：} Simulation case studies; reported RTI computation reduction by orders of magnitude with small optimality loss.
+
+\textbf{Metrics / 指标：} 求解时间、最优性损失、碰撞约束余量、通行时间、速度平滑性和不确定性敏感性。
+
+\textbf{Ablation / 消融：} 很适合做鲁棒半径、RTI 次数、统一约束 vs 分类型约束的消融。
+
+\textbf{Reviewer reading / 审稿式阅读提醒：} 阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.
+
+\subsection{图表阅读线索 / Figure and Table Reading Cues}
+PDF extraction detected approximately 41 figure references and 5 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.
+
+\begin{longtable}{p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}}
+\toprule
+图表名称 & Figure/Table Name & Reading focus / 阅读重点\\
+\midrule
+系统框架图 & system framework diagram & 先确认输入、决策层、控制层和安全约束之间的数据流。 \\
+控制框架/轨迹曲线图 & control-framework or trajectory-profile plots & 关注约束激活位置、速度/加速度曲线和安全裕度是否平滑。 \\
+实验指标对比图表 & experimental metric comparison plots/tables & 重点看平均值之外的密度变化、失败场景、计算时间和方差。 \\
+\bottomrule
+\end{longtable}
+
+\section{审稿人视角：批判性思考与未来方向 / Critical Thinking \& Future Directions}
+\subsection{论文局限性 / Limitations \& Weaknesses}
+\begin{itemize}
+\item 优化问题仍可能在大规模车辆数下变重。
+\item 不确定集合若估计过小会失去安全性，过大则过于保守。
+\item 高层排序/优先级选择不是主要贡献。
+\end{itemize}
+
+
+\subsection{博士课题拓展点 / Research Extensions for PhD}
+\begin{itemize}
+\item 将 JSSP 调度输出作为 MPC 的目标时间或优先级约束。
+\item 用学习模型预测不确定集合大小，实现自适应鲁棒性。
+\item 把空间域安全约束封装成调度动作可行性检查器。
+\end{itemize}
+
+
+\subsection{如何服务当前课题 / Use in This Project}
+Very strong for the smoother's feasibility and robust collision-avoidance constraints.
+
+\section{交互式可视化与 PDF 排版蓝图 / Interactive Visualization \& PDF Layout Blueprint}
+\textbf{动态参数 / Parameter：} 不确定性半径 / Uncertainty radius, range [0.0, 3.0] m.
+
+半径越大，安全裕度越高但轨迹越保守、延误越大。
+
+A larger uncertainty radius improves safety margin but increases conservatism.
+
+\subsection{HTML 结构化布局建议 / HTML Structuring}
+\begin{itemize}
+\item 顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。
+\item 左侧目录/section navigator，右侧为五大精读模块。
+\item 公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。
+\item 审稿人批注用 reviewer-note block，博士拓展用 research-idea list。
+\item 交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。
+\end{itemize}
+
+
+\section{来源锚点与逐节阅读路径 / Source Anchors \& Section-by-Section Reading Map}
+\begin{longtable}{p{0.14\linewidth}p{0.76\linewidth}}
+\toprule
+Page & Extracted heading\\
+\midrule
+p.1 & I. INTRODUCTION \\
+p.3 & II. PROBLEM FORMULATION \\
+p.8 & V. SIMULATION RESULTS \\
+\bottomrule
+\end{longtable}
+
+\paragraph{p.1 I. INTRODUCTION}定位问题背景、研究缺口和为什么现有保守/非协同方法不足。 / Frames the motivation, research gap, and limits of conservative or non-cooperative methods.
+
+\paragraph{p.3 II. PROBLEM FORMULATION}把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。 / Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.
+
+\paragraph{p.4 III. M ODELING OF CONFLICT RESOLUTION CONSIDERING}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.7 IV. C ENTRALIZED MODEL PREDICTIVE CONTROL AND}把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。 / Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.
+
+\paragraph{p.8 V. SIMULATION RESULTS}检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。 / Tests efficiency, safety, or energy claims; inspect whether baselines are fair.
+
+\paragraph{p.10 6. The shaded space shows the motion uncertainty of HDV 4, where the X-Y}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.10 1. Each CA V fulfills the speed and acceleration limits in all cases.}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.13 VI. CONCLUSION AND FUTURE WORK}总结贡献和未来方向，也常暴露作者承认的边界条件。 / Summarizes contributions and often reveals author-recognized boundaries.
+
+
+\end{document}

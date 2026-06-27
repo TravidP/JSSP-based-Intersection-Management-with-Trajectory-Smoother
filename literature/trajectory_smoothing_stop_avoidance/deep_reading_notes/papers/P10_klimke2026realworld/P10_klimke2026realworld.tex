@@ -1,0 +1,179 @@
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
+\definecolor{notegray}{RGB}{246,248,251}
+\title{P10. Real-World Evaluation of Two Cooperative Intersection Management Approaches\\中英双语博士精读笔记}
+\author{Marvin Klimke; Max Bastian Mertens; Benjamin Volz; Michael Buchholz}
+\date{2026 · IEEE Intelligent Transportation Systems Magazine (accepted)}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Theme / 主题：} Real-world cooperative intersection management\\
+\textbf{Method family / 方法族：} Real-world cooperative maneuver planning evaluation / 真实道路协同机动规划评估\\
+\textbf{PDF pages / 页数：} 11 \quad
+\textbf{Relevance / 相关度：} 90/100\\
+\textbf{Source / 来源：} \url{https://arxiv.org/abs/2403.16478}
+
+\section{论文全景速览与核心贡献 / High-Level Overview \& Core Contributions}
+\subsection{研究背景与痛点 / Background \& Pain Points}
+这篇论文位于“Real-world cooperative intersection management”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。
+
+The paper belongs to the theme of Real-world cooperative intersection management. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.
+
+\textbf{Pain point / 痛点：} Focuses on cooperative maneuver planning evaluation, not a JSSP formulation.
+
+\subsection{核心科学问题 / Core Scientific Question}
+协同交叉口管理方法在混合交通仿真与真实原型车测试中是否仍能减少停车和通行时间？
+
+Do cooperative intersection-management approaches reduce stops and crossing time in both mixed-traffic simulation and real prototype drives?
+
+\subsection{科学贡献 / Scientific Contributions}
+\begin{itemize}
+\item 方法贡献 (method contribution)：Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives.
+\item 安全/避碰贡献 (safety contribution)：Evaluates criticality metrics while operating with prototype connected automated vehicles in public traffic.
+\item 平滑/停止避免贡献 (smoothing contribution)：Reports substantial reductions in crossing time and number of stops for cooperative maneuver planning.
+\item 创新力度评判 (reviewer judgement)：强验证价值：真实道路评估稀缺，是论文实验设计和指标选择的优质参考。
+\end{itemize}
+
+
+\subsection{核心概念对照 / Core Concepts}
+\begin{longtable}{p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}}
+\toprule
+中文概念 & English Concept & Role / 学术作用\\
+\midrule
+自动交叉口管理 & Autonomous Intersection Management & 把信号控制替换为车辆级调度与控制。 \\
+轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
+安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
+Real-world cooperative maneuver planning evaluation & 真实道路协同机动规划评估 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{理论方法论深度解构 / Methodology \& Theoretical Framework}
+\subsection{问题数学建模 / Mathematical Formulation}
+\textbf{评估指标聚合 / Evaluation-metric aggregation}
+\[
+S=\frac{1}{M}\sum_{m=1}^{M} n_m^{stop},\quad T=\frac{1}{M}\sum_{m=1}^{M}(t_m^{out}-t_m^{in}),\quad K=\max_m \kappa_m
+\]
+\begin{longtable}{p{0.16\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.25\linewidth}}
+\toprule
+Symbol / 符号 & 含义 & Meaning & Role / 建模作用\\
+\midrule
+S & 平均停车次数 & average number of stops & 衡量 stop avoidance 的直接指标 \\
+T & 平均穿越时间 & average crossing time & 衡量效率 \\
+K & 最大关键性 & maximum criticality & 表示最危险场景风险 \\
+M & 评估运行次数 & number of evaluation runs & 仿真或真实试验样本量 \\
+kappa\_m & 关键性指标 & criticality measure & 安全评估变量 \\
+\bottomrule
+\end{longtable}
+
+\subsection{核心算法架构 / Core Algorithm Layout}
+论文不是提出单一新控制算法，而是比较多场景预测和图强化学习等协同机动规划模块，在混合交通仿真与真实车辆中评估停车、时间和关键性。
+
+Rather than only proposing a controller, the paper evaluates cooperative maneuver-planning modules in simulation and real-world prototype drives.
+
+\subsection{收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility}
+贡献在验证闭环：真实车辆实验暴露通信、定位、感知和人类交通干扰。它为仿真论文提供“哪些指标必须走向真实”的标尺。
+
+Its value is validation realism: real drives reveal communication, localization, perception, and mixed-traffic issues hidden in pure simulation.
+
+\subsection{潜在假设与边界条件 / Assumptions \& Boundary Conditions}
+\begin{itemize}
+\item 原型系统中的通信与感知可支持协同机动规划。
+\item 真实测试场景代表性足以支持初步结论。
+\item 关键性指标可近似反映真实安全风险。
+\end{itemize}
+
+
+\section{实验验证与结果评判 / Experimental Validation \& Result Evaluation}
+\textbf{Baselines \& Environment / 基准与环境：} 不同协同机动规划模块、非协同驾驶、仿真基线和真实驾驶对照。
+
+\textbf{Validation / 验证：} Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives.
+
+\textbf{Metrics / 指标：} 穿越时间、停车次数、关键性/风险、成功率和真实系统运行稳定性。
+
+\textbf{Ablation / 消融：} 作为评估论文，模块消融不一定充分；最需要的是同一交通需求下的模块替换、传感器/通信降级和 HDV 行为差异测试。
+
+\textbf{Reviewer reading / 审稿式阅读提醒：} 阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.
+
+\subsection{图表阅读线索 / Figure and Table Reading Cues}
+PDF extraction detected approximately 33 figure references and 4 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.
+
+\begin{longtable}{p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}}
+\toprule
+图表名称 & Figure/Table Name & Reading focus / 阅读重点\\
+\midrule
+系统框架图 & system framework diagram & 先确认输入、决策层、控制层和安全约束之间的数据流。 \\
+策略网络/训练流程图 & policy-network or training-pipeline diagram & 检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。 \\
+实验指标对比图表 & experimental metric comparison plots/tables & 重点看平均值之外的密度变化、失败场景、计算时间和方差。 \\
+\bottomrule
+\end{longtable}
+
+\section{审稿人视角：批判性思考与未来方向 / Critical Thinking \& Future Directions}
+\subsection{论文局限性 / Limitations \& Weaknesses}
+\begin{itemize}
+\item 样本规模和场景覆盖通常小于大规模仿真。
+\item 不是 JSSP 建模论文，理论调度贡献有限。
+\item 真实测试条件可能较温和，极端场景不足。
+\end{itemize}
+
+
+\subsection{博士课题拓展点 / Research Extensions for PhD}
+\begin{itemize}
+\item 把你的 JSSP scheduler 输出转化为相同停车/穿越时间/关键性指标，形成可对标实验。
+\item 设计 sim-to-real gap 表格：仿真中通过的策略在真实系统中哪些环节会失效。
+\item 加入通信延迟、定位噪声和 HDV 插入，复现实验鲁棒性。
+\end{itemize}
+
+
+\subsection{如何服务当前课题 / Use in This Project}
+Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.
+
+\section{交互式可视化与 PDF 排版蓝图 / Interactive Visualization \& PDF Layout Blueprint}
+\textbf{动态参数 / Parameter：} 通信延迟 / Communication latency, range [0, 500] ms.
+
+延迟上升会降低协同收益，并增加保守安全缓冲。
+
+Higher latency reduces coordination benefit and increases safety buffers.
+
+\subsection{HTML 结构化布局建议 / HTML Structuring}
+\begin{itemize}
+\item 顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。
+\item 左侧目录/section navigator，右侧为五大精读模块。
+\item 公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。
+\item 审稿人批注用 reviewer-note block，博士拓展用 research-idea list。
+\item 交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。
+\end{itemize}
+
+
+\section{来源锚点与逐节阅读路径 / Source Anchors \& Section-by-Section Reading Map}
+\begin{longtable}{p{0.14\linewidth}p{0.76\linewidth}}
+\toprule
+Page & Extracted heading\\
+\midrule
+p.1 & I. INTRODUCTION \\
+p.1 & 101069547. Views and opinions expressed are however those of the authors \\
+p.5 & IV. SIMULATIONAPPROACH \\
+\bottomrule
+\end{longtable}
+
+\paragraph{p.1 I. INTRODUCTION}定位问题背景、研究缺口和为什么现有保守/非协同方法不足。 / Frames the motivation, research gap, and limits of conservative or non-cooperative methods.
+
+\paragraph{p.1 101069547. Views and opinions expressed are however those of the authors}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.2 2 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.2 II. RELATEDWORK}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.3 III. COOPERATIVEMANEUVERPLANNINGMODULES}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.4 4 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.5 IV. SIMULATIONAPPROACH}检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。 / Tests efficiency, safety, or energy claims; inspect whether baselines are fair.
+
+\paragraph{p.6 6 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+
+\end{document}

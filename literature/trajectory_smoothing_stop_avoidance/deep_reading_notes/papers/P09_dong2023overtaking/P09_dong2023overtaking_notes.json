@@ -1,0 +1,226 @@
+{
+  "id": "P09",
+  "bibkey": "dong2023overtaking",
+  "title": "Overtaking-enabled Eco-approach Control at Signalized Intersections for Connected and Automated Vehicles",
+  "authors": "Haoxuan Dong; Weichao Zhuang; Guoyuan Wu; Zhaojian Li; Guodong Yin; Ziyou Song",
+  "year": 2023,
+  "venue": "arXiv preprint",
+  "doi": "10.48550/arXiv.2306.09736",
+  "source_url": "https://arxiv.org/abs/2306.09736",
+  "pdf_url": "https://arxiv.org/pdf/2306.09736",
+  "theme": "Eco-approach + relaxed FIFO",
+  "relevance": 84,
+  "method_family": "Overtaking-enabled two-stage eco-approach / 允许超车的两阶段生态接近控制",
+  "source_facts": {
+    "pdf_file": "P09_dong2023overtaking.pdf",
+    "page_count": 12,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. INTERSECTIONCROSSINGSCENARIO AND",
+        "page": 2
+      },
+      {
+        "heading": "III. PROBLEMFORMULATION ANDCONTROLFRAMEWORK",
+        "page": 3
+      },
+      {
+        "heading": "IV. OVERTAKING-ENABLEDECO-APPROACH",
+        "page": 4
+      },
+      {
+        "heading": "V. SIMULATION ANDRESULTS",
+        "page": 8
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "III. PROBLEMFORMULATION ANDCONTROLFRAMEWORK",
+        "page": 3
+      },
+      {
+        "heading": "V. SIMULATION ANDRESULTS",
+        "page": 8
+      }
+    ],
+    "figure_reference_count": 24,
+    "table_reference_count": 8,
+    "equation_reference_count": 91
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Overtaking-enabled two-stage eco-approach",
+      "允许超车的两阶段生态接近控制",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 2,
+      "heading": "II. INTERSECTIONCROSSINGSCENARIO AND",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 3,
+      "heading": "III. PROBLEMFORMULATION ANDCONTROLFRAMEWORK",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "IV. OVERTAKING-ENABLEDECO-APPROACH",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 8,
+      "heading": "V. SIMULATION ANDRESULTS",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Eco-approach + relaxed FIFO”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Eco-approach + relaxed FIFO. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Signalized intersection and overtaking/lane planning assumptions are outside the current fixed-route JSSP scope.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "在信号交叉口中，放松 FIFO 队列并允许超车，能否同时降低能耗和延误？",
+    "core_question_en": "Can relaxing FIFO with overtaking-enabled lane optimization reduce both energy use and delay at signalized intersections?",
+    "contributions": [
+      "方法贡献 (method contribution)：Receding-horizon two-stage control: dynamic-programming lane optimization followed by PMP speed trajectory optimization.",
+      "安全/避碰贡献 (safety contribution)：Handles dynamic disturbance from preceding vehicles and lane-choice constraints.",
+      "平滑/停止避免贡献 (smoothing contribution)：Relaxes FIFO queuing at signalized intersections to reduce driving cost, energy consumption, and delay.",
+      "创新力度评判 (reviewer judgement)：较强工程洞察：明确挑战 FIFO 保守性，对 JSSP 重排序动机非常有用。"
+    ]
+  },
+  "methodology": {
+    "model_name": "车道 DP 与速度 PMP 的两阶段目标 / Two-stage lane-DP and speed-PMP objective",
+    "formula": "\\min_{\\ell_{0:H},\\,u(t)}\\; J=\\sum_{k=0}^{H} c_{\\ell}(x_k,\\ell_k)+\\int_{t_0}^{t_f} c_v(v(t),u(t))\\,dt",
+    "symbols": [
+      [
+        "ell_k",
+        "第 k 步车道选择",
+        "lane choice at step k",
+        "动态规划阶段决策"
+      ],
+      [
+        "c_ell",
+        "车道/超车代价",
+        "lane/overtaking cost",
+        "平衡超车收益与扰动"
+      ],
+      [
+        "u(t)",
+        "速度控制",
+        "speed-control input",
+        "连续速度优化变量"
+      ],
+      [
+        "c_v",
+        "速度轨迹代价",
+        "speed-profile cost",
+        "包含能耗、时间和平滑性"
+      ],
+      [
+        "H",
+        "滚动规划长度",
+        "receding-horizon length",
+        "在线计算窗口"
+      ]
+    ],
+    "algorithm_zh": "第一阶段用动态规划选择车道和超车策略，打破传统 FIFO；第二阶段用 PMP/最优控制生成速度曲线。滚动时域使策略能对前车扰动重新规划。",
+    "algorithm_en": "A receding-horizon controller first solves lane/overtaking choices with dynamic programming and then optimizes the speed profile with optimal-control tools.",
+    "stability_zh": "两阶段设计把组合车道决策和连续速度控制分开，实时性较好；但阶段间耦合不足时，车道选择可能导致后续速度优化不可行。",
+    "stability_en": "The decomposition improves tractability, but lane decisions can create downstream feasibility issues if speed constraints are not anticipated.",
+    "assumptions": [
+      "车辆具备安全超车和变道能力。",
+      "信号相位和前车扰动可预测。",
+      "车道变化不会引入未建模的横向风险。"
+    ]
+  },
+  "experiments": {
+    "validation": "Extensive simulations report average driving-cost improvements over constant-speed and regular eco-approach baselines.",
+    "baselines": "常速接近、普通生态接近、FIFO 策略和不允许超车的控制器。",
+    "metrics": "驾驶成本、能耗、延误、停车次数、超车次数和计算耗时。",
+    "ablation": "需比较禁用超车、禁用 DP 车道优化和不同滚动时域长度。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "方法分类图",
+        "en": "method-taxonomy diagram",
+        "reading": "把综述分类映射到你的 scheduler、smoother、safety filter 和 evaluation 四层框架。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "信号场景与无信号 AIM 不完全一致。",
+      "超车可行性强依赖道路几何和混合交通行为。",
+      "DP 状态空间随车道数和车辆数增长。"
+    ],
+    "extensions": [
+      "把“允许超车”转化为 JSSP 中可交换相邻作业的局部搜索。",
+      "在无信号交叉口中研究 FIFO relaxation 的安全边界。",
+      "联合学习车道选择和排序，避免两阶段失配。"
+    ],
+    "project_use": "Supports the critique that FCFS/FIFO can be suboptimal and that speed smoothing should be coupled to sequencing."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "FIFO放松强度",
+      "label_en": "FIFO relaxation strength",
+      "min_value": 0,
+      "max_value": 1,
+      "default": 0.4,
+      "unit": "",
+      "response_zh": "放松越强，潜在效率越高，但规则复杂度和可解释性风险增加。",
+      "response_en": "Stronger FIFO relaxation can improve efficiency but raises rule complexity."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

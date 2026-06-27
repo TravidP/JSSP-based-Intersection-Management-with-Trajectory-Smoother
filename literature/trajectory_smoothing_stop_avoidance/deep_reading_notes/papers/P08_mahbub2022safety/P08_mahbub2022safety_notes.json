@@ -1,0 +1,268 @@
+{
+  "id": "P08",
+  "bibkey": "mahbub2022safety",
+  "title": "Safety-Aware and Data-Driven Predictive Control for Connected Automated Vehicles at a Mixed Traffic Signalized Intersection",
+  "authors": "A. M. Ishtiaque Mahbub; Viet-Anh Le; Andreas A. Malikopoulos",
+  "year": 2022,
+  "venue": "arXiv preprint",
+  "doi": "10.48550/arXiv.2203.05739",
+  "source_url": "https://arxiv.org/abs/2203.05739",
+  "pdf_url": "https://arxiv.org/pdf/2203.05739",
+  "theme": "Data-driven predictive control + mixed traffic safety",
+  "relevance": 78,
+  "method_family": "Data-driven predictive control + RLS / 数据驱动预测控制与递归最小二乘",
+  "source_facts": {
+    "pdf_file": "P08_mahbub2022safety.pdf",
+    "page_count": 6,
+    "section_headings": [
+      {
+        "heading": "1. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "2. PROBLEM FORMULATION",
+        "page": 2
+      },
+      {
+        "heading": "2.1 Communication Topology",
+        "page": 2
+      },
+      {
+        "heading": "2.2 Vehicle Dynamics and Constraints",
+        "page": 2
+      },
+      {
+        "heading": "3. CONTROL FRAMEWORK",
+        "page": 3
+      },
+      {
+        "heading": "3.1 Online Car-following Model Parameter Estimation",
+        "page": 4
+      },
+      {
+        "heading": "3.2 Predictive Control Problem",
+        "page": 4
+      },
+      {
+        "heading": "4. SIMULATION AND RESULT",
+        "page": 4
+      },
+      {
+        "heading": "4.1 Simulation Setup",
+        "page": 4
+      },
+      {
+        "heading": "4.2 Results and Discussions",
+        "page": 5
+      },
+      {
+        "heading": "5. CONCLUDING REMARKS",
+        "page": 5
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "1. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "2. PROBLEM FORMULATION",
+        "page": 2
+      },
+      {
+        "heading": "4. SIMULATION AND RESULT",
+        "page": 4
+      }
+    ],
+    "figure_reference_count": 11,
+    "table_reference_count": 2,
+    "equation_reference_count": 41
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Data-driven predictive control + RLS",
+      "数据驱动预测控制与递归最小二乘",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "1. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 2,
+      "heading": "2. PROBLEM FORMULATION",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 2,
+      "heading": "2.1 Communication Topology",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 2,
+      "heading": "2.2 Vehicle Dynamics and Constraints",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 3,
+      "heading": "3. CONTROL FRAMEWORK",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    },
+    {
+      "page": 4,
+      "heading": "3.1 Online Car-following Model Parameter Estimation",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "3.2 Predictive Control Problem",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "4. SIMULATION AND RESULT",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Data-driven predictive control + mixed traffic safety”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Data-driven predictive control + mixed traffic safety. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Signalized and rear-end-focused rather than conflict-zone scheduling across all movements.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "在混合交通信号交叉口中，如何在线估计前车行为并使 CAV 在黄灯/红灯附近安全预测控制？",
+    "core_question_en": "How can a CAV estimate a preceding HDV online and perform safety-aware predictive control near signal changes?",
+    "contributions": [
+      "方法贡献 (method contribution)：Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time.",
+      "安全/避碰贡献 (safety contribution)：Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes.",
+      "平滑/停止避免贡献 (smoothing contribution)：Smooths CAV response near yellow/red phases while avoiding overly conservative braking behind HDVs.",
+      "创新力度评判 (reviewer judgement)：中等：安全问题具体、方法稳健，对混合交通 fallback 很有参考价值。"
+    ]
+  },
+  "methodology": {
+    "model_name": "RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC",
+    "formula": "\\hat\\theta_k=\\hat\\theta_{k-1}+K_k(y_k-\\phi_k^\\top\\hat\\theta_{k-1}),\\quad \\min_{u_{0:N-1}}\\sum_{k=0}^{N}\\ell(x_k,u_k,\\hat\\theta_k)",
+    "symbols": [
+      [
+        "theta",
+        "HDV 行为参数",
+        "HDV behavior parameters",
+        "在线估计前车模型"
+      ],
+      [
+        "K_k",
+        "RLS 增益",
+        "RLS gain",
+        "控制新观测对参数的影响"
+      ],
+      [
+        "phi_k",
+        "回归特征",
+        "regressor features",
+        "由前车状态构成"
+      ],
+      [
+        "N",
+        "预测时域",
+        "prediction horizon",
+        "MPC 规划长度"
+      ],
+      [
+        "ell",
+        "阶段代价",
+        "stage cost",
+        "综合安全、舒适和信号响应"
+      ]
+    ],
+    "algorithm_zh": "控制器用 RLS 实时估计前方 HDV 行为，再在有限时域内求解预测控制问题，重点避免黄灯/红灯切换时的追尾风险和过度保守制动。",
+    "algorithm_en": "The controller estimates preceding HDV behavior with RLS and solves a finite-horizon predictive-control problem focused on rear-end safety near signal transitions.",
+    "stability_zh": "MPC 的滚动优化提供反馈修正，RLS 提供模型自适应；但稳定性依赖可辨识性、预测时域和安全约束设置。",
+    "stability_en": "Receding-horizon MPC offers feedback correction and RLS adapts the behavior model, but robustness depends on identifiability and constraint design.",
+    "assumptions": [
+      "前车行为可由低维参数模型描述。",
+      "CAV 可可靠观测前车状态。",
+      "主要风险是纵向追尾，而非多方向冲突区碰撞。"
+    ]
+  },
+  "experiments": {
+    "validation": "Numerical simulation and robustness analysis.",
+    "baselines": "固定参数 MPC、普通跟驰模型、无估计控制器和保守刹车策略。",
+    "metrics": "最小车间距、碰撞风险、速度/加速度平滑性、延误和信号违规。",
+    "ablation": "关键是去掉 RLS 自适应、改变预测时域、改变安全约束强度，观察鲁棒性。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "策略网络/训练流程图",
+        "en": "policy-network or training-pipeline diagram",
+        "reading": "检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "场景局限于信号交叉口纵向跟驰。",
+      "RLS 对异常驾驶和非线性行为变化可能响应不足。",
+      "未解决交叉冲突、合流和多车调度。"
+    ],
+    "extensions": [
+      "把 RLS/贝叶斯预测接入无信号 JSSP smoother，为 HDV 建立不确定处理时间。",
+      "用分布鲁棒 MPC 替代点估计 MPC。",
+      "将追尾 CBF 与横向冲突 CBF 统一成多约束 safety layer。"
+    ],
+    "project_use": "Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "预测时域",
+      "label_en": "Prediction horizon",
+      "min_value": 2,
+      "max_value": 12,
+      "default": 6,
+      "unit": "s",
+      "response_zh": "时域越长越能提前制动，但计算量和模型误差暴露也增加。",
+      "response_en": "A longer horizon anticipates braking but increases computation and model-error exposure."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

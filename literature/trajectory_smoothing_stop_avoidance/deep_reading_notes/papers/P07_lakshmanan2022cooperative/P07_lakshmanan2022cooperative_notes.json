@@ -1,0 +1,296 @@
+{
+  "id": "P07",
+  "bibkey": "lakshmanan2022cooperative",
+  "title": "Cooperative Control in Eco-Driving of Electric Connected and Autonomous Vehicles in an Un-Signalized Urban Intersection",
+  "authors": "Vinith Kumar Lakshmanan; Antonio Sciarretta; Ouafae El Ganaoui-Mourlan",
+  "year": 2022,
+  "venue": "AAC 2022 submission / arXiv version",
+  "doi": "10.48550/arXiv.2206.12360",
+  "source_url": "https://arxiv.org/abs/2206.12360",
+  "pdf_url": "https://arxiv.org/pdf/2206.12360",
+  "theme": "Eco-driving optimal speed profile",
+  "relevance": 81,
+  "method_family": "Pontryagin minimum principle eco-driving / PMP 生态驾驶最优控制",
+  "source_facts": {
+    "pdf_file": "P07_lakshmanan2022cooperative.pdf",
+    "page_count": 8,
+    "section_headings": [
+      {
+        "heading": "1. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "2. INTERSECTION MODEL, VEHICLE MODEL AND",
+        "page": 2
+      },
+      {
+        "heading": "2.1 Intersection Model",
+        "page": 2
+      },
+      {
+        "heading": "2.2 Vehicle Model",
+        "page": 3
+      },
+      {
+        "heading": "3. OPTIMAL CONTROL PROBLEM FORMULATION",
+        "page": 4
+      },
+      {
+        "heading": "3.1 Unconstrained Eco-Driving Problem",
+        "page": 4
+      },
+      {
+        "heading": "3.2 Car-Following conﬂict/Sequential Conﬂict",
+        "page": 4
+      },
+      {
+        "heading": "3.3 Crossing Conﬂict",
+        "page": 5
+      },
+      {
+        "heading": "3.4 Diverging Conﬂict",
+        "page": 5
+      },
+      {
+        "heading": "3.5 Merging Conﬂict",
+        "page": 5
+      },
+      {
+        "heading": "3.6 Turning Constraint",
+        "page": 6
+      },
+      {
+        "heading": "4. ALGORITHM",
+        "page": 6
+      },
+      {
+        "heading": "5. SIMULATION",
+        "page": 7
+      },
+      {
+        "heading": "6. CONCLUSION",
+        "page": 7
+      },
+      {
+        "heading": "2011 IEEE Vehicle Power and",
+        "page": 8
+      },
+      {
+        "heading": "2018 European Control Conference",
+        "page": 8
+      },
+      {
+        "heading": "2019 IEEE Intelligent Transportation Systems",
+        "page": 8
+      },
+      {
+        "heading": "2016 IEEE Conference on",
+        "page": 8
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "1. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "3. OPTIMAL CONTROL PROBLEM FORMULATION",
+        "page": 4
+      },
+      {
+        "heading": "5. SIMULATION",
+        "page": 7
+      }
+    ],
+    "figure_reference_count": 14,
+    "table_reference_count": 0,
+    "equation_reference_count": 63
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Pontryagin minimum principle eco-driving",
+      "PMP 生态驾驶最优控制",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "1. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 2,
+      "heading": "2. INTERSECTION MODEL, VEHICLE MODEL AND",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 2,
+      "heading": "2.1 Intersection Model",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 3,
+      "heading": "2.2 Vehicle Model",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "3. OPTIMAL CONTROL PROBLEM FORMULATION",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "3.1 Unconstrained Eco-Driving Problem",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "3.2 Car-Following conﬂict/Sequential Conﬂict",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 5,
+      "heading": "3.3 Crossing Conﬂict",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Eco-driving optimal speed profile”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Eco-driving optimal speed profile. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Narrower single-vehicle/eco-driving emphasis; less detail on high-level scheduling.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "在无信号交叉口协作中，如何用解析最优控制生成节能、少停顿的速度曲线？",
+    "core_question_en": "How can Pontryagin-style optimal control generate energy-efficient speed profiles for cooperative CAVs at an unsignalized intersection?",
+    "contributions": [
+      "方法贡献 (method contribution)：Single-level eco-driving optimization solved with Pontryagin's Minimum Principle for electric CAV speed profiles at an unsignalized intersection.",
+      "安全/避碰贡献 (safety contribution)：Analytical conflict cases and cooperation levels encode interaction safety among CAVs.",
+      "平滑/停止避免贡献 (smoothing contribution)：Focuses directly on optimal speed profiles that reduce energy use and avoid inefficient stop-and-go behavior.",
+      "创新力度评判 (reviewer judgement)：理论清晰但范围较窄：对 smoother 目标函数很有价值，对高层调度贡献较少。"
+    ]
+  },
+  "methodology": {
+    "model_name": "PMP 速度规划问题 / PMP speed-profile optimal control",
+    "formula": "\\min_{u(t)}\\int_{t_0}^{t_f}\\left(\\alpha P(v(t),u(t))+\\beta u(t)^2\\right)dt,\\quad H=L+\\lambda_p v+\\lambda_v u",
+    "symbols": [
+      [
+        "P(v,u)",
+        "动力/能耗模型",
+        "power or energy model",
+        "刻画电动车能量消耗"
+      ],
+      [
+        "u(t)",
+        "加速度",
+        "acceleration",
+        "连续控制变量"
+      ],
+      [
+        "H",
+        "哈密顿量",
+        "Hamiltonian",
+        "PMP 的必要条件核心"
+      ],
+      [
+        "lambda_p,lambda_v",
+        "协态变量",
+        "costate variables",
+        "连接状态约束和最优控制"
+      ],
+      [
+        "alpha,beta",
+        "能耗与平滑权重",
+        "energy and smoothness weights",
+        "决定节能与舒适的折中"
+      ]
+    ],
+    "algorithm_zh": "论文把路口协作转为有限时域速度曲线优化，用 PMP 推导最优性必要条件，并比较协作与非协作策略。其价值在于给出可解释的低层速度平滑目标。",
+    "algorithm_en": "The paper formulates cooperative eco-driving as a finite-horizon speed-profile problem and uses PMP conditions to derive interpretable optimal-control behavior.",
+    "stability_zh": "解析最优控制比黑盒学习更可解释，但对边界条件和冲突场景分类敏感；实时性取决于求解 shooting/边值问题的效率。",
+    "stability_en": "The optimal-control structure is interpretable, but solution quality depends on boundary conditions and conflict-case classification.",
+    "assumptions": [
+      "车辆动力学和能耗模型可精确获得。",
+      "冲突关系可以预先分类并转成边界/时间约束。",
+      "场景规模相对有限。"
+    ]
+  },
+  "experiments": {
+    "validation": "Simulation comparison of cooperative and non-cooperative eco-driving against IDM baseline.",
+    "baselines": "IDM、非协作生态驾驶、固定速度或普通跟驰策略。",
+    "metrics": "能耗、速度平滑性、旅行时间、停车次数和安全间隔满足情况。",
+    "ablation": "不是典型模块化学习论文，消融较少；更需要权重敏感性和不同协作等级比较。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "控制框架/轨迹曲线图",
+        "en": "control-framework or trajectory-profile plots",
+        "reading": "关注约束激活位置、速度/加速度曲线和安全裕度是否平滑。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "高层排序与多车组合爆炸处理不足。",
+      "PMP 推导在复杂约束下可能需要数值求解，工程实现不总是简单。",
+      "对混合交通和不确定性覆盖有限。"
+    ],
+    "extensions": [
+      "把 PMP 低层解作为 JSSP 调度候选动作的可行性 oracle。",
+      "用神经网络学习 PMP 解的近似映射，加速在线 smoother。",
+      "在成本中加入 jerk 和舒适性约束，构建更完整的轨迹平滑器。"
+    ],
+    "project_use": "Supports the smoothing objective terms for acceleration, energy proxy, and stop avoidance."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "平滑权重",
+      "label_en": "Smoothness weight",
+      "min_value": 0.1,
+      "max_value": 5.0,
+      "default": 1.5,
+      "unit": "",
+      "response_zh": "平滑权重越大，加速度变化越柔和，但可能增加清空时间。",
+      "response_en": "A larger smoothness weight softens acceleration but may increase clearing time."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

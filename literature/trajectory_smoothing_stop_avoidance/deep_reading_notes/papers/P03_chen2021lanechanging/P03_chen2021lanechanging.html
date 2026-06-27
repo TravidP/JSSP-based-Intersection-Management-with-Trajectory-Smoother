@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P03 Deep Reading Notes</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#657386; --line:#d9e1ea; --soft:#f6f8fb; --accent:#1f6f61; --warn:#8a4b0f; --blue:#1f5f8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif; color:var(--ink); background:#fff; }
+    header.hero { padding:28px 34px 18px; border-bottom:1px solid var(--line); background:#f3f6fa; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 10px; font-size:22px; }
+    h3 { margin:18px 0 8px; font-size:17px; color:var(--accent); }
+    p { margin:7px 0; }
+    a { color:var(--blue); }
+    .meta { color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar { position:sticky; top:0; z-index:2; display:flex; gap:8px; align-items:center; padding:10px 34px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    button, .back { border:1px solid var(--line); border-radius:6px; background:white; padding:7px 10px; color:var(--ink); text-decoration:none; cursor:pointer; }
+    main { display:grid; grid-template-columns:260px minmax(0,1fr); gap:28px; padding:24px 34px 60px; }
+    nav { position:sticky; top:58px; align-self:start; border-right:1px solid var(--line); padding-right:18px; }
+    nav a { display:block; padding:7px 0; color:var(--ink); text-decoration:none; }
+    section.panel { border-bottom:1px solid var(--line); padding:0 0 22px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .card, details, .reviewer-note { border:1px solid var(--line); border-radius:8px; padding:14px; background:var(--soft); }
+    .reviewer-note { border-left:4px solid var(--warn); background:#fffaf3; }
+    table { width:100%; border-collapse:collapse; margin:10px 0; }
+    th, td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    th { background:#eef3f7; text-align:left; }
+    .formula { overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }
+    .section-map { display:grid; gap:10px; }
+    .section-map article { border:1px solid var(--line); border-radius:8px; padding:12px; }
+    .viz { display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }
+    canvas { width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }
+    input[type=range] { width:100%; }
+    body.zh-only .en { display:none; }
+    body.en-only .zh { display:none; }
+    @media (max-width: 860px) { main { grid-template-columns:1fr; } nav { position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; } .grid,.viz { grid-template-columns:1fr; } }
+    @media print { .toolbar, nav, .interactive-only { display:none; } main { display:block; padding:12px 18px; } header.hero { padding:16px 18px; } body { font-size:11px; } section.panel { break-inside:avoid; } a { color:var(--ink); text-decoration:none; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>P03. Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling</h1>
+    <div class="meta">
+      <span>Chaoyi Chen; Mengchi Cai; Jiawei Wang; Kai Li; Qing Xu; Jianqiang Wang; Keqiang Li</span>
+      <span>2021</span>
+      <span>arXiv preprint</span>
+      <span>PDF pages: 14</span>
+      <span>Relevance: 82/100</span>
+    </div>
+  </header>
+  <div class="toolbar interactive-only">
+    <a class="back" href="../../index.html">Index</a>
+    <button onclick="document.body.className=''">双语 / Bilingual</button>
+    <button onclick="document.body.className='zh-only'">中文</button>
+    <button onclick="document.body.className='en-only'">English</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </div>
+  <main>
+    <nav>
+      <a href="#overview">1. 全景速览</a>
+      <a href="#method">2. 理论方法</a>
+      <a href="#experiment">3. 实验评判</a>
+      <a href="#critique">4. 批判与拓展</a>
+      <a href="#viz">5. 交互蓝图</a>
+      <a href="#anchors">来源锚点</a>
+    </nav>
+    <div>
+      <section id="overview" class="panel">
+        <h2>1. 论文全景速览与核心贡献 / High-Level Overview & Core Contributions</h2>
+        <div class="grid">
+          <div class="card"><h3>研究背景与痛点 / Background & Pain Points</h3><p class="zh">这篇论文位于“Lane changing + arrival scheduling”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。</p><p class="en">The paper belongs to the theme of Lane changing + arrival scheduling. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.</p><p>arXiv note reports text overlap with the authors&#x27; earlier graph-based paper; use mainly for lane-changing extension context.</p></div>
+          <div class="card"><h3>核心科学问题 / Core Scientific Question</h3><p class="zh">当车辆可以变道或选择目标车道时，如何联合决定路径/车道与无冲突到达时间？</p><p class="en">How should target-lane assignment and conflict-free arrival scheduling be coupled when vehicles may change lanes before the intersection?</p></div>
+        </div>
+        <h3>科学贡献 / Scientific Contributions</h3>
+        <ul><li>方法贡献 (method contribution)：Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover.</li><li>安全/避碰贡献 (safety contribution)：Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements.</li><li>平滑/停止避免贡献 (smoothing contribution)：Improves traffic efficiency by choosing target lanes and arrival schedules that avoid unnecessary queuing.</li><li>创新力度评判 (reviewer judgement)：中等：在 P02 图排序基础上加入横向决策，扩展性有价值，但理论新颖性主要来自组合而非新算法。</li></ul>
+        <h3>核心概念对照 / Core Concepts</h3>
+        <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr><tr><td>自动交叉口管理</td><td>Autonomous Intersection Management</td><td>把信号控制替换为车辆级调度与控制。</td></tr><tr><td>轨迹平滑</td><td>Trajectory Smoothing</td><td>减少急加减速、停车和能耗峰值。</td></tr><tr><td>安全约束</td><td>Safety Constraints</td><td>把碰撞风险写成距离、时间间隔或屏障函数。</td></tr><tr><td>Lane assignment + arrival scheduling</td><td>车道分配与到达调度</td><td>该论文的核心方法族。</td></tr></table>
+      </section>
+      <section id="method" class="panel">
+        <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
+        <h3>问题数学建模 / Mathematical Formulation</h3>
+        <p><b>联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling</b></p>
+        <div class="formula">$$
+\min_{l_i,t_i}\; \sum_{i\in V}\left(\alpha\,d_i(l_i)+\beta\,|t_i-t_i^{des}|\right)\quad \text{s.t.}\; (i,j)\in E(l)\Rightarrow |t_i-t_j|\ge \tau_{ij}
+$$</div>
+        <table><tr><th>Symbol / 符号</th><th>含义</th><th>Meaning</th><th>Role / 建模作用</th></tr><tr><td><code>l_i</code></td><td>目标车道</td><td>target lane</td><td>横向规划决策变量</td></tr><tr><td><code>t_i</code></td><td>车辆到达冲突区时间</td><td>arrival time at conflict zone</td><td>纵向调度决策变量</td></tr><tr><td><code>d_i(l_i)</code></td><td>变道代价</td><td>lane-changing cost</td><td>衡量横向操作复杂度</td></tr><tr><td><code>E(l)</code></td><td>由车道选择诱导的冲突边集</td><td>lane-induced conflict edges</td><td>说明横向选择会改变调度约束</td></tr><tr><td><code>tau_ij</code></td><td>安全时间间隔</td><td>safety headway</td><td>保证冲突车辆时间分离</td></tr></table>
+        <h3>核心算法架构 / Core Algorithm Layout</h3>
+        <p class="zh">框架先求多车目标分配与路径规划，再基于最终路径构建冲突图并求到达时间。这样横向变道改变冲突关系，纵向调度再处理被改变后的路口资源竞争。</p>
+        <p class="en">The framework first assigns target lanes/paths, then constructs a conflict graph for those paths and computes a conflict-free arrival schedule.</p>
+        <div class="reviewer-note"><b>收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility</b><p class="zh">分阶段设计提高实时性，但牺牲联合最优性；如果第一阶段车道选择失误，第二阶段只能在较差冲突结构上补救。</p><p class="en">The two-stage decomposition is tractable but not globally optimal; poor lane assignment can constrain the downstream scheduler.</p></div>
+        <h3>潜在假设与边界条件 / Assumptions & Boundary Conditions</h3>
+        <ul><li>车辆可执行规划出的变道动作，周围交通允许形成编队。</li><li>车道级地图和目标车道需求已知。</li><li>变道安全约束可以被简化成可规划的路径/队形约束。</li></ul>
+      </section>
+      <section id="experiment" class="panel">
+        <h2>3. 实验验证与结果评判 / Experimental Validation & Result Evaluation</h2>
+        <div class="grid">
+          <div class="card"><h3>基准对比与环境 / Baselines & Environment</h3><p>固定车道策略、无变道调度、FCFS 和基于图的到达调度。</p><p>Numerical simulations for different vehicle counts and traffic volumes.</p></div>
+          <div class="card"><h3>核心指标 / Metrics</h3><p>平均延误、总行程时间、完成变道比例、冲突避免成功率和交通量敏感性。</p></div>
+          <div class="card"><h3>消融实验 / Ablation</h3><p>最关键消融是去掉 lane-changing stage，对比是否真的改善调度；还应测试高密度下变道失败的退化策略。</p></div>
+          <div class="card"><h3>博士阅读提醒 / Reading Reminder</h3><p>阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.</p></div>
+        </div>
+        <h3>图表阅读线索 / Figure and Table Reading Cues</h3>
+        <p>PDF extraction detected approximately 44 figure references and 6 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.</p>
+        <table><tr><th>图表名称</th><th>Figure/Table Name</th><th>Reading focus / 阅读重点</th></tr><tr><td>系统框架图</td><td>system framework diagram</td><td>先确认输入、决策层、控制层和安全约束之间的数据流。</td></tr><tr><td>冲突关系图 / 通行顺序图</td><td>conflict-relation or passing-order graph</td><td>把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。</td></tr><tr><td>实验指标对比图表</td><td>experimental metric comparison plots/tables</td><td>重点看平均值之外的密度变化、失败场景、计算时间和方差。</td></tr></table>
+      </section>
+      <section id="critique" class="panel">
+        <h2>4. 审稿人视角：批判性思考与未来方向 / Critical Thinking & Future Directions</h2>
+        <div class="grid">
+          <div><h3>论文局限性 / Limitations & Weaknesses</h3><ul><li>文本与同作者早期图调度工作高度相关，独立贡献需谨慎引用。</li><li>横向控制细节和人类驾驶干扰不足。</li><li>两阶段解耦可能错过更优的路径-时间联合解。</li></ul></div>
+          <div><h3>博士课题拓展点 / Research Extensions for PhD</h3><ul class="research-idea"><li>用双层优化 (bi-level optimization) 同时学习车道选择和 JSSP 排序。</li><li>为变道失败设计可恢复调度 (recoverable scheduling)，让路口管理器在线回滚目标车道。</li><li>把车道选择看成 route-template selection，扩展当前固定路线假设。</li></ul></div>
+        </div>
+        <div class="reviewer-note"><b>如何服务当前课题 / Use in This Project</b><p>Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.</p></div>
+      </section>
+      <section id="viz" class="panel">
+        <h2>5. 交互式可视化与 PDF 排版蓝图 / Interactive Visualization & PDF Layout Blueprint</h2>
+        <div class="viz">
+          <div class="card">
+            <h3>动态参数探索 / Parameter Exploration</h3>
+            <label>可变道车辆比例 / Lane-change-enabled ratio: <b id="paramValue"></b> </label>
+            <input id="param" type="range" min="0" max="1" value="0.35" step="0.01">
+            <p class="zh">比例增加会提高调度自由度，但过高时变道冲突和局部扰动也会增加。</p>
+            <p class="en">More lane-change freedom improves scheduling flexibility but can add lateral conflicts.</p>
+          </div>
+          <canvas id="chart" width="720" height="320"></canvas>
+        </div>
+        <h3>HTML 结构化布局建议 / HTML Structuring</h3>
+        <ul><li>顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。</li><li>左侧目录/section navigator，右侧为五大精读模块。</li><li>公式卡片使用 &lt;pre&gt; 或 LaTeX block，紧跟符号表。</li><li>审稿人批注用 reviewer-note block，博士拓展用 research-idea list。</li><li>交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。</li></ul>
+      </section>
+      <section id="anchors" class="panel">
+        <h2>来源锚点与逐节阅读路径 / Source Anchors & Section-by-Section Reading Map</h2>
+        <p>以下锚点来自本地 PDF 抽取，用于回到原文复核；笔记不保存论文全文。</p>
+        <table><tr><th>Page</th><th>Extracted heading</th></tr><tr><td>p.1</td><td>I. INTRODUCTION</td></tr><tr><td>p.2</td><td>II. T WO-STAGE COOPERATION FRAMEWORK</td></tr><tr><td>p.10</td><td>V. SIMULATIONS</td></tr></table>
+        <div class="section-map"><article><b>p.1 · I. INTRODUCTION</b><p class='zh'>定位问题背景、研究缺口和为什么现有保守/非协同方法不足。</p><p class='en'>Frames the motivation, research gap, and limits of conservative or non-cooperative methods.</p></article><article><b>p.2 · II. T WO-STAGE COOPERATION FRAMEWORK</b><p class='zh'>给出算法流程和求解机制，应重点追踪输入、输出和安全接口。</p><p class='en'>Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.</p></article><article><b>p.3 · III. M ULTI-VEHICLE TARGET ASSIGNMENT AND PATH</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.6 · 1. However, we</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.7 · IV. CAV S CHEDULING AT UNSIGNALIZED INTERSECTIONS</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.9 · 4. This also indicates that the theoretical evacuation times</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.9 · 6. We have proved that this can be solved by exchanging the</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.10 · V. SIMULATIONS</b><p class='zh'>检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。</p><p class='en'>Tests efficiency, safety, or energy claims; inspect whether baselines are fair.</p></article></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const min = 0, max = 1;
+    const slider = document.getElementById('param');
+    const value = document.getElementById('paramValue');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    function response(x) {
+      const z = (x - min) / (max - min || 1);
+      const delay = Math.min(1, 0.18 + 0.82 * Math.pow(z, 1.25));
+      const safety = Math.max(0, Math.min(1, 0.15 + 0.75 * (1 - Math.exp(-2.2 * z))));
+      const compute = Math.min(1, 0.10 + 0.88 * z * z);
+      return {delay, safety, compute};
+    }
+    function draw() {
+      const x = parseFloat(slider.value);
+      value.textContent = x.toFixed(2);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = '#d9e1ea'; ctx.lineWidth = 1;
+      for (let i=0;i<6;i++) { const y=40+i*45; ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(690,y); ctx.stroke(); }
+      const series = [
+        ['Efficiency pressure / 效率压力', '#1f5f8b', 'delay'],
+        ['Safety margin / 安全裕度', '#1f6f61', 'safety'],
+        ['Compute load / 计算负载', '#8a4b0f', 'compute']
+      ];
+      for (const [label,color,key] of series) {
+        ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i=0;i<=120;i++) {
+          const xx = min + (max-min)*i/120;
+          const yy = response(xx)[key];
+          const px = 50 + i/120*640;
+          const py = 270 - yy*210;
+          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      const px = 50 + ((x-min)/(max-min||1))*640;
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px,35); ctx.lineTo(px,285); ctx.stroke();
+      ctx.font = '15px -apple-system, sans-serif'; ctx.fillStyle = '#1d2733';
+      series.forEach((s,i)=>{ ctx.fillStyle=s[1]; ctx.fillRect(58,20+i*22,12,12); ctx.fillStyle='#1d2733'; ctx.fillText(s[0],78,31+i*22); });
+    }
+    slider.addEventListener('input', draw);
+    draw();
+  </script>
+</body>
+</html>

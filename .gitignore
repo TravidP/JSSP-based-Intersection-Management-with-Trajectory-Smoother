@@ -22,6 +22,7 @@
 *.nav
 *.snm
 *.vrb
+*.xdv
 
 # Compiled paper output
 /*.pdf
@@ -29,3 +30,4 @@
 # Local editor/build environment
 /.vscode/
 /.texmf/
+/.venv/

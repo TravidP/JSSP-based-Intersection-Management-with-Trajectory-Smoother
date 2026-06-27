@@ -1,0 +1,129 @@
+{
+  "output_root": "deep_reading_notes",
+  "paper_count": 15,
+  "html_count": 15,
+  "tex_count": 15,
+  "pdf_count": 15,
+  "notes": [
+    {
+      "id": "P01",
+      "bibkey": "chalaki2021priority",
+      "title": "A Priority-Aware Replanning and Resequencing Framework for Coordination of Connected and Automated Vehicles",
+      "html": "papers/P01_chalaki2021priority/P01_chalaki2021priority.html",
+      "pdf": "papers/P01_chalaki2021priority/P01_chalaki2021priority.pdf",
+      "json": "papers/P01_chalaki2021priority/P01_chalaki2021priority_notes.json"
+    },
+    {
+      "id": "P02",
+      "bibkey": "chen2021conflictfree",
+      "title": "Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis",
+      "html": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree.html",
+      "pdf": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree.pdf",
+      "json": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree_notes.json"
+    },
+    {
+      "id": "P03",
+      "bibkey": "chen2021lanechanging",
+      "title": "Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling",
+      "html": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging.html",
+      "pdf": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging.pdf",
+      "json": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging_notes.json"
+    },
+    {
+      "id": "P04",
+      "bibkey": "luo2023realtime",
+      "title": "Real-time Cooperative Vehicle Coordination at Unsignalized Road Intersections",
+      "html": "papers/P04_luo2023realtime/P04_luo2023realtime.html",
+      "pdf": "papers/P04_luo2023realtime/P04_luo2023realtime.pdf",
+      "json": "papers/P04_luo2023realtime/P04_luo2023realtime_notes.json"
+    },
+    {
+      "id": "P05",
+      "bibkey": "bai2022hybrid",
+      "title": "Hybrid Reinforcement Learning-Based Eco-Driving Strategy for Connected and Automated Vehicles at Signalized Intersections",
+      "html": "papers/P05_bai2022hybrid/P05_bai2022hybrid.html",
+      "pdf": "papers/P05_bai2022hybrid/P05_bai2022hybrid.pdf",
+      "json": "papers/P05_bai2022hybrid/P05_bai2022hybrid_notes.json"
+    },
+    {
+      "id": "P06",
+      "bibkey": "jiang2023ecodriving",
+      "title": "Eco-driving for Electric Connected Vehicles at Signalized Intersections: A Parameterized Reinforcement Learning Approach",
+      "html": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving.html",
+      "pdf": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving.pdf",
+      "json": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving_notes.json"
+    },
+    {
+      "id": "P07",
+      "bibkey": "lakshmanan2022cooperative",
+      "title": "Cooperative Control in Eco-Driving of Electric Connected and Autonomous Vehicles in an Un-Signalized Urban Intersection",
+      "html": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative.html",
+      "pdf": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative.pdf",
+      "json": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative_notes.json"
+    },
+    {
+      "id": "P08",
+      "bibkey": "mahbub2022safety",
+      "title": "Safety-Aware and Data-Driven Predictive Control for Connected Automated Vehicles at a Mixed Traffic Signalized Intersection",
+      "html": "papers/P08_mahbub2022safety/P08_mahbub2022safety.html",
+      "pdf": "papers/P08_mahbub2022safety/P08_mahbub2022safety.pdf",
+      "json": "papers/P08_mahbub2022safety/P08_mahbub2022safety_notes.json"
+    },
+    {
+      "id": "P09",
+      "bibkey": "dong2023overtaking",
+      "title": "Overtaking-enabled Eco-approach Control at Signalized Intersections for Connected and Automated Vehicles",
+      "html": "papers/P09_dong2023overtaking/P09_dong2023overtaking.html",
+      "pdf": "papers/P09_dong2023overtaking/P09_dong2023overtaking.pdf",
+      "json": "papers/P09_dong2023overtaking/P09_dong2023overtaking_notes.json"
+    },
+    {
+      "id": "P10",
+      "bibkey": "klimke2026realworld",
+      "title": "Real-World Evaluation of Two Cooperative Intersection Management Approaches",
+      "html": "papers/P10_klimke2026realworld/P10_klimke2026realworld.html",
+      "pdf": "papers/P10_klimke2026realworld/P10_klimke2026realworld.pdf",
+      "json": "papers/P10_klimke2026realworld/P10_klimke2026realworld_notes.json"
+    },
+    {
+      "id": "P11",
+      "bibkey": "zhao2025spatial",
+      "title": "A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty",
+      "html": "papers/P11_zhao2025spatial/P11_zhao2025spatial.html",
+      "pdf": "papers/P11_zhao2025spatial/P11_zhao2025spatial.pdf",
+      "json": "papers/P11_zhao2025spatial/P11_zhao2025spatial_notes.json"
+    },
+    {
+      "id": "P12",
+      "bibkey": "yu2025uncertainty",
+      "title": "Uncertainty-Aware Safety-Critical Decision and Control for Autonomous Vehicles at Unsignalized Intersections",
+      "html": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty.html",
+      "pdf": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty.pdf",
+      "json": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty_notes.json"
+    },
+    {
+      "id": "P13",
+      "bibkey": "liu2023systematic",
+      "title": "A Systematic Survey of Control Techniques and Applications in Connected and Automated Vehicles",
+      "html": "papers/P13_liu2023systematic/P13_liu2023systematic.html",
+      "pdf": "papers/P13_liu2023systematic/P13_liu2023systematic.pdf",
+      "json": "papers/P13_liu2023systematic/P13_liu2023systematic_notes.json"
+    },
+    {
+      "id": "P14",
+      "bibkey": "cederle2024distributed",
+      "title": "A Distributed Approach to Autonomous Intersection Management via Multi-Agent Reinforcement Learning",
+      "html": "papers/P14_cederle2024distributed/P14_cederle2024distributed.html",
+      "pdf": "papers/P14_cederle2024distributed/P14_cederle2024distributed.pdf",
+      "json": "papers/P14_cederle2024distributed/P14_cederle2024distributed_notes.json"
+    },
+    {
+      "id": "P15",
+      "bibkey": "li2023dhal",
+      "title": "D-HAL: Distributed Hierarchical Adversarial Learning for Multi-Agent Interaction in Autonomous Intersection Management",
+      "html": "papers/P15_li2023dhal/P15_li2023dhal.html",
+      "pdf": "papers/P15_li2023dhal/P15_li2023dhal.pdf",
+      "json": "papers/P15_li2023dhal/P15_li2023dhal_notes.json"
+    }
+  ]
+}

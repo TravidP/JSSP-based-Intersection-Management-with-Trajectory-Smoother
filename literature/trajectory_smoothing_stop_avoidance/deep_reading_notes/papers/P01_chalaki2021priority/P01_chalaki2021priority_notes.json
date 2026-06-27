@@ -1,0 +1,236 @@
+{
+  "id": "P01",
+  "bibkey": "chalaki2021priority",
+  "title": "A Priority-Aware Replanning and Resequencing Framework for Coordination of Connected and Automated Vehicles",
+  "authors": "Behdad Chalaki; Andreas A. Malikopoulos",
+  "year": 2021,
+  "venue": "arXiv preprint",
+  "doi": "10.48550/arXiv.2109.05573",
+  "source_url": "https://arxiv.org/abs/2109.05573",
+  "pdf_url": "https://arxiv.org/pdf/2109.05573",
+  "theme": "Scheduling/resequencing + optimal control",
+  "relevance": 94,
+  "method_family": "Priority-aware resequencing + decentralized optimal control / 优先级重排序与分散最优控制",
+  "source_facts": {
+    "pdf_file": "P01_chalaki2021priority.pdf",
+    "page_count": 6,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "III. Finally, we provide simulation results in Section IV, and",
+        "page": 1
+      },
+      {
+        "heading": "II. M ODELING FRAMEWORK",
+        "page": 1
+      },
+      {
+        "heading": "III. A PRIORITY-AWARE RESEQUENCING",
+        "page": 3
+      },
+      {
+        "heading": "IV. SIMULATION RESULTS",
+        "page": 5
+      },
+      {
+        "heading": "V. CONCLUDING REMARKS AND DISCUSSION",
+        "page": 6
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. M ODELING FRAMEWORK",
+        "page": 1
+      },
+      {
+        "heading": "III. Finally, we provide simulation results in Section IV, and",
+        "page": 1
+      }
+    ],
+    "figure_reference_count": 11,
+    "table_reference_count": 0,
+    "equation_reference_count": 37
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Priority-aware resequencing + decentralized optimal control",
+      "优先级重排序与分散最优控制",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 1,
+      "heading": "III. Finally, we provide simulation results in Section IV, and",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    },
+    {
+      "page": 1,
+      "heading": "II. M ODELING FRAMEWORK",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    },
+    {
+      "page": 3,
+      "heading": "III. A PRIORITY-AWARE RESEQUENCING",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 5,
+      "heading": "IV. SIMULATION RESULTS",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    },
+    {
+      "page": 6,
+      "heading": "V. CONCLUDING REMARKS AND DISCUSSION",
+      "zh": "总结贡献和未来方向，也常暴露作者承认的边界条件。",
+      "en": "Summarizes contributions and often reveals author-recognized boundaries."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Scheduling/resequencing + optimal control”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Scheduling/resequencing + optimal control. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Assumes connected automated vehicles, known paths, and simplified dynamics; the paper is closer to resequencing theory than to learned graph scheduling.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "当车辆到达扰动使原始通行序列不再高效或可行时，如何在不牺牲安全约束的前提下快速重排序并生成可执行轨迹？",
+    "core_question_en": "How can an intersection manager resequence disturbed arrivals while preserving safety and low-level trajectory feasibility?",
+    "contributions": [
+      "方法贡献 (method contribution)：Event-driven replanning and priority-aware resequencing layered on decentralized CAV optimal control at a signal-free intersection.",
+      "安全/避碰贡献 (safety contribution)：Uses rear-end and lateral safety constraints around conflict points, with replanning when disturbances change feasibility.",
+      "平滑/停止避免贡献 (smoothing contribution)：The lower-level optimal-control trajectory is constructed so vehicles can conserve momentum rather than stop at the intersection when a feasible exit time exists.",
+      "创新力度评判 (reviewer judgement)：强相关但中等创新：把 resequencing 明确嵌入 CAV 最优控制闭环，贡献主要在系统架构和事件触发逻辑。"
+    ]
+  },
+  "methodology": {
+    "model_name": "双积分车辆模型与能量型最优控制 / Double-integrator vehicle model with energy-like optimal control",
+    "formula": "\\min_{u_i(\\cdot),\\,t_i^f}\\; J_i=\\frac{1}{2}\\int_{t_i^0}^{t_i^f}u_i(t)^2\\,dt,\\quad \\dot p_i(t)=v_i(t),\\quad \\dot v_i(t)=u_i(t)",
+    "symbols": [
+      [
+        "i",
+        "车辆索引",
+        "vehicle index",
+        "把多车协调拆成单车最优控制子问题"
+      ],
+      [
+        "p_i(t)",
+        "沿路径位置",
+        "path-coordinate position",
+        "描述车辆是否接近/离开冲突区"
+      ],
+      [
+        "v_i(t)",
+        "速度",
+        "speed",
+        "连接安全间距、通行时间与停止避免"
+      ],
+      [
+        "u_i(t)",
+        "加速度控制",
+        "acceleration control",
+        "优化变量，平滑性和能耗代理"
+      ],
+      [
+        "t_i^f",
+        "车辆离开控制区时间",
+        "terminal exit time",
+        "高层排序传给低层控制器的关键接口"
+      ]
+    ],
+    "algorithm_zh": "高层监测车辆进入、延误和可行性破坏；当扰动出现时，按照优先级规则更新局部通行序列，再把目标离开时间传给每辆车的解析/数值最优控制器。低层控制器检查速度、加速度、追尾和横向冲突约束是否可执行。",
+    "algorithm_en": "The upper layer detects event-triggered infeasibility, resequences vehicles under priority rules, and sends target exit times to decentralized optimal controllers that enforce motion and safety constraints.",
+    "stability_zh": "实时性来自局部事件触发与低维车辆模型；安全性依赖硬约束而非学习策略。它不证明全局最优，但把全局重排问题约束在小窗口内，适合在线运行。",
+    "stability_en": "Real-time behavior comes from event-triggered local resequencing and low-dimensional dynamics; safety is constraint-based, while global optimality is intentionally relaxed.",
+    "assumptions": [
+      "所有车辆为联网自动驾驶车辆 (connected automated vehicles, CAVs)，且路径已知。",
+      "车辆动力学可由简化双积分模型 (double-integrator model) 充分描述。",
+      "通信、定位和控制执行误差较小，扰动可被及时探测。"
+    ]
+  },
+  "experiments": {
+    "validation": "Numerical simulation of signal-free intersection coordination under resequencing and replanning.",
+    "baselines": "通常与固定先来先服务/不重排序 (FCFS / no resequencing) 策略比较，重点观察扰动后恢复效率。",
+    "metrics": "通行时间 (travel time)、延误 (delay)、停止次数 (number of stops)、控制能量代理 (control effort) 和安全约束违反。",
+    "ablation": "论文更像机制验证而非完整消融；最应补充的是关闭优先级、关闭事件触发和扩大重排窗口的对比。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "冲突关系图 / 通行顺序图",
+        "en": "conflict-relation or passing-order graph",
+        "reading": "把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "对全 CAV 环境依赖强，混合交通中人类驾驶车辆 (HDVs) 会破坏可行性假设。",
+      "优先级规则可能引入公平性问题，长期低优先级车流需要饥饿避免机制。",
+      "简化动力学忽略执行器延迟、轮胎约束和感知误差累积。"
+    ],
+    "extensions": [
+      "把固定优先级扩展为学习型优先级函数 (learned priority function)，并加入公平性正则。",
+      "将重排序窗口映射为 JSSP machine queue，用图神经网络 (GNN) 预测候选交换收益。",
+      "在低层加入鲁棒 MPC 或 CBF 安全过滤器，处理通信延迟和轨迹预测误差。"
+    ],
+    "project_use": "Directly supports this project's hierarchy: a high-level sequence or schedule provides target times, and a low-level controller checks executable motion."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "重排序窗口大小",
+      "label_en": "Resequencing window size",
+      "min_value": 2,
+      "max_value": 12,
+      "default": 5,
+      "unit": "veh",
+      "response_zh": "窗口增大通常降低延误但提高计算量，并可能增加局部公平性风险。",
+      "response_en": "A larger window usually reduces delay but increases computation and fairness risk."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

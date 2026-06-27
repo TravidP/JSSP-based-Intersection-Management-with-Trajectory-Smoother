@@ -1,0 +1,236 @@
+{
+  "id": "P02",
+  "bibkey": "chen2021conflictfree",
+  "title": "Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis",
+  "authors": "Chaoyi Chen; Qing Xu; Mengchi Cai; Jiawei Wang; Jianqiang Wang; Biao Xu; Keqiang Li",
+  "year": 2021,
+  "venue": "Transportation Research Part C: Emerging Technologies / arXiv version",
+  "doi": "10.48550/arXiv.2107.07179",
+  "source_url": "https://arxiv.org/abs/2107.07179",
+  "pdf_url": "https://arxiv.org/pdf/2107.07179",
+  "theme": "Graph conflict modeling + passing order",
+  "relevance": 92,
+  "method_family": "Conflict graph + optimal passing order / 冲突图与最优通行顺序",
+  "source_facts": {
+    "pdf_file": "P02_chen2021conflictfree.pdf",
+    "page_count": 19,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. PROBLEM STATEMENT",
+        "page": 2
+      },
+      {
+        "heading": "III. METHODOLOGY",
+        "page": 4
+      },
+      {
+        "heading": "IV. SIMULATION",
+        "page": 11
+      },
+      {
+        "heading": "V. CONCLUSION",
+        "page": 17
+      },
+      {
+        "heading": "2014 IEEE Intelligent Vehicle Symposium, the Best Paper Award in the 14th",
+        "page": 19
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. PROBLEM STATEMENT",
+        "page": 2
+      },
+      {
+        "heading": "IV. SIMULATION",
+        "page": 11
+      }
+    ],
+    "figure_reference_count": 61,
+    "table_reference_count": 7,
+    "equation_reference_count": 40
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Conflict graph + optimal passing order",
+      "冲突图与最优通行顺序",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 2,
+      "heading": "II. PROBLEM STATEMENT",
+      "zh": "把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。",
+      "en": "Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully."
+    },
+    {
+      "page": 4,
+      "heading": "III. METHODOLOGY",
+      "zh": "给出算法流程和求解机制，应重点追踪输入、输出和安全接口。",
+      "en": "Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces."
+    },
+    {
+      "page": 11,
+      "heading": "IV. SIMULATION",
+      "zh": "检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。",
+      "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
+    },
+    {
+      "page": 17,
+      "heading": "V. CONCLUSION",
+      "zh": "总结贡献和未来方向，也常暴露作者承认的边界条件。",
+      "en": "Summarizes contributions and often reveals author-recognized boundaries."
+    },
+    {
+      "page": 19,
+      "heading": "2014 IEEE Intelligent Vehicle Symposium, the Best Paper Award in the 14th",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Graph conflict modeling + passing order”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Graph conflict modeling + passing order. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Mostly longitudinal control, ideal communication, and no lane changing in this paper's base formulation.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "如何把无信号交叉口中复杂的相交、跟驰、合流和分流关系转化为可求解的图排序问题？",
+    "core_question_en": "How can heterogeneous vehicle conflicts at an unsignalized intersection be encoded as graph relations that yield a conflict-free passing order?",
+    "contributions": [
+      "方法贡献 (method contribution)：Models trajectory conflicts as a conflict directed graph and coexisting undirected graph; solves passing order through improved depth-first spanning tree and minimum clique cover methods.",
+      "安全/避碰贡献 (safety contribution)：Conflict-free graph edges represent crossing, diverging, converging, and reachability conflicts before scheduling.",
+      "平滑/停止避免贡献 (smoothing contribution)：Optimizes evacuation time and average delay, using distributed control to reduce idling near the stop line.",
+      "创新力度评判 (reviewer judgement)：较强：图建模把交通冲突类型显式化，便于和 JSSP 的机器冲突/工序约束建立同构关系。"
+    ]
+  },
+  "methodology": {
+    "model_name": "冲突图与排序目标 / Conflict graph and sequencing objective",
+    "formula": "G=(V,E_d,E_u),\\quad \\min_{\\pi}\\; C_{\\max}(\\pi)=\\max_{i\\in V} t_i^{out}\\quad \\text{s.t.}\\; (i,j)\\in E_d\\Rightarrow i\\prec_\\pi j",
+    "symbols": [
+      [
+        "V",
+        "车辆节点集合",
+        "vehicle-node set",
+        "每辆车对应一个调度实体"
+      ],
+      [
+        "E_d",
+        "有向冲突/可达边",
+        "directed conflict/reachability edges",
+        "表达必须先后通过的约束"
+      ],
+      [
+        "E_u",
+        "无向共存/冲突边",
+        "undirected coexistence/conflict edges",
+        "表达是否可同批通过或需分组"
+      ],
+      [
+        "pi",
+        "通行序列",
+        "passing permutation",
+        "调度算法的核心决策变量"
+      ],
+      [
+        "C_max",
+        "最大清空时间",
+        "makespan / evacuation time",
+        "衡量路口整体效率"
+      ]
+    ],
+    "algorithm_zh": "先依据几何轨迹和时间可达性构建冲突有向图与共存无向图；再用改进深度优先生成树和最小团覆盖等图算法求通行组与顺序；最后由分布式控制保证每辆车按序到达冲突区。",
+    "algorithm_en": "The method builds directed and undirected graph relations from trajectory conflicts, solves groups and orders with graph algorithms, and executes the resulting order via distributed vehicle control.",
+    "stability_zh": "图约束先把不安全组合排除，控制层只需执行已筛选的顺序。实时性取决于图规模和团覆盖求解，但比直接连续优化全车轨迹更结构化。",
+    "stability_en": "Safety is front-loaded into graph constraints; tractability improves because the continuous-control layer receives a filtered sequence rather than solving all interactions jointly.",
+    "assumptions": [
+      "车辆轨迹模板和冲突点可提前计算。",
+      "车辆遵守分配的通行顺序，通信近似理想。",
+      "主要聚焦纵向控制，横向变道不是核心问题。"
+    ]
+  },
+  "experiments": {
+    "validation": "Traffic simulations over varying vehicle counts and volumes; reports efficiency and fuel-economy improvements.",
+    "baselines": "常见基准包括 FCFS、交通灯控制、无协同控制和其他图排序策略。",
+    "metrics": "平均延误 (average delay)、总清空时间 (evacuation time)、吞吐量 (throughput)、燃油/能耗代理和停车次数。",
+    "ablation": "图关系本身有可解释性，但仍需更系统地拆分：仅有向图、仅无向图、不同团覆盖策略和不同交通流密度下的鲁棒性。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "冲突关系图 / 通行顺序图",
+        "en": "conflict-relation or passing-order graph",
+        "reading": "把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "图构造依赖精确几何和预测，异常驾驶会导致边集失真。",
+      "团覆盖/排序在大规模密集车流下可能成为瓶颈。",
+      "模型偏重全 CAV 场景，对低渗透率混合交通支持不足。"
+    ],
+    "extensions": [
+      "把图边类型作为异构图 (heterogeneous graph) 特征，训练 GNN 调度器。",
+      "将最小团覆盖与 JSSP disjunctive graph 融合，建立可证明安全的调度层。",
+      "引入不确定边权，做分布鲁棒通行排序 (distributionally robust sequencing)。"
+    ],
+    "project_use": "Strong support for representing intersection conflicts as typed graph relations, similar to the operation graph in this manuscript."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "冲突边密度",
+      "label_en": "Conflict-edge density",
+      "min_value": 0.1,
+      "max_value": 0.9,
+      "default": 0.45,
+      "unit": "",
+      "response_zh": "边密度升高会减少可并行通行组，通常增大清空时间。",
+      "response_en": "Higher edge density reduces parallel passing groups and increases evacuation time."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

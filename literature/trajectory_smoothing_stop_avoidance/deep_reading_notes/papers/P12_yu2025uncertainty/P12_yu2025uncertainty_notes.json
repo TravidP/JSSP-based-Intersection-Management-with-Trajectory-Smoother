@@ -1,0 +1,246 @@
+{
+  "id": "P12",
+  "bibkey": "yu2025uncertainty",
+  "title": "Uncertainty-Aware Safety-Critical Decision and Control for Autonomous Vehicles at Unsignalized Intersections",
+  "authors": "Ran Yu; Zhuoren Li; Lu Xiong; Wei Han; Bo Leng",
+  "year": 2025,
+  "venue": "arXiv preprint",
+  "doi": "10.48550/arXiv.2505.19939",
+  "source_url": "https://arxiv.org/abs/2505.19939",
+  "pdf_url": "https://arxiv.org/pdf/2505.19939",
+  "theme": "Uncertainty-aware safe RL + HOCBF",
+  "relevance": 84,
+  "method_family": "Uncertainty-aware RL + high-order CBF / 不确定性感知强化学习与高阶控制屏障函数",
+  "source_facts": {
+    "pdf_file": "P12_yu2025uncertainty.pdf",
+    "page_count": 7,
+    "section_headings": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. P RELIMINARIES",
+        "page": 2
+      },
+      {
+        "heading": "III. M ETHODOLOGIES",
+        "page": 3
+      },
+      {
+        "heading": "IV. I MPLEMENTATIONS",
+        "page": 5
+      },
+      {
+        "heading": "1 SR, FR, CR, AER, and AEV stand for success rate, frozen rate,",
+        "page": 6
+      },
+      {
+        "heading": "2 Bold: best performance. Policy update frequency fπ = 10 Hz.",
+        "page": 6
+      },
+      {
+        "heading": "V. CONCLUSIONS",
+        "page": 6
+      }
+    ],
+    "source_anchors": [
+      {
+        "heading": "I. INTRODUCTION",
+        "page": 1
+      },
+      {
+        "heading": "II. P RELIMINARIES",
+        "page": 2
+      },
+      {
+        "heading": "V. CONCLUSIONS",
+        "page": 6
+      }
+    ],
+    "figure_reference_count": 8,
+    "table_reference_count": 2,
+    "equation_reference_count": 49
+  },
+  "concepts": [
+    [
+      "自动交叉口管理",
+      "Autonomous Intersection Management",
+      "把信号控制替换为车辆级调度与控制。"
+    ],
+    [
+      "轨迹平滑",
+      "Trajectory Smoothing",
+      "减少急加减速、停车和能耗峰值。"
+    ],
+    [
+      "安全约束",
+      "Safety Constraints",
+      "把碰撞风险写成距离、时间间隔或屏障函数。"
+    ],
+    [
+      "Uncertainty-aware RL + high-order CBF",
+      "不确定性感知强化学习与高阶控制屏障函数",
+      "该论文的核心方法族。"
+    ]
+  ],
+  "section_map": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "zh": "定位问题背景、研究缺口和为什么现有保守/非协同方法不足。",
+      "en": "Frames the motivation, research gap, and limits of conservative or non-cooperative methods."
+    },
+    {
+      "page": 2,
+      "heading": "II. P RELIMINARIES",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 3,
+      "heading": "III. M ETHODOLOGIES",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 5,
+      "heading": "IV. I MPLEMENTATIONS",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 6,
+      "heading": "1 SR, FR, CR, AER, and AEV stand for success rate, frozen rate,",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 6,
+      "heading": "2 Bold: best performance. Policy update frequency fπ = 10 Hz.",
+      "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
+      "en": "Read as a local argument and ask how it supports the main question."
+    },
+    {
+      "page": 6,
+      "heading": "V. CONCLUSIONS",
+      "zh": "总结贡献和未来方向，也常暴露作者承认的边界条件。",
+      "en": "Summarizes contributions and often reveals author-recognized boundaries."
+    }
+  ],
+  "overview": {
+    "background_zh": "这篇论文位于“Uncertainty-aware safe RL + HOCBF”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
+    "background_en": "The paper belongs to the theme of Uncertainty-aware safe RL + HOCBF. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
+    "pain_zh": "Single-agent urban autonomous-driving framing rather than centralized conflict-zone scheduling.",
+    "pain_en": "The main pain point is that efficient intersection coordination must handle combinatorial interactions, continuous vehicle dynamics, and safety constraints under online computation limits.",
+    "core_question_zh": "如何让 RL 在无信号交叉口中既保持灵活决策，又在不确定性升高时由 HOCBF 强制保证安全？",
+    "core_question_en": "How can RL remain flexible while a high-order CBF safety filter intervenes under uncertainty at unsignalized intersections?",
+    "contributions": [
+      "方法贡献 (method contribution)：Risk-aware ensemble distributional RL estimates policy uncertainty, then a high-order control barrier function acts as a safety filter.",
+      "安全/避碰贡献 (safety contribution)：HOCBF safety filter dynamically adjusts constraints using joint uncertainty in unsignalized-intersection tasks.",
+      "平滑/停止避免贡献 (smoothing contribution)：Balances safety and traffic efficiency by switching between flexible RL behavior and conservative HOCBF intervention.",
+      "创新力度评判 (reviewer judgement)：较强：把 ensemble distributional RL 的不确定性与 HOCBF 过滤结合，适合作为学习调度器安全外壳。"
+    ]
+  },
+  "methodology": {
+    "model_name": "HOCBF 安全过滤 / High-order CBF safety filter",
+    "formula": "u^\\star=\\arg\\min_u \\|u-u_{RL}\\|^2\\quad \\text{s.t.}\\quad L_f^m h(x)+L_gL_f^{m-1}h(x)u+\\alpha(\\psi_{m-1}(x))\\ge \\rho(\\sigma)",
+    "symbols": [
+      [
+        "u_RL",
+        "强化学习建议动作",
+        "RL-proposed action",
+        "效率导向但未必安全"
+      ],
+      [
+        "h(x)",
+        "安全函数",
+        "safety barrier function",
+        "h>=0 表示安全集合"
+      ],
+      [
+        "L_f,L_g",
+        "李导数",
+        "Lie derivatives",
+        "刻画动力学对安全函数的影响"
+      ],
+      [
+        "sigma",
+        "策略/状态不确定性",
+        "policy/state uncertainty",
+        "调节安全收紧程度"
+      ],
+      [
+        "rho(sigma)",
+        "不确定性安全裕度",
+        "uncertainty-dependent safety margin",
+        "不确定性越高约束越保守"
+      ]
+    ],
+    "algorithm_zh": "先用风险感知 ensemble distributional RL 估计动作价值和不确定性，再通过 HOCBF 二次规划把 RL 动作投影到安全集合中。不确定性越大，屏障约束越保守。",
+    "algorithm_en": "An uncertainty-aware ensemble/distributional RL policy proposes actions, and a HOCBF quadratic program filters them into the safe set with uncertainty-dependent tightening.",
+    "stability_zh": "HOCBF 提供形式化安全条件，但效率取决于 RL 策略；若安全约束不可行，需要 fallback 或软约束设计。",
+    "stability_en": "The HOCBF layer can certify forward invariance under assumptions, but infeasible safety constraints require fallback handling.",
+    "assumptions": [
+      "安全函数可正确表达交叉口危险集合。",
+      "车辆动力学和相对状态可观测。",
+      "不确定性估计与真实风险有足够相关性。"
+    ]
+  },
+  "experiments": {
+    "validation": "Simulation tests on multiple unsignalized-intersection tasks against safety and efficiency baselines.",
+    "baselines": "普通 RL、安全 RL、固定 CBF、无不确定性调节的 HOCBF 和规则控制。",
+    "metrics": "碰撞率、成功率、平均时间、干预次数、不确定性校准和约束可行性。",
+    "ablation": "必须比较无 HOCBF、固定 HOCBF、无 ensemble 不确定性、不同安全裕度函数。",
+    "figure_table_cues": [
+      {
+        "zh": "系统框架图",
+        "en": "system framework diagram",
+        "reading": "先确认输入、决策层、控制层和安全约束之间的数据流。"
+      },
+      {
+        "zh": "策略网络/训练流程图",
+        "en": "policy-network or training-pipeline diagram",
+        "reading": "检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。"
+      },
+      {
+        "zh": "实验指标对比图表",
+        "en": "experimental metric comparison plots/tables",
+        "reading": "重点看平均值之外的密度变化、失败场景、计算时间和方差。"
+      }
+    ],
+    "reviewer_reading": "阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements."
+  },
+  "critique": {
+    "limitations": [
+      "单车/局部自动驾驶视角多于集中式多车调度。",
+      "HOCBF 对动力学模型准确性敏感。",
+      "QP 频繁干预可能导致行为抖动或效率下降。"
+    ],
+    "extensions": [
+      "把 JSSP scheduler 的动作作为 RL proposal，再用 HOCBF/MPC 投影到安全集合。",
+      "研究 CBF 约束不可行时的优先级回退和重调度。",
+      "用 conformal prediction 校准不确定性裕度，增强审稿可信度。"
+    ],
+    "project_use": "Supports adding CBF/HOCBF safety filters or fallback logic to learned policies."
+  },
+  "visualization": {
+    "interactive": {
+      "label_zh": "安全裕度系数",
+      "label_en": "Safety margin coefficient",
+      "min_value": 0.0,
+      "max_value": 4.0,
+      "default": 1.3,
+      "unit": "",
+      "response_zh": "系数越大，CBF 介入更早；安全性提升但效率下降。",
+      "response_en": "A larger margin triggers earlier intervention, improving safety but reducing efficiency."
+    },
+    "html_structure": [
+      "顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。",
+      "左侧目录/section navigator，右侧为五大精读模块。",
+      "公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。",
+      "审稿人批注用 reviewer-note block，博士拓展用 research-idea list。",
+      "交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。"
+    ]
+  }
+}

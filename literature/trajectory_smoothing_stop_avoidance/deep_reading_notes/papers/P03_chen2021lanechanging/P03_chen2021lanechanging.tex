@@ -1,0 +1,179 @@
+\documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
+\usepackage{geometry}
+\geometry{margin=2.2cm}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
+\setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
+\definecolor{notegray}{RGB}{246,248,251}
+\title{P03. Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling\\中英双语博士精读笔记}
+\author{Chaoyi Chen; Mengchi Cai; Jiawei Wang; Kai Li; Qing Xu; Jianqiang Wang; Keqiang Li}
+\date{2021 · arXiv preprint}
+\begin{document}
+\maketitle
+
+\noindent\textbf{Theme / 主题：} Lane changing + arrival scheduling\\
+\textbf{Method family / 方法族：} Lane assignment + arrival scheduling / 车道分配与到达调度\\
+\textbf{PDF pages / 页数：} 14 \quad
+\textbf{Relevance / 相关度：} 82/100\\
+\textbf{Source / 来源：} \url{https://arxiv.org/abs/2109.14175}
+
+\section{论文全景速览与核心贡献 / High-Level Overview \& Core Contributions}
+\subsection{研究背景与痛点 / Background \& Pain Points}
+这篇论文位于“Lane changing + arrival scheduling”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。
+
+The paper belongs to the theme of Lane changing + arrival scheduling. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.
+
+\textbf{Pain point / 痛点：} arXiv note reports text overlap with the authors' earlier graph-based paper; use mainly for lane-changing extension context.
+
+\subsection{核心科学问题 / Core Scientific Question}
+当车辆可以变道或选择目标车道时，如何联合决定路径/车道与无冲突到达时间？
+
+How should target-lane assignment and conflict-free arrival scheduling be coupled when vehicles may change lanes before the intersection?
+
+\subsection{科学贡献 / Scientific Contributions}
+\begin{itemize}
+\item 方法贡献 (method contribution)：Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover.
+\item 安全/避碰贡献 (safety contribution)：Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements.
+\item 平滑/停止避免贡献 (smoothing contribution)：Improves traffic efficiency by choosing target lanes and arrival schedules that avoid unnecessary queuing.
+\item 创新力度评判 (reviewer judgement)：中等：在 P02 图排序基础上加入横向决策，扩展性有价值，但理论新颖性主要来自组合而非新算法。
+\end{itemize}
+
+
+\subsection{核心概念对照 / Core Concepts}
+\begin{longtable}{p{0.24\linewidth}p{0.28\linewidth}p{0.40\linewidth}}
+\toprule
+中文概念 & English Concept & Role / 学术作用\\
+\midrule
+自动交叉口管理 & Autonomous Intersection Management & 把信号控制替换为车辆级调度与控制。 \\
+轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
+安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
+Lane assignment + arrival scheduling & 车道分配与到达调度 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{理论方法论深度解构 / Methodology \& Theoretical Framework}
+\subsection{问题数学建模 / Mathematical Formulation}
+\textbf{联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling}
+\[
+\min_{l_i,t_i}\; \sum_{i\in V}\left(\alpha\,d_i(l_i)+\beta\,|t_i-t_i^{des}|\right)\quad \text{s.t.}\; (i,j)\in E(l)\Rightarrow |t_i-t_j|\ge \tau_{ij}
+\]
+\begin{longtable}{p{0.16\linewidth}p{0.25\linewidth}p{0.25\linewidth}p{0.25\linewidth}}
+\toprule
+Symbol / 符号 & 含义 & Meaning & Role / 建模作用\\
+\midrule
+l\_i & 目标车道 & target lane & 横向规划决策变量 \\
+t\_i & 车辆到达冲突区时间 & arrival time at conflict zone & 纵向调度决策变量 \\
+d\_i(l\_i) & 变道代价 & lane-changing cost & 衡量横向操作复杂度 \\
+E(l) & 由车道选择诱导的冲突边集 & lane-induced conflict edges & 说明横向选择会改变调度约束 \\
+tau\_ij & 安全时间间隔 & safety headway & 保证冲突车辆时间分离 \\
+\bottomrule
+\end{longtable}
+
+\subsection{核心算法架构 / Core Algorithm Layout}
+框架先求多车目标分配与路径规划，再基于最终路径构建冲突图并求到达时间。这样横向变道改变冲突关系，纵向调度再处理被改变后的路口资源竞争。
+
+The framework first assigns target lanes/paths, then constructs a conflict graph for those paths and computes a conflict-free arrival schedule.
+
+\subsection{收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility}
+分阶段设计提高实时性，但牺牲联合最优性；如果第一阶段车道选择失误，第二阶段只能在较差冲突结构上补救。
+
+The two-stage decomposition is tractable but not globally optimal; poor lane assignment can constrain the downstream scheduler.
+
+\subsection{潜在假设与边界条件 / Assumptions \& Boundary Conditions}
+\begin{itemize}
+\item 车辆可执行规划出的变道动作，周围交通允许形成编队。
+\item 车道级地图和目标车道需求已知。
+\item 变道安全约束可以被简化成可规划的路径/队形约束。
+\end{itemize}
+
+
+\section{实验验证与结果评判 / Experimental Validation \& Result Evaluation}
+\textbf{Baselines \& Environment / 基准与环境：} 固定车道策略、无变道调度、FCFS 和基于图的到达调度。
+
+\textbf{Validation / 验证：} Numerical simulations for different vehicle counts and traffic volumes.
+
+\textbf{Metrics / 指标：} 平均延误、总行程时间、完成变道比例、冲突避免成功率和交通量敏感性。
+
+\textbf{Ablation / 消融：} 最关键消融是去掉 lane-changing stage，对比是否真的改善调度；还应测试高密度下变道失败的退化策略。
+
+\textbf{Reviewer reading / 审稿式阅读提醒：} 阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.
+
+\subsection{图表阅读线索 / Figure and Table Reading Cues}
+PDF extraction detected approximately 44 figure references and 6 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.
+
+\begin{longtable}{p{0.24\linewidth}p{0.30\linewidth}p{0.36\linewidth}}
+\toprule
+图表名称 & Figure/Table Name & Reading focus / 阅读重点\\
+\midrule
+系统框架图 & system framework diagram & 先确认输入、决策层、控制层和安全约束之间的数据流。 \\
+冲突关系图 / 通行顺序图 & conflict-relation or passing-order graph & 把节点、边类型和先后约束翻译成 JSSP 的作业、机器和析取约束。 \\
+实验指标对比图表 & experimental metric comparison plots/tables & 重点看平均值之外的密度变化、失败场景、计算时间和方差。 \\
+\bottomrule
+\end{longtable}
+
+\section{审稿人视角：批判性思考与未来方向 / Critical Thinking \& Future Directions}
+\subsection{论文局限性 / Limitations \& Weaknesses}
+\begin{itemize}
+\item 文本与同作者早期图调度工作高度相关，独立贡献需谨慎引用。
+\item 横向控制细节和人类驾驶干扰不足。
+\item 两阶段解耦可能错过更优的路径-时间联合解。
+\end{itemize}
+
+
+\subsection{博士课题拓展点 / Research Extensions for PhD}
+\begin{itemize}
+\item 用双层优化 (bi-level optimization) 同时学习车道选择和 JSSP 排序。
+\item 为变道失败设计可恢复调度 (recoverable scheduling)，让路口管理器在线回滚目标车道。
+\item 把车道选择看成 route-template selection，扩展当前固定路线假设。
+\end{itemize}
+
+
+\subsection{如何服务当前课题 / Use in This Project}
+Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.
+
+\section{交互式可视化与 PDF 排版蓝图 / Interactive Visualization \& PDF Layout Blueprint}
+\textbf{动态参数 / Parameter：} 可变道车辆比例 / Lane-change-enabled ratio, range [0, 1] .
+
+比例增加会提高调度自由度，但过高时变道冲突和局部扰动也会增加。
+
+More lane-change freedom improves scheduling flexibility but can add lateral conflicts.
+
+\subsection{HTML 结构化布局建议 / HTML Structuring}
+\begin{itemize}
+\item 顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。
+\item 左侧目录/section navigator，右侧为五大精读模块。
+\item 公式卡片使用 <pre> 或 LaTeX block，紧跟符号表。
+\item 审稿人批注用 reviewer-note block，博士拓展用 research-idea list。
+\item 交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。
+\end{itemize}
+
+
+\section{来源锚点与逐节阅读路径 / Source Anchors \& Section-by-Section Reading Map}
+\begin{longtable}{p{0.14\linewidth}p{0.76\linewidth}}
+\toprule
+Page & Extracted heading\\
+\midrule
+p.1 & I. INTRODUCTION \\
+p.2 & II. T WO-STAGE COOPERATION FRAMEWORK \\
+p.10 & V. SIMULATIONS \\
+\bottomrule
+\end{longtable}
+
+\paragraph{p.1 I. INTRODUCTION}定位问题背景、研究缺口和为什么现有保守/非协同方法不足。 / Frames the motivation, research gap, and limits of conservative or non-cooperative methods.
+
+\paragraph{p.2 II. T WO-STAGE COOPERATION FRAMEWORK}给出算法流程和求解机制，应重点追踪输入、输出和安全接口。 / Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.
+
+\paragraph{p.3 III. M ULTI-VEHICLE TARGET ASSIGNMENT AND PATH}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.6 1. However, we}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.7 IV. CAV S CHEDULING AT UNSIGNALIZED INTERSECTIONS}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.9 4. This also indicates that the theoretical evacuation times}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.9 6. We have proved that this can be solved by exchanging the}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.10 V. SIMULATIONS}检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。 / Tests efficiency, safety, or energy claims; inspect whether baselines are fair.
+
+
+\end{document}

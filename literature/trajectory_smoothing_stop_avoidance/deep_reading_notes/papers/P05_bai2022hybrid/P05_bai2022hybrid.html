@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>P05 Deep Reading Notes</title>
+  <style>
+    :root { --ink:#1d2733; --muted:#657386; --line:#d9e1ea; --soft:#f6f8fb; --accent:#1f6f61; --warn:#8a4b0f; --blue:#1f5f8b; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",sans-serif; color:var(--ink); background:#fff; }
+    header.hero { padding:28px 34px 18px; border-bottom:1px solid var(--line); background:#f3f6fa; }
+    h1 { margin:0 0 8px; font-size:28px; line-height:1.25; letter-spacing:0; }
+    h2 { margin:0 0 10px; font-size:22px; }
+    h3 { margin:18px 0 8px; font-size:17px; color:var(--accent); }
+    p { margin:7px 0; }
+    a { color:var(--blue); }
+    .meta { color:var(--muted); display:flex; gap:10px; flex-wrap:wrap; }
+    .toolbar { position:sticky; top:0; z-index:2; display:flex; gap:8px; align-items:center; padding:10px 34px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    button, .back { border:1px solid var(--line); border-radius:6px; background:white; padding:7px 10px; color:var(--ink); text-decoration:none; cursor:pointer; }
+    main { display:grid; grid-template-columns:260px minmax(0,1fr); gap:28px; padding:24px 34px 60px; }
+    nav { position:sticky; top:58px; align-self:start; border-right:1px solid var(--line); padding-right:18px; }
+    nav a { display:block; padding:7px 0; color:var(--ink); text-decoration:none; }
+    section.panel { border-bottom:1px solid var(--line); padding:0 0 22px; margin-bottom:20px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .card, details, .reviewer-note { border:1px solid var(--line); border-radius:8px; padding:14px; background:var(--soft); }
+    .reviewer-note { border-left:4px solid var(--warn); background:#fffaf3; }
+    table { width:100%; border-collapse:collapse; margin:10px 0; }
+    th, td { border:1px solid var(--line); padding:8px; vertical-align:top; }
+    th { background:#eef3f7; text-align:left; }
+    .formula { overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }
+    .section-map { display:grid; gap:10px; }
+    .section-map article { border:1px solid var(--line); border-radius:8px; padding:12px; }
+    .viz { display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }
+    canvas { width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }
+    input[type=range] { width:100%; }
+    body.zh-only .en { display:none; }
+    body.en-only .zh { display:none; }
+    @media (max-width: 860px) { main { grid-template-columns:1fr; } nav { position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; } .grid,.viz { grid-template-columns:1fr; } }
+    @media print { .toolbar, nav, .interactive-only { display:none; } main { display:block; padding:12px 18px; } header.hero { padding:16px 18px; } body { font-size:11px; } section.panel { break-inside:avoid; } a { color:var(--ink); text-decoration:none; } }
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <h1>P05. Hybrid Reinforcement Learning-Based Eco-Driving Strategy for Connected and Automated Vehicles at Signalized Intersections</h1>
+    <div class="meta">
+      <span>Zhengwei Bai; Peng Hao; Wei Shangguan; Baigen Cai; Matthew J. Barth</span>
+      <span>2022</span>
+      <span>IEEE Transactions on Intelligent Transportation Systems</span>
+      <span>PDF pages: 15</span>
+      <span>Relevance: 86/100</span>
+    </div>
+  </header>
+  <div class="toolbar interactive-only">
+    <a class="back" href="../../index.html">Index</a>
+    <button onclick="document.body.className=''">双语 / Bilingual</button>
+    <button onclick="document.body.className='zh-only'">中文</button>
+    <button onclick="document.body.className='en-only'">English</button>
+    <button onclick="window.print()">Print / Export PDF</button>
+  </div>
+  <main>
+    <nav>
+      <a href="#overview">1. 全景速览</a>
+      <a href="#method">2. 理论方法</a>
+      <a href="#experiment">3. 实验评判</a>
+      <a href="#critique">4. 批判与拓展</a>
+      <a href="#viz">5. 交互蓝图</a>
+      <a href="#anchors">来源锚点</a>
+    </nav>
+    <div>
+      <section id="overview" class="panel">
+        <h2>1. 论文全景速览与核心贡献 / High-Level Overview & Core Contributions</h2>
+        <div class="grid">
+          <div class="card"><h3>研究背景与痛点 / Background & Pain Points</h3><p class="zh">这篇论文位于“Eco-driving + hybrid RL”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。</p><p class="en">The paper belongs to the theme of Eco-driving + hybrid RL. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.</p><p>Signalized setting and policy-level action output differ from a scheduler-to-smoother architecture.</p></div>
+          <div class="card"><h3>核心科学问题 / Core Scientific Question</h3><p class="zh">在信号灯、V2I 信息和混合交通干扰下，如何通过混合规则-学习策略降低能耗和时间损失？</p><p class="en">How can a hybrid rule-learning eco-driving policy reduce energy and travel time under SPaT and mixed-traffic constraints?</p></div>
+        </div>
+        <h3>科学贡献 / Scientific Contributions</h3>
+        <ul><li>方法贡献 (method contribution)：Combines a rule-based driving manager, V2I/vision features, and RL to generate longitudinal and lateral eco-driving actions.</li><li>安全/避碰贡献 (safety contribution)：Mixed-traffic policy includes rule-based safety management around surrounding vehicles.</li><li>平滑/停止避免贡献 (smoothing contribution)：Targets energy and travel-time reduction by smoothing approach behavior at signalized intersections.</li><li>创新力度评判 (reviewer judgement)：强应用价值：规则管理器增强 RL 安全性，适合作为轨迹平滑器能耗目标的参考。</li></ul>
+        <h3>核心概念对照 / Core Concepts</h3>
+        <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr><tr><td>自动交叉口管理</td><td>Autonomous Intersection Management</td><td>把信号控制替换为车辆级调度与控制。</td></tr><tr><td>轨迹平滑</td><td>Trajectory Smoothing</td><td>减少急加减速、停车和能耗峰值。</td></tr><tr><td>安全约束</td><td>Safety Constraints</td><td>把碰撞风险写成距离、时间间隔或屏障函数。</td></tr><tr><td>Hybrid RL eco-driving at signalized intersections</td><td>信号交叉口混合强化学习生态驾驶</td><td>该论文的核心方法族。</td></tr></table>
+      </section>
+      <section id="method" class="panel">
+        <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
+        <h3>问题数学建模 / Mathematical Formulation</h3>
+        <p><b>能耗-效率-安全复合奖励 / Energy-efficiency-safety reward</b></p>
+        <div class="formula">$$
+\max_{\pi}\; \mathbb{E}\sum_t \gamma^t r_t,\quad r_t= -w_e E_t-w_d D_t-w_s \mathbb{I}_{unsafe}-w_a |a_t|
+$$</div>
+        <table><tr><th>Symbol / 符号</th><th>含义</th><th>Meaning</th><th>Role / 建模作用</th></tr><tr><td><code>E_t</code></td><td>瞬时能耗</td><td>instantaneous energy use</td><td>生态驾驶优化主目标</td></tr><tr><td><code>D_t</code></td><td>延误/时间损失</td><td>delay or time loss</td><td>避免单纯省能导致低速拖行</td></tr><tr><td><code>I_unsafe</code></td><td>不安全事件指示</td><td>unsafe-event indicator</td><td>对碰撞或近碰撞施加强惩罚</td></tr><tr><td><code>a_t</code></td><td>加速度动作</td><td>acceleration action</td><td>连接舒适性和平滑性</td></tr><tr><td><code>w_e,w_d,w_s,w_a</code></td><td>奖励权重</td><td>reward weights</td><td>决定策略偏好</td></tr></table>
+        <h3>核心算法架构 / Core Algorithm Layout</h3>
+        <p class="zh">系统用规则型驾驶管理器处理安全和交通规则，用强化学习在允许动作空间中选择纵向/横向生态驾驶动作；V2I 和视觉特征帮助策略预见信号相位与周围车辆。</p>
+        <p class="en">A rule-based driving manager constrains behavior, while RL chooses eco-driving actions using SPaT/V2I and perception features.</p>
+        <div class="reviewer-note"><b>收敛性、稳定性或实时性 / Convergence, Stability, Real-Time Feasibility</b><p class="zh">规则层提高可控性和可解释性，但策略性能仍依赖训练分布与奖励权重。相比纯 RL，它更适合工程系统中的安全外壳。</p><p class="en">The rule layer improves interpretability and reduces unsafe exploration, making the hybrid policy more deployable than a purely learned controller.</p></div>
+        <h3>潜在假设与边界条件 / Assumptions & Boundary Conditions</h3>
+        <ul><li>可获得信号相位与配时 (SPaT) 或可靠 V2I 信息。</li><li>规则管理器覆盖主要危险场景。</li><li>能耗模型与仿真平台对真实车辆足够近似。</li></ul>
+      </section>
+      <section id="experiment" class="panel">
+        <h2>3. 实验验证与结果评判 / Experimental Validation & Result Evaluation</h2>
+        <div class="grid">
+          <div class="card"><h3>基准对比与环境 / Baselines & Environment</h3><p>模型式生态驾驶、普通 RL、人工驾驶/IDM、固定速度或信号响应策略。</p><p>Unity-based mixed-traffic intersection simulation; reports 12.70 percent energy reduction and 11.75 percent travel-time saving against a model-based eco-driving baseline.</p></div>
+          <div class="card"><h3>核心指标 / Metrics</h3><p>能耗降低百分比、行程时间、停车次数、舒适性指标和碰撞/违规事件。</p></div>
+          <div class="card"><h3>消融实验 / Ablation</h3><p>需要分别去掉规则管理器、V2I 特征、视觉特征和横向动作，才能说明混合结构的真实贡献。</p></div>
+          <div class="card"><h3>博士阅读提醒 / Reading Reminder</h3><p>阅读实验时不要只看平均值；应检查交通密度、车流方向、随机种子、失败案例和计算耗时。For doctoral reading, inspect density regimes, demand patterns, random seeds, failure cases, and computation time rather than only mean improvements.</p></div>
+        </div>
+        <h3>图表阅读线索 / Figure and Table Reading Cues</h3>
+        <p>PDF extraction detected approximately 40 figure references and 8 table references. Exact captions remain in the original PDF; the bilingual cues below tell you what to inspect first.</p>
+        <table><tr><th>图表名称</th><th>Figure/Table Name</th><th>Reading focus / 阅读重点</th></tr><tr><td>系统框架图</td><td>system framework diagram</td><td>先确认输入、决策层、控制层和安全约束之间的数据流。</td></tr><tr><td>策略网络/训练流程图</td><td>policy-network or training-pipeline diagram</td><td>检查状态、动作、奖励、经验回放和安全惩罚是否闭环一致。</td></tr><tr><td>实验指标对比图表</td><td>experimental metric comparison plots/tables</td><td>重点看平均值之外的密度变化、失败场景、计算时间和方差。</td></tr></table>
+      </section>
+      <section id="critique" class="panel">
+        <h2>4. 审稿人视角：批判性思考与未来方向 / Critical Thinking & Future Directions</h2>
+        <div class="grid">
+          <div><h3>论文局限性 / Limitations & Weaknesses</h3><ul><li>信号化场景与无信号 AIM 调度问题不同。</li><li>Unity 仿真能否代表真实车辆能耗仍需校准。</li><li>奖励权重敏感，跨路口迁移可能不稳定。</li></ul></div>
+          <div><h3>博士课题拓展点 / Research Extensions for PhD</h3><ul class="research-idea"><li>把能耗奖励移植到 JSSP smoother，作为低层轨迹成本。</li><li>用多目标 RL 生成 Pareto 前沿，而不是固定奖励权重。</li><li>在 SUMO/真实轨迹数据上校准能耗模型，提高可发表可信度。</li></ul></div>
+        </div>
+        <div class="reviewer-note"><b>如何服务当前课题 / Use in This Project</b><p>Supports the argument that stop-and-go reduction and energy-aware smoothing are important low-level objectives.</p></div>
+      </section>
+      <section id="viz" class="panel">
+        <h2>5. 交互式可视化与 PDF 排版蓝图 / Interactive Visualization & PDF Layout Blueprint</h2>
+        <div class="viz">
+          <div class="card">
+            <h3>动态参数探索 / Parameter Exploration</h3>
+            <label>能耗权重 / Energy weight: <b id="paramValue"></b> </label>
+            <input id="param" type="range" min="0.1" max="4.0" value="1.0" step="0.01">
+            <p class="zh">能耗权重越高，轨迹越平滑，但可能牺牲通行时间。</p>
+            <p class="en">Higher energy weight smooths trajectories but can increase travel time.</p>
+          </div>
+          <canvas id="chart" width="720" height="320"></canvas>
+        </div>
+        <h3>HTML 结构化布局建议 / HTML Structuring</h3>
+        <ul><li>顶部固定 metadata bar：题名、作者、年份、主题、PDF 页数。</li><li>左侧目录/section navigator，右侧为五大精读模块。</li><li>公式卡片使用 &lt;pre&gt; 或 LaTeX block，紧跟符号表。</li><li>审稿人批注用 reviewer-note block，博士拓展用 research-idea list。</li><li>交互参数用 input[type=range] + canvas 曲线，打印 PDF 时隐藏交互控件但保留解释。</li></ul>
+      </section>
+      <section id="anchors" class="panel">
+        <h2>来源锚点与逐节阅读路径 / Source Anchors & Section-by-Section Reading Map</h2>
+        <p>以下锚点来自本地 PDF 抽取，用于回到原文复核；笔记不保存论文全文。</p>
+        <table><tr><th>Page</th><th>Extracted heading</th></tr><tr><td>p.1</td><td>I. INTRODUCTION</td></tr><tr><td>p.2</td><td>II. PROBLEM FORMULATION</td></tr><tr><td>p.9</td><td>IV. G AME ENGINE BASED SIMULATION EXPERIMENTS</td></tr></table>
+        <div class="section-map"><article><b>p.1 · I. INTRODUCTION</b><p class='zh'>定位问题背景、研究缺口和为什么现有保守/非协同方法不足。</p><p class='en'>Frames the motivation, research gap, and limits of conservative or non-cooperative methods.</p></article><article><b>p.2 · II. PROBLEM FORMULATION</b><p class='zh'>把交通交互转写为状态、约束、目标或图结构，是精读时最应复现的部分。</p><p class='en'>Defines states, constraints, objectives, or graph structures; this is the section to reproduce carefully.</p></article><article><b>p.4 · III. HRL- BASED ECO-D RIVING FRAMEWORK</b><p class='zh'>给出算法流程和求解机制，应重点追踪输入、输出和安全接口。</p><p class='en'>Gives the algorithmic mechanism; track inputs, outputs, and safety interfaces.</p></article><article><b>p.4 · 1. On-board computer: it houses the hierarchical-RL brain</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.5 · 2. On-board radar : As deﬁned in previous section, three</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.5 · 3. On-board camera : this is installed in the front of</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.5 · 4. On-board diagnostics (OBD) : this component can get</b><p class='zh'>作为局部论证段落阅读，关注它如何服务主问题。</p><p class='en'>Read as a local argument and ask how it supports the main question.</p></article><article><b>p.9 · IV. G AME ENGINE BASED SIMULATION EXPERIMENTS</b><p class='zh'>检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。</p><p class='en'>Tests efficiency, safety, or energy claims; inspect whether baselines are fair.</p></article></div>
+      </section>
+    </div>
+  </main>
+  <script>
+    const min = 0.1, max = 4.0;
+    const slider = document.getElementById('param');
+    const value = document.getElementById('paramValue');
+    const canvas = document.getElementById('chart');
+    const ctx = canvas.getContext('2d');
+    function response(x) {
+      const z = (x - min) / (max - min || 1);
+      const delay = Math.min(1, 0.18 + 0.82 * Math.pow(z, 1.25));
+      const safety = Math.max(0, Math.min(1, 0.15 + 0.75 * (1 - Math.exp(-2.2 * z))));
+      const compute = Math.min(1, 0.10 + 0.88 * z * z);
+      return {delay, safety, compute};
+    }
+    function draw() {
+      const x = parseFloat(slider.value);
+      value.textContent = x.toFixed(2);
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.strokeStyle = '#d9e1ea'; ctx.lineWidth = 1;
+      for (let i=0;i<6;i++) { const y=40+i*45; ctx.beginPath(); ctx.moveTo(50,y); ctx.lineTo(690,y); ctx.stroke(); }
+      const series = [
+        ['Efficiency pressure / 效率压力', '#1f5f8b', 'delay'],
+        ['Safety margin / 安全裕度', '#1f6f61', 'safety'],
+        ['Compute load / 计算负载', '#8a4b0f', 'compute']
+      ];
+      for (const [label,color,key] of series) {
+        ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.beginPath();
+        for (let i=0;i<=120;i++) {
+          const xx = min + (max-min)*i/120;
+          const yy = response(xx)[key];
+          const px = 50 + i/120*640;
+          const py = 270 - yy*210;
+          if (i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+        }
+        ctx.stroke();
+      }
+      const px = 50 + ((x-min)/(max-min||1))*640;
+      ctx.strokeStyle = '#111827'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(px,35); ctx.lineTo(px,285); ctx.stroke();
+      ctx.font = '15px -apple-system, sans-serif'; ctx.fillStyle = '#1d2733';
+      series.forEach((s,i)=>{ ctx.fillStyle=s[1]; ctx.fillRect(58,20+i*22,12,12); ctx.fillStyle='#1d2733'; ctx.fillText(s[0],78,31+i*22); });
+    }
+    slider.addEventListener('input', draw);
+    draw();
+  </script>
+</body>
+</html>
