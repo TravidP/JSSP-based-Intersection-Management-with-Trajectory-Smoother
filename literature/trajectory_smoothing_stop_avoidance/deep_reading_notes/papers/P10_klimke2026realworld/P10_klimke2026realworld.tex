@@ -1,7 +1,7 @@
 \documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
 \usepackage{geometry}
 \geometry{margin=2.2cm}
-\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem,graphicx,float}
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 \setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
 \definecolor{notegray}{RGB}{246,248,251}
@@ -48,6 +48,203 @@ Do cooperative intersection-management approaches reduce stops and crossing time
 轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
 安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
 Real-world cooperative maneuver planning evaluation & 真实道路协同机动规划评估 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{教材式学习路径与关键截图 / Textbook-Style Study Path \& PDF Snapshots}
+\subsection{学习路径 / Study Path}
+\begin{itemize}
+\item 第一遍先读首页截图、摘要与引言，确认研究问题和场景假设。
+\item 第二遍沿着技术路线图复现模型变量、约束和求解器输入输出。
+\item 第三遍逐节阅读 section deep reading，对照 PDF 截图检查公式、图表和实验。
+\item 第四遍只站在审稿人视角重读实验，判断 baseline、公平性、消融和鲁棒性。
+\item 最后把博士 checklist 写成自己的复现实验或论文拓展计划。
+\end{itemize}
+
+
+\subsection{博士阅读 Checklist / Doctoral Reading Checklist}
+\begin{itemize}
+\item 能否独立重写核心公式：评估指标聚合 / Evaluation-metric aggregation，并解释每个符号的物理意义？
+\item 能否画出输入-模型-算法-控制-验证的数据流图？
+\item 能否指出至少两个强假设，并说明它们在真实交通中何时失效？
+\item 能否复述实验基准是否公平，指标是否覆盖效率、安全、能耗和计算时间？
+\item 能否提出一个与自己 JSSP/RL/smoother 课题直接相连的拓展实验？
+\end{itemize}
+
+
+\subsection{关键截图讲解 / PDF Snapshot Explanation}
+Screenshots are selected anchors from the local PDFs for study and parallel reading. They do not replace the original paper.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P10_klimke2026realworld/01_title_and_abstract_p1.jpg}
+\caption{首页与摘要 / Title and abstract page (p.1, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P10_klimke2026realworld/02_modeling_or_problem_setup_p3.jpg}
+\caption{建模或问题设定页 / Modeling or problem-setup page (p.3, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P10_klimke2026realworld/03_core_method_or_algorithm_p5.jpg}
+\caption{核心方法或算法页 / Core method or algorithm page (p.5, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P10_klimke2026realworld/04_conclusion_or_limitations_p9.jpg}
+\caption{结论或局限页 / Conclusion or limitations page (p.9, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P10_klimke2026realworld/05_supplemental_reading_page_p2.jpg}
+\caption{补充精读页 / Supplemental close-reading page (p.2, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.}
+\end{figure}
+
+
+\section{章节精读与逐段导读 / Section-by-Section Deep Reading \& Walkthrough}
+\subsection*{p.1 I. INTRODUCTION}
+\textbf{章节目标 / Learning goal：} 建立研究动机：为什么传统信号控制、FCFS 或单车控制不足以处理该论文关注的交叉口协同问题。
+
+Understand why the paper needs a new coordination method rather than a standard signal, FCFS, or single-vehicle controller.
+
+\textbf{关键论点 / Key argument：} 这一部分通常把痛点落到 Real-world cooperative intersection management：既要提高效率，又要保持安全与在线可执行。
+
+\textbf{技术焦点 / Technical focus：} 精读时标出作者批判的 baseline、场景假设、交通参与者类型和隐含优化目标。
+
+\textbf{审稿追问 / Reviewer question：} 作者指出的痛点是否真的需要新方法，还是可以由更强的优化器/更保守规则解决？
+
+\subsection*{p.2 2 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}
+\textbf{章节目标 / Learning goal：} 解释算法如何把模型转化为可执行决策，并说明在线运行机制。
+
+Trace how the paper turns the model into executable online decisions.
+
+\textbf{关键论点 / Key argument：} 论文不是提出单一新控制算法，而是比较多场景预测和图强化学习等协同机动规划模块，在混合交通仿真与真实车辆中评估停车、时间和关键性。
+
+\textbf{技术焦点 / Technical focus：} 画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。
+
+\textbf{审稿追问 / Reviewer question：} 若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？
+
+\subsection*{p.2 II. RELATEDWORK}
+\textbf{章节目标 / Learning goal：} 建立方法谱系和相关工作边界，避免把本文贡献误读为完全从零开始。
+
+Place the paper inside the broader method taxonomy.
+
+\textbf{关键论点 / Key argument：} 该部分说明作者站在哪些已有工作之上，以及本文选择绕开或继承了哪些限制。
+
+\textbf{技术焦点 / Technical focus：} 把相关工作按 scheduler、smoother、safety filter、evaluation 四类重排。
+
+\textbf{审稿追问 / Reviewer question：} 作者是否公平比较了最接近的强 baseline？
+
+\subsection*{p.3 III. COOPERATIVEMANEUVERPLANNINGMODULES}
+\textbf{章节目标 / Learning goal：} 承接前后章节，补充局部定义、案例或实现细节。
+
+Recover implementation details needed for reproduction.
+
+\textbf{关键论点 / Key argument：} 这类章节常常不是主贡献，但决定你能否真正复现方法。
+
+\textbf{技术焦点 / Technical focus：} 检查它是否给出了参数、伪代码、场景划分或实现细节。
+
+\textbf{审稿追问 / Reviewer question：} 跳过该节会不会导致公式或实验无法复现？
+
+\subsection*{p.4 4 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}
+\textbf{章节目标 / Learning goal：} 解释算法如何把模型转化为可执行决策，并说明在线运行机制。
+
+Trace how the paper turns the model into executable online decisions.
+
+\textbf{关键论点 / Key argument：} 论文不是提出单一新控制算法，而是比较多场景预测和图强化学习等协同机动规划模块，在混合交通仿真与真实车辆中评估停车、时间和关键性。
+
+\textbf{技术焦点 / Technical focus：} 画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。
+
+\textbf{审稿追问 / Reviewer question：} 若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？
+
+\subsection*{p.5 IV. SIMULATIONAPPROACH}
+\textbf{章节目标 / Learning goal：} 解释算法如何把模型转化为可执行决策，并说明在线运行机制。
+
+Trace how the paper turns the model into executable online decisions.
+
+\textbf{关键论点 / Key argument：} 论文不是提出单一新控制算法，而是比较多场景预测和图强化学习等协同机动规划模块，在混合交通仿真与真实车辆中评估停车、时间和关键性。
+
+\textbf{技术焦点 / Technical focus：} 画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。
+
+\textbf{审稿追问 / Reviewer question：} 若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？
+
+\subsection*{p.6 6 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}
+\textbf{章节目标 / Learning goal：} 解释算法如何把模型转化为可执行决策，并说明在线运行机制。
+
+Trace how the paper turns the model into executable online decisions.
+
+\textbf{关键论点 / Key argument：} 论文不是提出单一新控制算法，而是比较多场景预测和图强化学习等协同机动规划模块，在混合交通仿真与真实车辆中评估停车、时间和关键性。
+
+\textbf{技术焦点 / Technical focus：} 画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。
+
+\textbf{审稿追问 / Reviewer question：} 若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？
+
+\subsection*{p.6 V. SIMULATIONEVALUATIONRESULTS}
+\textbf{章节目标 / Learning goal：} 验证方法是否在公平基准下改善效率、安全、能耗或计算时间。
+
+Check whether the claimed improvements are supported by fair baselines and meaningful metrics.
+
+\textbf{关键论点 / Key argument：} 实验应与论文声称的贡献闭环：Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives.
+
+\textbf{技术焦点 / Technical focus：} 重点追踪指标：穿越时间、停车次数、关键性/风险、成功率和真实系统运行稳定性。 同时检查仿真平台、交通需求和随机性设置。
+
+\textbf{审稿追问 / Reviewer question：} 实验是否只展示平均收益，还是覆盖了高密度、异常扰动和失败案例？
+
+
+\subsection{逐段式导读 / Paragraph-Level Walkthrough}
+\paragraph{Opening motivation / 开篇动机段}先把作者的痛点翻译成一句博士问题：协同交叉口管理方法在混合交通仿真与真实原型车测试中是否仍能减少停车和通行时间？ 读这一段时不要急着接受动机，要追问传统 FCFS、信号灯或保守 MPC 为什么不足。
+
+Turn the opening motivation into one doctoral-level question and test whether the paper truly needs a new method.
+
+\paragraph{Assumption and setting / 假设与场景段}把车辆类型、通信条件、路口类型和动力学假设列成表。该文的关键边界包括：原型系统中的通信与感知可支持协同机动规划。；真实测试场景代表性足以支持初步结论。；关键性指标可近似反映真实安全风险。
+
+List vehicle type, communication, intersection setting, and dynamics assumptions before reading the equations.
+
+\paragraph{Model and notation / 模型与符号段}围绕核心公式“评估指标聚合 / Evaluation-metric aggregation”复写符号表，确认每个变量是决策变量、状态变量、参数还是约束阈值。
+
+Rewrite the symbol table around the core formulation and classify variables as states, decisions, parameters, or constraints.
+
+\paragraph{Algorithm mechanism / 算法机制段}把算法读成一条数据流：输入交通状态，执行 Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives.，输出可执行通行/控制决策，并检查安全接口。
+
+Read the algorithm as a dataflow from traffic state to executable sequence/control decision, with explicit safety interfaces.
+
+\paragraph{Experiment and evidence / 实验证据段}不要只看作者报告的提升，要检查基准、公平性和指标。本文验证描述为：Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives.
+
+Go beyond reported gains and inspect baselines, fairness, metrics, and computation time.
+
+\paragraph{Reviewer synthesis / 审稿式总结段}最后把贡献拆成可发表与需补强两部分。对你课题最直接的用途是：Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation.
+
+Separate publishable contribution from missing evidence, then connect the result to your own thesis architecture.
+
+
+\section{技术路线图与贡献量评估 / Technical Route \& Contribution Matrix}
+\begin{longtable}{p{0.08\linewidth}p{0.24\linewidth}p{0.58\linewidth}}
+\toprule
+Step & Stage / 阶段 & Content / 内容\\
+\midrule
+1 & 输入 / Input & 车辆状态、路径/车道、交通需求、信号或协同信息。 \\
+2 & 建模 / Modeling & 评估指标聚合 / Evaluation-metric aggregation \\
+3 & 核心求解 / Core solver & Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives. \\
+4 & 安全接口 / Safety interface & Evaluates criticality metrics while operating with prototype connected automated vehicles in public traffic. \\
+5 & 平滑与效率 / Smoothing and efficiency & Reports substantial reductions in crossing time and number of stops for cooperative maneuver planning. \\
+6 & 验证 / Validation & Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives. \\
+\bottomrule
+\end{longtable}
+
+\begin{longtable}{p{0.34\linewidth}p{0.14\linewidth}p{0.42\linewidth}}
+\toprule
+Dimension / 维度 & Score & Comment / 评语\\
+\midrule
+理论贡献 / Theoretical contribution & 3/5 & 评估指标聚合 / Evaluation-metric aggregation \\
+算法贡献 / Algorithmic contribution & 5/5 & Compares multi-scenario prediction and graph-based reinforcement learning approaches in mixed-traffic simulation and real drives. \\
+实验贡献 / Experimental contribution & 5/5 & Novel mixed-traffic simulation framework plus real-world prototype connected automated vehicle drives. \\
+工程贡献 / Engineering contribution & 5/5 & Evaluates criticality metrics while operating with prototype connected automated vehicles in public traffic. \\
+博士课题价值 / PhD relevance & 4/5 & Excellent evidence that stop count is a practical metric and that real-world mixed traffic should be considered in future validation. \\
 \bottomrule
 \end{longtable}
 
@@ -154,14 +351,12 @@ Higher latency reduces coordination benefit and increases safety buffers.
 Page & Extracted heading\\
 \midrule
 p.1 & I. INTRODUCTION \\
-p.1 & 101069547. Views and opinions expressed are however those of the authors \\
+p.2 & 2 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES \\
 p.5 & IV. SIMULATIONAPPROACH \\
 \bottomrule
 \end{longtable}
 
 \paragraph{p.1 I. INTRODUCTION}定位问题背景、研究缺口和为什么现有保守/非协同方法不足。 / Frames the motivation, research gap, and limits of conservative or non-cooperative methods.
-
-\paragraph{p.1 101069547. Views and opinions expressed are however those of the authors}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
 
 \paragraph{p.2 2 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
 
@@ -174,6 +369,8 @@ p.5 & IV. SIMULATIONAPPROACH \\
 \paragraph{p.5 IV. SIMULATIONAPPROACH}检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。 / Tests efficiency, safety, or energy claims; inspect whether baselines are fair.
 
 \paragraph{p.6 6 REAL-WORLD EV ALUATION OF TWO COOPERATIVE INTERSECTION MANAGEMENT APPROACHES}作为局部论证段落阅读，关注它如何服务主问题。 / Read as a local argument and ask how it supports the main question.
+
+\paragraph{p.6 V. SIMULATIONEVALUATIONRESULTS}检验方法是否真的改善效率、安全或能耗；要关注基准是否公平。 / Tests efficiency, safety, or energy claims; inspect whether baselines are fair.
 
 
 \end{document}

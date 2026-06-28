@@ -12,6 +12,7 @@ import argparse
 import html
 import json
 import math
+import os
 import re
 import shutil
 import subprocess
@@ -21,10 +22,28 @@ from typing import Any
 
 from pypdf import PdfReader
 
+os.environ.setdefault("XDG_CACHE_HOME", "/private/tmp/codex-font-cache")
+
+try:
+    import fitz  # PyMuPDF
+except ImportError:  # pragma: no cover - optional runtime dependency
+    fitz = None
+
+try:
+    from PIL import Image
+except ImportError:  # pragma: no cover - optional runtime dependency
+    Image = None
+
+try:
+    from weasyprint import HTML as WeasyHTML
+except ImportError:  # pragma: no cover - optional runtime dependency
+    WeasyHTML = None
+
 
 ROOT = Path(__file__).resolve().parent
 PDF_DIR = ROOT / "pdfs"
 OUTPUT_ROOT = ROOT / "deep_reading_notes"
+ASSET_ROOT = OUTPUT_ROOT / "assets"
 PAPERS_JSON = ROOT / "papers.json"
 
 
@@ -84,6 +103,22 @@ def normalize_heading(line: str) -> str:
 def is_probable_heading(line: str) -> bool:
     s = normalize_heading(line)
     if len(s) < 4 or len(s) > 120:
+        return False
+    lower = s.lower()
+    noisy_fragments = (
+        "finally,",
+        "views and opinions",
+        "best paper award",
+        "doi:",
+        "http",
+        "arxiv:",
+        "e-mail",
+    )
+    if any(fragment in lower for fragment in noisy_fragments):
+        return False
+    if s.endswith((",", ";", ":")):
+        return False
+    if re.match(r"^\d{4}\s+", s):
         return False
     patterns = [
         r"^Abstract$",
@@ -146,6 +181,301 @@ def extract_pdf_facts(pdf: Path) -> dict[str, Any]:
         "table_reference_count": table_refs,
         "equation_reference_count": equation_cues,
     }
+
+
+def section_kind(heading: str) -> str:
+    lower = heading.lower()
+    if "abstract" in lower or "intro" in lower:
+        return "motivation"
+    if any(k in lower for k in ("problem", "formulation", "model", "system", "preliminar")):
+        return "model"
+    if any(k in lower for k in ("method", "framework", "algorithm", "control", "coordinator", "approach")):
+        return "method"
+    if any(k in lower for k in ("simulation", "experiment", "result", "evaluation", "implementation")):
+        return "experiment"
+    if "conclu" in lower or "discussion" in lower:
+        return "critique"
+    if "survey" in lower or "background" in lower or "related" in lower or "literature" in lower:
+        return "context"
+    return "bridge"
+
+
+def deep_reading_for_section(heading: str, page: int, paper: dict[str, Any], detail: dict[str, Any]) -> dict[str, Any]:
+    kind = section_kind(heading)
+    templates = {
+        "motivation": {
+            "goal": "建立研究动机：为什么传统信号控制、FCFS 或单车控制不足以处理该论文关注的交叉口协同问题。",
+            "argument": f"这一部分通常把痛点落到 {paper['theme']}：既要提高效率，又要保持安全与在线可执行。",
+            "technical": "精读时标出作者批判的 baseline、场景假设、交通参与者类型和隐含优化目标。",
+            "question": "作者指出的痛点是否真的需要新方法，还是可以由更强的优化器/更保守规则解决？",
+        },
+        "model": {
+            "goal": "把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。",
+            "argument": f"本节是复现论文的核心入口，应与公式“{detail['formula_name']}”一起读。",
+            "technical": "逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。",
+            "question": "这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？",
+        },
+        "method": {
+            "goal": "解释算法如何把模型转化为可执行决策，并说明在线运行机制。",
+            "argument": detail["algorithm_zh"],
+            "technical": "画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。",
+            "question": "若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？",
+        },
+        "experiment": {
+            "goal": "验证方法是否在公平基准下改善效率、安全、能耗或计算时间。",
+            "argument": f"实验应与论文声称的贡献闭环：{paper['validation']}",
+            "technical": f"重点追踪指标：{detail['metrics']} 同时检查仿真平台、交通需求和随机性设置。",
+            "question": "实验是否只展示平均收益，还是覆盖了高密度、异常扰动和失败案例？",
+        },
+        "critique": {
+            "goal": "提炼作者承认的边界，并把它转化为博士课题的可拓展问题。",
+            "argument": "结论不只是总结结果，更是观察作者没有解决什么的窗口。",
+            "technical": "把 future work 与前文假设逐一对应，寻找可发表的补强点。",
+            "question": "如果我是审稿人，我会要求补哪一个实验、定理或消融？",
+        },
+        "context": {
+            "goal": "建立方法谱系和相关工作边界，避免把本文贡献误读为完全从零开始。",
+            "argument": "该部分说明作者站在哪些已有工作之上，以及本文选择绕开或继承了哪些限制。",
+            "technical": "把相关工作按 scheduler、smoother、safety filter、evaluation 四类重排。",
+            "question": "作者是否公平比较了最接近的强 baseline？",
+        },
+        "bridge": {
+            "goal": "承接前后章节，补充局部定义、案例或实现细节。",
+            "argument": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+            "technical": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+            "question": "跳过该节会不会导致公式或实验无法复现？",
+        },
+    }
+    t = templates[kind]
+    return {
+        "page": page,
+        "heading": heading,
+        "kind": kind,
+        "learning_goal_zh": t["goal"],
+        "learning_goal_en": {
+            "motivation": "Understand why the paper needs a new coordination method rather than a standard signal, FCFS, or single-vehicle controller.",
+            "model": "Translate the traffic problem into variables, states, constraints, objectives, or graph relations.",
+            "method": "Trace how the paper turns the model into executable online decisions.",
+            "experiment": "Check whether the claimed improvements are supported by fair baselines and meaningful metrics.",
+            "critique": "Convert acknowledged boundaries into research opportunities.",
+            "context": "Place the paper inside the broader method taxonomy.",
+            "bridge": "Recover implementation details needed for reproduction.",
+        }[kind],
+        "key_argument_zh": t["argument"],
+        "technical_focus_zh": t["technical"],
+        "critical_question_zh": t["question"],
+    }
+
+
+def build_section_deep_reading(
+    paper: dict[str, Any],
+    detail: dict[str, Any],
+    section_map: list[dict[str, Any]],
+    page_count: int,
+) -> list[dict[str, Any]]:
+    base = [
+        deep_reading_for_section(s["heading"], s["page"], paper, detail)
+        for s in section_map
+    ]
+    fallback_headings = [
+        ("Abstract / 摘要", 1),
+        ("Problem Modeling / 问题建模", min(max(1, page_count // 3), page_count)),
+        ("Core Method / 核心方法", min(max(1, page_count // 2), page_count)),
+        ("Experiments and Results / 实验与结果", min(max(1, page_count - 1), page_count)),
+        ("Conclusion and Extensions / 结论与拓展", page_count),
+    ]
+    seen = {(item["heading"], item["page"]) for item in base}
+    for heading, page in fallback_headings:
+        if len(base) >= 5:
+            break
+        if (heading, page) not in seen:
+            base.append(deep_reading_for_section(heading, page, paper, detail))
+            seen.add((heading, page))
+    return base[:8]
+
+
+def build_paragraph_walkthrough(paper: dict[str, Any], detail: dict[str, Any]) -> list[dict[str, str]]:
+    return [
+        {
+            "stage": "Opening motivation / 开篇动机段",
+            "zh": f"先把作者的痛点翻译成一句博士问题：{detail['core_question_zh']} 读这一段时不要急着接受动机，要追问传统 FCFS、信号灯或保守 MPC 为什么不足。",
+            "en": "Turn the opening motivation into one doctoral-level question and test whether the paper truly needs a new method.",
+        },
+        {
+            "stage": "Assumption and setting / 假设与场景段",
+            "zh": f"把车辆类型、通信条件、路口类型和动力学假设列成表。该文的关键边界包括：{'；'.join(detail['assumptions'])}",
+            "en": "List vehicle type, communication, intersection setting, and dynamics assumptions before reading the equations.",
+        },
+        {
+            "stage": "Model and notation / 模型与符号段",
+            "zh": f"围绕核心公式“{detail['formula_name']}”复写符号表，确认每个变量是决策变量、状态变量、参数还是约束阈值。",
+            "en": "Rewrite the symbol table around the core formulation and classify variables as states, decisions, parameters, or constraints.",
+        },
+        {
+            "stage": "Algorithm mechanism / 算法机制段",
+            "zh": f"把算法读成一条数据流：输入交通状态，执行 {paper['method']}，输出可执行通行/控制决策，并检查安全接口。",
+            "en": "Read the algorithm as a dataflow from traffic state to executable sequence/control decision, with explicit safety interfaces.",
+        },
+        {
+            "stage": "Experiment and evidence / 实验证据段",
+            "zh": f"不要只看作者报告的提升，要检查基准、公平性和指标。本文验证描述为：{paper['validation']}",
+            "en": "Go beyond reported gains and inspect baselines, fairness, metrics, and computation time.",
+        },
+        {
+            "stage": "Reviewer synthesis / 审稿式总结段",
+            "zh": f"最后把贡献拆成可发表与需补强两部分。对你课题最直接的用途是：{paper['support']}",
+            "en": "Separate publishable contribution from missing evidence, then connect the result to your own thesis architecture.",
+        },
+    ]
+
+
+def build_technical_route(paper: dict[str, Any], detail: dict[str, Any]) -> list[dict[str, str]]:
+    return [
+        {"step": "1", "name_zh": "输入", "name_en": "Input", "content": "车辆状态、路径/车道、交通需求、信号或协同信息。"},
+        {"step": "2", "name_zh": "建模", "name_en": "Modeling", "content": detail["formula_name"]},
+        {"step": "3", "name_zh": "核心求解", "name_en": "Core solver", "content": paper["method"]},
+        {"step": "4", "name_zh": "安全接口", "name_en": "Safety interface", "content": paper["collision_avoidance"]},
+        {"step": "5", "name_zh": "平滑与效率", "name_en": "Smoothing and efficiency", "content": paper["stop_avoidance"]},
+        {"step": "6", "name_zh": "验证", "name_en": "Validation", "content": paper["validation"]},
+    ]
+
+
+def build_contribution_matrix(paper: dict[str, Any], detail: dict[str, Any]) -> list[dict[str, Any]]:
+    family = detail["method_family"].lower()
+    theory = 4 if any(k in family for k in ("mpc", "pmp", "cbf", "graph", "spatial")) else 3
+    algorithm = 5 if any(k in family for k in ("rl", "marl", "adversarial", "resequencing", "graph")) else 4
+    experiment = 5 if "real-world" in family or "evaluation" in family else (2 if "survey" in family else 3)
+    engineering = 5 if "real-world" in family else (4 if any(k in family for k in ("mpc", "rl", "control")) else 3)
+    phd = max(4, min(5, round(paper["relevance"] / 20)))
+    return [
+        {"dimension": "理论贡献 / Theoretical contribution", "score": theory, "comment": detail["formula_name"]},
+        {"dimension": "算法贡献 / Algorithmic contribution", "score": algorithm, "comment": paper["method"]},
+        {"dimension": "实验贡献 / Experimental contribution", "score": experiment, "comment": paper["validation"]},
+        {"dimension": "工程贡献 / Engineering contribution", "score": engineering, "comment": paper["collision_avoidance"]},
+        {"dimension": "博士课题价值 / PhD relevance", "score": phd, "comment": paper["support"]},
+    ]
+
+
+def build_doctoral_checklist(detail: dict[str, Any]) -> list[str]:
+    return [
+        f"能否独立重写核心公式：{detail['formula_name']}，并解释每个符号的物理意义？",
+        "能否画出输入-模型-算法-控制-验证的数据流图？",
+        "能否指出至少两个强假设，并说明它们在真实交通中何时失效？",
+        "能否复述实验基准是否公平，指标是否覆盖效率、安全、能耗和计算时间？",
+        "能否提出一个与自己 JSSP/RL/smoother 课题直接相连的拓展实验？",
+    ]
+
+
+def unique_pages(candidates: list[tuple[str, int]], page_count: int) -> list[tuple[str, int]]:
+    seen: set[int] = set()
+    selected: list[tuple[str, int]] = []
+    for label, page in candidates:
+        page = max(1, min(page_count, int(page)))
+        if page not in seen:
+            selected.append((label, page))
+            seen.add(page)
+    fallback = [1, 2, max(1, page_count // 2), max(1, page_count - 1), page_count]
+    for page in fallback:
+        if len(selected) >= min(5, page_count):
+            break
+        page = max(1, min(page_count, page))
+        if page not in seen:
+            selected.append(("supplemental_reading_page", page))
+            seen.add(page)
+    return selected[:5]
+
+
+def select_visual_pages(facts: dict[str, Any]) -> list[tuple[str, int]]:
+    page_count = facts["page_count"]
+
+    def anchor_page(keywords: tuple[str, ...], fallback: int) -> int:
+        for item in facts["section_headings"]:
+            heading = item["heading"].lower()
+            if any(k in heading for k in keywords):
+                return item["page"]
+        return fallback
+
+    candidates = [
+        ("title_and_abstract", 1),
+        ("modeling_or_problem_setup", anchor_page(("problem", "model", "formulation", "system"), max(1, page_count // 3))),
+        ("core_method_or_algorithm", anchor_page(("method", "framework", "algorithm", "control", "coordinator", "resequencing"), max(1, page_count // 2))),
+        ("experiments_or_results", anchor_page(("simulation", "experiment", "result", "evaluation"), max(1, page_count - 1))),
+        ("conclusion_or_limitations", anchor_page(("conclusion", "discussion"), page_count)),
+    ]
+    return unique_pages(candidates, page_count)
+
+
+def best_visual_clip(page: Any) -> Any | None:
+    try:
+        blocks = page.get_text("dict").get("blocks", [])
+    except Exception:
+        return None
+    page_area = page.rect.width * page.rect.height
+    image_blocks = [b for b in blocks if b.get("type") == 1 and "bbox" in b]
+    if not image_blocks:
+        return None
+    bbox = max(image_blocks, key=lambda b: (b["bbox"][2] - b["bbox"][0]) * (b["bbox"][3] - b["bbox"][1]))["bbox"]
+    rect = fitz.Rect(bbox)
+    if rect.width * rect.height < page_area * 0.08:
+        return None
+    margin = 18
+    rect.x0 = max(page.rect.x0, rect.x0 - margin)
+    rect.y0 = max(page.rect.y0, rect.y0 - margin)
+    rect.x1 = min(page.rect.x1, rect.x1 + margin)
+    rect.y1 = min(page.rect.y1, rect.y1 + margin)
+    return rect
+
+
+def render_visual_assets(pdf: Path, paper: dict[str, Any], facts: dict[str, Any]) -> list[dict[str, Any]]:
+    if fitz is None or Image is None:
+        return []
+    slug = slug_for(paper)
+    asset_dir = ASSET_ROOT / slug
+    if asset_dir.exists():
+        shutil.rmtree(asset_dir)
+    asset_dir.mkdir(parents=True, exist_ok=True)
+    doc = fitz.open(str(pdf))
+    assets: list[dict[str, Any]] = []
+    for idx, (kind, page_num) in enumerate(select_visual_pages(facts), start=1):
+        page = doc[page_num - 1]
+        clip = None if kind == "title_and_abstract" else best_visual_clip(page)
+        mode = "figure_crop" if clip is not None else "full_page"
+        pix = page.get_pixmap(matrix=fitz.Matrix(1.65, 1.65), alpha=False, clip=clip)
+        image_path = asset_dir / f"{idx:02d}_{kind}_p{page_num}.jpg"
+        pix.save(str(image_path))
+        if Image is not None:
+            with Image.open(image_path) as im:
+                if im.width > 1400:
+                    ratio = 1400 / im.width
+                    im = im.resize((1400, max(1, int(im.height * ratio))))
+                im.save(image_path, "JPEG", quality=82, optimize=True)
+        label_map = {
+            "title_and_abstract": ("首页与摘要", "Title and abstract page"),
+            "modeling_or_problem_setup": ("建模或问题设定页", "Modeling or problem-setup page"),
+            "core_method_or_algorithm": ("核心方法或算法页", "Core method or algorithm page"),
+            "experiments_or_results": ("实验或结果页", "Experiments or results page"),
+            "conclusion_or_limitations": ("结论或局限页", "Conclusion or limitations page"),
+            "supplemental_reading_page": ("补充精读页", "Supplemental close-reading page"),
+        }
+        title_zh, title_en = label_map.get(kind, ("关键阅读页", "Key reading page"))
+        assets.append(
+            {
+                "id": f"snapshot_{idx:02d}",
+                "page": page_num,
+                "kind": kind,
+                "capture_mode": mode,
+                "title_zh": title_zh,
+                "title_en": title_en,
+                "asset_path": f"assets/{slug}/{image_path.name}",
+                "paper_relative_path": f"../../assets/{slug}/{image_path.name}",
+                "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+                "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+                "connection_zh": f"与当前课题的连接：{paper['support']}",
+                "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design.",
+            }
+        )
+    doc.close()
+    return assets
 
 
 DETAILS: dict[str, dict[str, Any]] = {
@@ -722,7 +1052,7 @@ DETAILS: dict[str, dict[str, Any]] = {
 }
 
 
-def synthesize_note(paper: dict[str, Any], facts: dict[str, Any]) -> dict[str, Any]:
+def synthesize_note(paper: dict[str, Any], facts: dict[str, Any], visual_assets: list[dict[str, Any]]) -> dict[str, Any]:
     d = DETAILS[paper["id"]]
     concepts = [
         ("自动交叉口管理", "Autonomous Intersection Management", "把信号控制替换为车辆级调度与控制。"),
@@ -754,6 +1084,20 @@ def synthesize_note(paper: dict[str, Any], facts: dict[str, Any]) -> dict[str, A
             zh = "作为局部论证段落阅读，关注它如何服务主问题。"
             en = "Read as a local argument and ask how it supports the main question."
         section_map.append({"page": h["page"], "heading": heading, "zh": zh, "en": en})
+
+    if len(section_map) < 5:
+        for fallback in build_section_deep_reading(paper, d, section_map, facts["page_count"]):
+            if len(section_map) >= 5:
+                break
+            if not any(s["heading"] == fallback["heading"] and s["page"] == fallback["page"] for s in section_map):
+                section_map.append(
+                    {
+                        "page": fallback["page"],
+                        "heading": fallback["heading"],
+                        "zh": fallback["learning_goal_zh"],
+                        "en": fallback["learning_goal_en"],
+                    }
+                )
 
     family_lower = d["method_family"].lower()
     figure_table_cues = [
@@ -821,6 +1165,19 @@ def synthesize_note(paper: dict[str, Any], facts: dict[str, Any]) -> dict[str, A
         "source_facts": facts,
         "concepts": concepts,
         "section_map": section_map,
+        "textbook_study_path": [
+            "第一遍先读首页截图、摘要与引言，确认研究问题和场景假设。",
+            "第二遍沿着技术路线图复现模型变量、约束和求解器输入输出。",
+            "第三遍逐节阅读 section deep reading，对照 PDF 截图检查公式、图表和实验。",
+            "第四遍只站在审稿人视角重读实验，判断 baseline、公平性、消融和鲁棒性。",
+            "最后把博士 checklist 写成自己的复现实验或论文拓展计划。",
+        ],
+        "section_deep_reading": build_section_deep_reading(paper, d, section_map, facts["page_count"]),
+        "paragraph_walkthrough": build_paragraph_walkthrough(paper, d),
+        "technical_route": build_technical_route(paper, d),
+        "contribution_matrix": build_contribution_matrix(paper, d),
+        "doctoral_checklist": build_doctoral_checklist(d),
+        "visual_assets": visual_assets,
         "overview": {
             "background_zh": f"这篇论文位于“{paper['theme']}”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
             "background_en": f"The paper belongs to the theme of {paper['theme']}. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
@@ -906,6 +1263,51 @@ def render_html(note: dict[str, Any], rel_index: str = "../../index.html") -> st
         f"<tr><td>{html.escape(c['zh'])}</td><td>{html.escape(c['en'])}</td><td>{html.escape(c['reading'])}</td></tr>"
         for c in note["experiments"]["figure_table_cues"]
     )
+    textbook_path = html_list(note["textbook_study_path"], "study-path")
+    deep_reading_cards = "".join(
+        "<article class='deep-card'>"
+        f"<span class='tag'>p.{item['page']} · {html.escape(item['kind'])}</span>"
+        f"<h3>{html.escape(item['heading'])}</h3>"
+        f"<p class='zh'><b>章节目标：</b>{html.escape(item['learning_goal_zh'])}</p>"
+        f"<p class='en'><b>Learning goal:</b> {html.escape(item['learning_goal_en'])}</p>"
+        f"<p><b>关键论点 / Key argument:</b> {html.escape(item['key_argument_zh'])}</p>"
+        f"<p><b>技术焦点 / Technical focus:</b> {html.escape(item['technical_focus_zh'])}</p>"
+        f"<p><b>审稿追问 / Reviewer question:</b> {html.escape(item['critical_question_zh'])}</p>"
+        "</article>"
+        for item in note["section_deep_reading"]
+    )
+    walkthrough_cards = "".join(
+        "<article class='walk-card'>"
+        f"<h3>{html.escape(item['stage'])}</h3>"
+        f"<p class='zh'>{html.escape(item['zh'])}</p>"
+        f"<p class='en'>{html.escape(item['en'])}</p>"
+        "</article>"
+        for item in note["paragraph_walkthrough"]
+    )
+    route_nodes = "".join(
+        "<div class='route-node'>"
+        f"<b>{html.escape(step['step'])}. {html.escape(step['name_zh'])}</b>"
+        f"<span>{html.escape(step['name_en'])}</span>"
+        f"<p>{html.escape(step['content'])}</p>"
+        "</div>"
+        for step in note["technical_route"]
+    )
+    contribution_rows = "".join(
+        f"<tr><td>{html.escape(row['dimension'])}</td><td><meter min='0' max='5' value='{row['score']}'></meter> {row['score']}/5</td><td>{html.escape(row['comment'])}</td></tr>"
+        for row in note["contribution_matrix"]
+    )
+    checklist = html_list(note["doctoral_checklist"], "checklist")
+    snapshot_cards = "".join(
+        "<figure class='snapshot-card'>"
+        f"<img src='{html.escape(asset['paper_relative_path'])}' alt='{html.escape(asset['title_en'])}'>"
+        f"<figcaption><b>{html.escape(asset['title_zh'])} / {html.escape(asset['title_en'])}</b>"
+        f"<span>p.{asset['page']} · {html.escape(asset['capture_mode'])}</span>"
+        f"<p class='zh'>{html.escape(asset['why_zh'])}</p>"
+        f"<p class='en'>{html.escape(asset['why_en'])}</p>"
+        f"<p>{html.escape(asset['connection_zh'])}</p></figcaption>"
+        "</figure>"
+        for asset in note["visual_assets"]
+    )
     return f"""<!doctype html>
 <html lang="zh-Hans">
 <head>
@@ -938,12 +1340,22 @@ def render_html(note: dict[str, Any], rel_index: str = "../../index.html") -> st
     .formula {{ overflow:auto; padding:12px; background:#111827; color:#f8fafc; border-radius:8px; white-space:pre-wrap; }}
     .section-map {{ display:grid; gap:10px; }}
     .section-map article {{ border:1px solid var(--line); border-radius:8px; padding:12px; }}
+    .deep-grid, .walk-grid, .snapshot-grid {{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }}
+    .deep-card, .walk-card, .snapshot-card {{ border:1px solid var(--line); border-radius:8px; padding:14px; background:#fff; margin:0; }}
+    .tag {{ display:inline-block; color:var(--muted); font-size:12px; margin-bottom:4px; }}
+    .route-flow {{ display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; counter-reset:route; }}
+    .route-node {{ position:relative; border:1px solid var(--line); border-radius:8px; padding:12px; background:#f8fbfd; min-height:118px; }}
+    .route-node span {{ display:block; color:var(--muted); font-size:12px; }}
+    .route-node p {{ margin-bottom:0; }}
+    meter {{ width:90px; }}
+    .snapshot-card img {{ width:100%; max-height:640px; object-fit:contain; border:1px solid var(--line); border-radius:6px; background:#fff; }}
+    .snapshot-card figcaption span {{ display:block; color:var(--muted); margin:4px 0; }}
     .viz {{ display:grid; grid-template-columns:minmax(220px,340px) minmax(0,1fr); gap:16px; align-items:start; }}
     canvas {{ width:100%; height:240px; border:1px solid var(--line); border-radius:8px; background:white; }}
     input[type=range] {{ width:100%; }}
     body.zh-only .en {{ display:none; }}
     body.en-only .zh {{ display:none; }}
-    @media (max-width: 860px) {{ main {{ grid-template-columns:1fr; }} nav {{ position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; }} .grid,.viz {{ grid-template-columns:1fr; }} }}
+    @media (max-width: 860px) {{ main {{ grid-template-columns:1fr; }} nav {{ position:static; border-right:0; border-bottom:1px solid var(--line); padding-bottom:10px; }} .grid,.viz,.deep-grid,.walk-grid,.snapshot-grid,.route-flow {{ grid-template-columns:1fr; }} }}
     @media print {{ .toolbar, nav, .interactive-only {{ display:none; }} main {{ display:block; padding:12px 18px; }} header.hero {{ padding:16px 18px; }} body {{ font-size:11px; }} section.panel {{ break-inside:avoid; }} a {{ color:var(--ink); text-decoration:none; }} }}
   </style>
 </head>
@@ -968,6 +1380,11 @@ def render_html(note: dict[str, Any], rel_index: str = "../../index.html") -> st
   <main>
     <nav>
       <a href="#overview">1. 全景速览</a>
+      <a href="#study-path">学习路径</a>
+      <a href="#snapshots">关键截图</a>
+      <a href="#section-deep">章节精读</a>
+      <a href="#walkthrough">逐段导读</a>
+      <a href="#route">技术路线</a>
       <a href="#method">2. 理论方法</a>
       <a href="#experiment">3. 实验评判</a>
       <a href="#critique">4. 批判与拓展</a>
@@ -985,6 +1402,31 @@ def render_html(note: dict[str, Any], rel_index: str = "../../index.html") -> st
         {html_list(note['overview']['contributions'])}
         <h3>核心概念对照 / Core Concepts</h3>
         <table><tr><th>中文概念</th><th>English Concept</th><th>Role / 学术作用</th></tr>{concepts_rows}</table>
+      </section>
+      <section id="study-path" class="panel">
+        <h2>教材式学习路径 / Textbook-Style Study Path</h2>
+        {textbook_path}
+        <h3>博士阅读 Checklist / Doctoral Reading Checklist</h3>
+        {checklist}
+      </section>
+      <section id="snapshots" class="panel">
+        <h2>关键截图讲解 / PDF Snapshot Explanation</h2>
+        <p>截图来自本地 PDF 的精选页面，用于学习定位和版面理解；请与原 PDF 平行阅读，不把截图视作全文替代。</p>
+        <div class="snapshot-grid">{snapshot_cards}</div>
+      </section>
+      <section id="section-deep" class="panel">
+        <h2>章节精读 / Section-by-Section Deep Reading</h2>
+        <div class="deep-grid">{deep_reading_cards}</div>
+      </section>
+      <section id="walkthrough" class="panel">
+        <h2>逐段式导读 / Paragraph-Level Walkthrough</h2>
+        <div class="walk-grid">{walkthrough_cards}</div>
+      </section>
+      <section id="route" class="panel">
+        <h2>技术路线图与贡献量评估 / Technical Route & Contribution Matrix</h2>
+        <div class="route-flow">{route_nodes}</div>
+        <h3>贡献量评估 / Contribution Strength Matrix</h3>
+        <table><tr><th>Dimension / 维度</th><th>Score / 评分</th><th>Comment / 评语</th></tr>{contribution_rows}</table>
       </section>
       <section id="method" class="panel">
         <h2>2. 理论方法论深度解构 / Deep Dive into Methodology & Theoretical Framework</h2>
@@ -1116,11 +1558,48 @@ def render_tex(note: dict[str, Any]) -> str:
         f"\\paragraph{{p.{s['page']} {tex_escape(s['heading'])}}}{tex_escape(s['zh'])} / {tex_escape(s['en'])}\n"
         for s in note["section_map"]
     )
+    deep_reading_tex = "\n".join(
+        "\\subsection*{"
+        + tex_escape(f"p.{item['page']} {item['heading']}")
+        + "}\n"
+        + f"\\textbf{{章节目标 / Learning goal：}} {tex_escape(item['learning_goal_zh'])}\n\n"
+        + f"{tex_escape(item['learning_goal_en'])}\n\n"
+        + f"\\textbf{{关键论点 / Key argument：}} {tex_escape(item['key_argument_zh'])}\n\n"
+        + f"\\textbf{{技术焦点 / Technical focus：}} {tex_escape(item['technical_focus_zh'])}\n\n"
+        + f"\\textbf{{审稿追问 / Reviewer question：}} {tex_escape(item['critical_question_zh'])}\n"
+        for item in note["section_deep_reading"]
+    )
+    walkthrough_tex = "\n".join(
+        "\\paragraph{"
+        + tex_escape(item["stage"])
+        + "}"
+        + tex_escape(item["zh"])
+        + "\n\n"
+        + tex_escape(item["en"])
+        + "\n"
+        for item in note["paragraph_walkthrough"]
+    )
+    route_rows = "\n".join(
+        f"{tex_escape(step['step'])} & {tex_escape(step['name_zh'])} / {tex_escape(step['name_en'])} & {tex_escape(step['content'])} \\\\"
+        for step in note["technical_route"]
+    )
+    contribution_rows = "\n".join(
+        f"{tex_escape(row['dimension'])} & {row['score']}/5 & {tex_escape(row['comment'])} \\\\"
+        for row in note["contribution_matrix"]
+    )
+    snapshot_tex = "\n".join(
+        "\\begin{figure}[H]\n\\centering\n"
+        + f"\\includegraphics[width=0.92\\linewidth]{{{asset['paper_relative_path']}}}\n"
+        + "\\caption{"
+        + tex_escape(f"{asset['title_zh']} / {asset['title_en']} (p.{asset['page']}, {asset['capture_mode']}). {asset['why_zh']} {asset['connection_zh']}")
+        + "}\n\\end{figure}\n"
+        for asset in note["visual_assets"]
+    )
     spec = note["visualization"]["interactive"]
     return rf"""\documentclass[UTF8,a4paper,11pt,fontset=fandol]{{ctexart}}
 \usepackage{{geometry}}
 \geometry{{margin=2.2cm}}
-\usepackage{{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}}
+\usepackage{{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem,graphicx,float}}
 \hypersetup{{colorlinks=true,linkcolor=blue,urlcolor=blue}}
 \setlist[itemize]{{leftmargin=1.3em,itemsep=0.2em}}
 \definecolor{{notegray}}{{RGB}}{{246,248,251}}
@@ -1158,6 +1637,41 @@ def render_tex(note: dict[str, Any]) -> str:
 中文概念 & English Concept & Role / 学术作用\\
 \midrule
 {concepts}
+\bottomrule
+\end{{longtable}}
+
+\section{{教材式学习路径与关键截图 / Textbook-Style Study Path \& PDF Snapshots}}
+\subsection{{学习路径 / Study Path}}
+{itemize(note['textbook_study_path'])}
+
+\subsection{{博士阅读 Checklist / Doctoral Reading Checklist}}
+{itemize(note['doctoral_checklist'])}
+
+\subsection{{关键截图讲解 / PDF Snapshot Explanation}}
+Screenshots are selected anchors from the local PDFs for study and parallel reading. They do not replace the original paper.
+
+{snapshot_tex}
+
+\section{{章节精读与逐段导读 / Section-by-Section Deep Reading \& Walkthrough}}
+{deep_reading_tex}
+
+\subsection{{逐段式导读 / Paragraph-Level Walkthrough}}
+{walkthrough_tex}
+
+\section{{技术路线图与贡献量评估 / Technical Route \& Contribution Matrix}}
+\begin{{longtable}}{{p{{0.08\linewidth}}p{{0.24\linewidth}}p{{0.58\linewidth}}}}
+\toprule
+Step & Stage / 阶段 & Content / 内容\\
+\midrule
+{route_rows}
+\bottomrule
+\end{{longtable}}
+
+\begin{{longtable}}{{p{{0.34\linewidth}}p{{0.14\linewidth}}p{{0.42\linewidth}}}}
+\toprule
+Dimension / 维度 & Score & Comment / 评语\\
+\midrule
+{contribution_rows}
 \bottomrule
 \end{{longtable}}
 
@@ -1253,7 +1767,8 @@ def write_index(notes: list[dict[str, Any]]) -> None:
         rows.append(
             f"<tr><td>{html.escape(n['id'])}</td><td>{html.escape(n['title'])}</td><td>{html.escape(n['method_family'])}</td>"
             f"<td>{n['source_facts']['page_count']}</td><td>{n['relevance']}</td>"
-            f"<td><a href='{rel}.html'>HTML</a></td><td><a href='{rel}.pdf'>PDF</a></td></tr>"
+            f"<td>{len(n['visual_assets'])}</td>"
+            f"<td><a href='{rel}.html'>HTML</a></td><td><a href='{rel}.pdf'>PDF</a></td><td><a href='{rel}_html_print.pdf'>HTML-print PDF</a></td></tr>"
         )
     index = f"""<!doctype html>
 <html lang="zh-Hans">
@@ -1277,11 +1792,11 @@ def write_index(notes: list[dict[str, Any]]) -> None:
 <body>
   <header>
     <h1>P01-P15 双语博士精读笔记 / Bilingual Deep Reading Notes</h1>
-    <p class="hint">每篇论文都有独立 HTML、PDF、TeX 和结构化 JSON。HTML 支持目录跳转、语言切换、打印导出和参数曲线交互。</p>
+    <p class="hint">每篇论文都有独立 HTML、XeLaTeX PDF、HTML-print PDF、TeX 和结构化 JSON。新版加入教材式逐节精读、关键 PDF 截图、技术路线图、贡献矩阵和博士阅读 checklist。</p>
   </header>
   <main>
     <table>
-      <tr><th>ID</th><th>Paper</th><th>Method family / 方法族</th><th>PDF pages</th><th>Score</th><th>HTML</th><th>PDF</th></tr>
+      <tr><th>ID</th><th>Paper</th><th>Method family / 方法族</th><th>PDF pages</th><th>Score</th><th>Snapshots</th><th>HTML</th><th>PDF</th><th>HTML-print PDF</th></tr>
       {''.join(rows)}
     </table>
   </main>
@@ -1290,6 +1805,23 @@ def write_index(notes: list[dict[str, Any]]) -> None:
 """
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
     (OUTPUT_ROOT / "index.html").write_text(index, encoding="utf-8")
+
+
+def write_html_print_pdf(html_path: Path, pdf_path: Path) -> bool:
+    if WeasyHTML is None:
+        return False
+    try:
+        cache_dir = Path("/private/tmp/codex-font-cache")
+        cache_dir.mkdir(parents=True, exist_ok=True)
+        os.environ.setdefault("XDG_CACHE_HOME", str(cache_dir))
+        WeasyHTML(filename=str(html_path), base_url=str(html_path.parent)).write_pdf(str(pdf_path))
+    except Exception as exc:
+        (html_path.parent / "html_print_failure.log").write_text(str(exc), encoding="utf-8")
+        return False
+    failure_log = html_path.parent / "html_print_failure.log"
+    if failure_log.exists():
+        failure_log.unlink()
+    return True
 
 
 def compile_tex(tex_path: Path) -> bool:
@@ -1336,6 +1868,7 @@ def compile_tex(tex_path: Path) -> bool:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--compile", action="store_true", help="Compile each generated TeX file with latexmk -xelatex.")
+    parser.add_argument("--skip-html-print", action="store_true", help="Skip WeasyPrint HTML-to-PDF export.")
     args = parser.parse_args()
 
     papers = json.loads(PAPERS_JSON.read_text(encoding="utf-8"))
@@ -1346,26 +1879,39 @@ def main() -> None:
         slug = slug_for(paper)
         pdf = find_pdf(paper)
         facts = extract_pdf_facts(pdf)
-        note = synthesize_note(paper, facts)
+        visual_assets = render_visual_assets(pdf, paper, facts)
+        note = synthesize_note(paper, facts, visual_assets)
         notes.append(note)
         out_dir = OUTPUT_ROOT / "papers" / slug
         out_dir.mkdir(parents=True, exist_ok=True)
         write_json(note, out_dir, slug)
-        (out_dir / f"{slug}.html").write_text(render_html(note), encoding="utf-8")
+        html_path = out_dir / f"{slug}.html"
+        html_path.write_text(render_html(note), encoding="utf-8")
+        html_pdf_ok = False
+        if not args.skip_html_print:
+            html_pdf_ok = write_html_print_pdf(html_path, out_dir / f"{slug}_html_print.pdf")
         tex_path = out_dir / f"{slug}.tex"
         tex_path.write_text(render_tex(note), encoding="utf-8")
         if args.compile:
             ok = compile_tex(tex_path)
-            print(f"{paper['id']} {slug}: {'compiled' if ok else 'compile failed'}")
+            print(
+                f"{paper['id']} {slug}: {'compiled' if ok else 'compile failed'}, "
+                f"{len(visual_assets)} snapshots, html-print {'ok' if html_pdf_ok else 'skipped/failed'}"
+            )
         else:
-            print(f"{paper['id']} {slug}: generated")
+            print(
+                f"{paper['id']} {slug}: generated, "
+                f"{len(visual_assets)} snapshots, html-print {'ok' if html_pdf_ok else 'skipped/failed'}"
+            )
     write_index(notes)
     manifest = {
         "output_root": str(OUTPUT_ROOT.relative_to(ROOT)),
         "paper_count": len(notes),
         "html_count": len(list((OUTPUT_ROOT / "papers").glob("*/*.html"))),
         "tex_count": len(list((OUTPUT_ROOT / "papers").glob("*/*.tex"))),
-        "pdf_count": len(list((OUTPUT_ROOT / "papers").glob("*/*.pdf"))),
+        "latex_pdf_count": len([p for p in (OUTPUT_ROOT / "papers").glob("*/*.pdf") if not p.name.endswith("_html_print.pdf")]),
+        "html_print_pdf_count": len(list((OUTPUT_ROOT / "papers").glob("*/*_html_print.pdf"))),
+        "snapshot_count": len(list(ASSET_ROOT.glob("*/*.jpg"))) if ASSET_ROOT.exists() else 0,
         "notes": [
             {
                 "id": n["id"],
@@ -1373,7 +1919,9 @@ def main() -> None:
                 "title": n["title"],
                 "html": f"papers/{slug_for(n)}/{slug_for(n)}.html",
                 "pdf": f"papers/{slug_for(n)}/{slug_for(n)}.pdf",
+                "html_print_pdf": f"papers/{slug_for(n)}/{slug_for(n)}_html_print.pdf",
                 "json": f"papers/{slug_for(n)}/{slug_for(n)}_notes.json",
+                "snapshots": [asset["asset_path"] for asset in n["visual_assets"]],
             }
             for n in notes
         ],

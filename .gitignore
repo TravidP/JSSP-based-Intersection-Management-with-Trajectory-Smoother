@@ -31,3 +31,5 @@
 /.vscode/
 /.texmf/
 /.venv/
+__pycache__/
+*.pyc

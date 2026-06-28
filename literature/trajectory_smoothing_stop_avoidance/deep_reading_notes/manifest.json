@@ -3,7 +3,9 @@
   "paper_count": 15,
   "html_count": 15,
   "tex_count": 15,
-  "pdf_count": 15,
+  "latex_pdf_count": 15,
+  "html_print_pdf_count": 15,
+  "snapshot_count": 75,
   "notes": [
     {
       "id": "P01",
@@ -11,7 +13,15 @@
       "title": "A Priority-Aware Replanning and Resequencing Framework for Coordination of Connected and Automated Vehicles",
       "html": "papers/P01_chalaki2021priority/P01_chalaki2021priority.html",
       "pdf": "papers/P01_chalaki2021priority/P01_chalaki2021priority.pdf",
-      "json": "papers/P01_chalaki2021priority/P01_chalaki2021priority_notes.json"
+      "html_print_pdf": "papers/P01_chalaki2021priority/P01_chalaki2021priority_html_print.pdf",
+      "json": "papers/P01_chalaki2021priority/P01_chalaki2021priority_notes.json",
+      "snapshots": [
+        "assets/P01_chalaki2021priority/01_title_and_abstract_p1.jpg",
+        "assets/P01_chalaki2021priority/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P01_chalaki2021priority/03_experiments_or_results_p5.jpg",
+        "assets/P01_chalaki2021priority/04_conclusion_or_limitations_p6.jpg",
+        "assets/P01_chalaki2021priority/05_supplemental_reading_page_p3.jpg"
+      ]
     },
     {
       "id": "P02",
@@ -19,7 +29,15 @@
       "title": "Conflict-free Cooperation Method for Connected and Automated Vehicles at Unsignalized Intersections: Graph-based Modeling and Optimality Analysis",
       "html": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree.html",
       "pdf": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree.pdf",
-      "json": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree_notes.json"
+      "html_print_pdf": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree_html_print.pdf",
+      "json": "papers/P02_chen2021conflictfree/P02_chen2021conflictfree_notes.json",
+      "snapshots": [
+        "assets/P02_chen2021conflictfree/01_title_and_abstract_p1.jpg",
+        "assets/P02_chen2021conflictfree/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P02_chen2021conflictfree/03_core_method_or_algorithm_p4.jpg",
+        "assets/P02_chen2021conflictfree/04_experiments_or_results_p11.jpg",
+        "assets/P02_chen2021conflictfree/05_conclusion_or_limitations_p17.jpg"
+      ]
     },
     {
       "id": "P03",
@@ -27,7 +45,15 @@
       "title": "Cooperation Method of Connected and Automated Vehicles at Unsignalized Intersections: Lane Changing and Arrival Scheduling",
       "html": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging.html",
       "pdf": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging.pdf",
-      "json": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging_notes.json"
+      "html_print_pdf": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging_html_print.pdf",
+      "json": "papers/P03_chen2021lanechanging/P03_chen2021lanechanging_notes.json",
+      "snapshots": [
+        "assets/P03_chen2021lanechanging/01_title_and_abstract_p1.jpg",
+        "assets/P03_chen2021lanechanging/02_modeling_or_problem_setup_p4.jpg",
+        "assets/P03_chen2021lanechanging/03_core_method_or_algorithm_p2.jpg",
+        "assets/P03_chen2021lanechanging/04_experiments_or_results_p10.jpg",
+        "assets/P03_chen2021lanechanging/05_conclusion_or_limitations_p13.jpg"
+      ]
     },
     {
       "id": "P04",
@@ -35,7 +61,15 @@
       "title": "Real-time Cooperative Vehicle Coordination at Unsignalized Road Intersections",
       "html": "papers/P04_luo2023realtime/P04_luo2023realtime.html",
       "pdf": "papers/P04_luo2023realtime/P04_luo2023realtime.pdf",
-      "json": "papers/P04_luo2023realtime/P04_luo2023realtime_notes.json"
+      "html_print_pdf": "papers/P04_luo2023realtime/P04_luo2023realtime_html_print.pdf",
+      "json": "papers/P04_luo2023realtime/P04_luo2023realtime_notes.json",
+      "snapshots": [
+        "assets/P04_luo2023realtime/01_title_and_abstract_p1.jpg",
+        "assets/P04_luo2023realtime/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P04_luo2023realtime/03_core_method_or_algorithm_p5.jpg",
+        "assets/P04_luo2023realtime/04_experiments_or_results_p8.jpg",
+        "assets/P04_luo2023realtime/05_conclusion_or_limitations_p13.jpg"
+      ]
     },
     {
       "id": "P05",
@@ -43,7 +77,15 @@
       "title": "Hybrid Reinforcement Learning-Based Eco-Driving Strategy for Connected and Automated Vehicles at Signalized Intersections",
       "html": "papers/P05_bai2022hybrid/P05_bai2022hybrid.html",
       "pdf": "papers/P05_bai2022hybrid/P05_bai2022hybrid.pdf",
-      "json": "papers/P05_bai2022hybrid/P05_bai2022hybrid_notes.json"
+      "html_print_pdf": "papers/P05_bai2022hybrid/P05_bai2022hybrid_html_print.pdf",
+      "json": "papers/P05_bai2022hybrid/P05_bai2022hybrid_notes.json",
+      "snapshots": [
+        "assets/P05_bai2022hybrid/01_title_and_abstract_p1.jpg",
+        "assets/P05_bai2022hybrid/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P05_bai2022hybrid/03_core_method_or_algorithm_p4.jpg",
+        "assets/P05_bai2022hybrid/04_experiments_or_results_p9.jpg",
+        "assets/P05_bai2022hybrid/05_conclusion_or_limitations_p13.jpg"
+      ]
     },
     {
       "id": "P06",
@@ -51,7 +93,15 @@
       "title": "Eco-driving for Electric Connected Vehicles at Signalized Intersections: A Parameterized Reinforcement Learning Approach",
       "html": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving.html",
       "pdf": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving.pdf",
-      "json": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving_notes.json"
+      "html_print_pdf": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving_html_print.pdf",
+      "json": "papers/P06_jiang2023ecodriving/P06_jiang2023ecodriving_notes.json",
+      "snapshots": [
+        "assets/P06_jiang2023ecodriving/01_title_and_abstract_p1.jpg",
+        "assets/P06_jiang2023ecodriving/02_modeling_or_problem_setup_p9.jpg",
+        "assets/P06_jiang2023ecodriving/03_core_method_or_algorithm_p6.jpg",
+        "assets/P06_jiang2023ecodriving/04_experiments_or_results_p15.jpg",
+        "assets/P06_jiang2023ecodriving/05_supplemental_reading_page_p2.jpg"
+      ]
     },
     {
       "id": "P07",
@@ -59,7 +109,15 @@
       "title": "Cooperative Control in Eco-Driving of Electric Connected and Autonomous Vehicles in an Un-Signalized Urban Intersection",
       "html": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative.html",
       "pdf": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative.pdf",
-      "json": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative_notes.json"
+      "html_print_pdf": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative_html_print.pdf",
+      "json": "papers/P07_lakshmanan2022cooperative/P07_lakshmanan2022cooperative_notes.json",
+      "snapshots": [
+        "assets/P07_lakshmanan2022cooperative/01_title_and_abstract_p1.jpg",
+        "assets/P07_lakshmanan2022cooperative/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P07_lakshmanan2022cooperative/03_core_method_or_algorithm_p4.jpg",
+        "assets/P07_lakshmanan2022cooperative/04_experiments_or_results_p7.jpg",
+        "assets/P07_lakshmanan2022cooperative/05_supplemental_reading_page_p8.jpg"
+      ]
     },
     {
       "id": "P08",
@@ -67,7 +125,15 @@
       "title": "Safety-Aware and Data-Driven Predictive Control for Connected Automated Vehicles at a Mixed Traffic Signalized Intersection",
       "html": "papers/P08_mahbub2022safety/P08_mahbub2022safety.html",
       "pdf": "papers/P08_mahbub2022safety/P08_mahbub2022safety.pdf",
-      "json": "papers/P08_mahbub2022safety/P08_mahbub2022safety_notes.json"
+      "html_print_pdf": "papers/P08_mahbub2022safety/P08_mahbub2022safety_html_print.pdf",
+      "json": "papers/P08_mahbub2022safety/P08_mahbub2022safety_notes.json",
+      "snapshots": [
+        "assets/P08_mahbub2022safety/01_title_and_abstract_p1.jpg",
+        "assets/P08_mahbub2022safety/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P08_mahbub2022safety/03_core_method_or_algorithm_p3.jpg",
+        "assets/P08_mahbub2022safety/04_experiments_or_results_p4.jpg",
+        "assets/P08_mahbub2022safety/05_conclusion_or_limitations_p5.jpg"
+      ]
     },
     {
       "id": "P09",
@@ -75,7 +141,15 @@
       "title": "Overtaking-enabled Eco-approach Control at Signalized Intersections for Connected and Automated Vehicles",
       "html": "papers/P09_dong2023overtaking/P09_dong2023overtaking.html",
       "pdf": "papers/P09_dong2023overtaking/P09_dong2023overtaking.pdf",
-      "json": "papers/P09_dong2023overtaking/P09_dong2023overtaking_notes.json"
+      "html_print_pdf": "papers/P09_dong2023overtaking/P09_dong2023overtaking_html_print.pdf",
+      "json": "papers/P09_dong2023overtaking/P09_dong2023overtaking_notes.json",
+      "snapshots": [
+        "assets/P09_dong2023overtaking/01_title_and_abstract_p1.jpg",
+        "assets/P09_dong2023overtaking/02_modeling_or_problem_setup_p3.jpg",
+        "assets/P09_dong2023overtaking/03_experiments_or_results_p8.jpg",
+        "assets/P09_dong2023overtaking/04_conclusion_or_limitations_p12.jpg",
+        "assets/P09_dong2023overtaking/05_supplemental_reading_page_p2.jpg"
+      ]
     },
     {
       "id": "P10",
@@ -83,7 +157,15 @@
       "title": "Real-World Evaluation of Two Cooperative Intersection Management Approaches",
       "html": "papers/P10_klimke2026realworld/P10_klimke2026realworld.html",
       "pdf": "papers/P10_klimke2026realworld/P10_klimke2026realworld.pdf",
-      "json": "papers/P10_klimke2026realworld/P10_klimke2026realworld_notes.json"
+      "html_print_pdf": "papers/P10_klimke2026realworld/P10_klimke2026realworld_html_print.pdf",
+      "json": "papers/P10_klimke2026realworld/P10_klimke2026realworld_notes.json",
+      "snapshots": [
+        "assets/P10_klimke2026realworld/01_title_and_abstract_p1.jpg",
+        "assets/P10_klimke2026realworld/02_modeling_or_problem_setup_p3.jpg",
+        "assets/P10_klimke2026realworld/03_core_method_or_algorithm_p5.jpg",
+        "assets/P10_klimke2026realworld/04_conclusion_or_limitations_p9.jpg",
+        "assets/P10_klimke2026realworld/05_supplemental_reading_page_p2.jpg"
+      ]
     },
     {
       "id": "P11",
@@ -91,7 +173,15 @@
       "title": "A Spatial-Domain Coordinated Control Method for CAVs at Unsignalized Intersections Considering Motion Uncertainty",
       "html": "papers/P11_zhao2025spatial/P11_zhao2025spatial.html",
       "pdf": "papers/P11_zhao2025spatial/P11_zhao2025spatial.pdf",
-      "json": "papers/P11_zhao2025spatial/P11_zhao2025spatial_notes.json"
+      "html_print_pdf": "papers/P11_zhao2025spatial/P11_zhao2025spatial_html_print.pdf",
+      "json": "papers/P11_zhao2025spatial/P11_zhao2025spatial_notes.json",
+      "snapshots": [
+        "assets/P11_zhao2025spatial/01_title_and_abstract_p1.jpg",
+        "assets/P11_zhao2025spatial/02_modeling_or_problem_setup_p3.jpg",
+        "assets/P11_zhao2025spatial/03_core_method_or_algorithm_p7.jpg",
+        "assets/P11_zhao2025spatial/04_experiments_or_results_p8.jpg",
+        "assets/P11_zhao2025spatial/05_conclusion_or_limitations_p13.jpg"
+      ]
     },
     {
       "id": "P12",
@@ -99,7 +189,15 @@
       "title": "Uncertainty-Aware Safety-Critical Decision and Control for Autonomous Vehicles at Unsignalized Intersections",
       "html": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty.html",
       "pdf": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty.pdf",
-      "json": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty_notes.json"
+      "html_print_pdf": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty_html_print.pdf",
+      "json": "papers/P12_yu2025uncertainty/P12_yu2025uncertainty_notes.json",
+      "snapshots": [
+        "assets/P12_yu2025uncertainty/01_title_and_abstract_p1.jpg",
+        "assets/P12_yu2025uncertainty/02_modeling_or_problem_setup_p2.jpg",
+        "assets/P12_yu2025uncertainty/03_core_method_or_algorithm_p3.jpg",
+        "assets/P12_yu2025uncertainty/04_experiments_or_results_p6.jpg",
+        "assets/P12_yu2025uncertainty/05_supplemental_reading_page_p7.jpg"
+      ]
     },
     {
       "id": "P13",
@@ -107,7 +205,15 @@
       "title": "A Systematic Survey of Control Techniques and Applications in Connected and Automated Vehicles",
       "html": "papers/P13_liu2023systematic/P13_liu2023systematic.html",
       "pdf": "papers/P13_liu2023systematic/P13_liu2023systematic.pdf",
-      "json": "papers/P13_liu2023systematic/P13_liu2023systematic_notes.json"
+      "html_print_pdf": "papers/P13_liu2023systematic/P13_liu2023systematic_html_print.pdf",
+      "json": "papers/P13_liu2023systematic/P13_liu2023systematic_notes.json",
+      "snapshots": [
+        "assets/P13_liu2023systematic/01_title_and_abstract_p1.jpg",
+        "assets/P13_liu2023systematic/02_modeling_or_problem_setup_p10.jpg",
+        "assets/P13_liu2023systematic/03_core_method_or_algorithm_p8.jpg",
+        "assets/P13_liu2023systematic/04_experiments_or_results_p31.jpg",
+        "assets/P13_liu2023systematic/05_conclusion_or_limitations_p18.jpg"
+      ]
     },
     {
       "id": "P14",
@@ -115,7 +221,15 @@
       "title": "A Distributed Approach to Autonomous Intersection Management via Multi-Agent Reinforcement Learning",
       "html": "papers/P14_cederle2024distributed/P14_cederle2024distributed.html",
       "pdf": "papers/P14_cederle2024distributed/P14_cederle2024distributed.pdf",
-      "json": "papers/P14_cederle2024distributed/P14_cederle2024distributed_notes.json"
+      "html_print_pdf": "papers/P14_cederle2024distributed/P14_cederle2024distributed_html_print.pdf",
+      "json": "papers/P14_cederle2024distributed/P14_cederle2024distributed_notes.json",
+      "snapshots": [
+        "assets/P14_cederle2024distributed/01_title_and_abstract_p1.jpg",
+        "assets/P14_cederle2024distributed/02_modeling_or_problem_setup_p5.jpg",
+        "assets/P14_cederle2024distributed/03_core_method_or_algorithm_p7.jpg",
+        "assets/P14_cederle2024distributed/04_conclusion_or_limitations_p12.jpg",
+        "assets/P14_cederle2024distributed/05_supplemental_reading_page_p2.jpg"
+      ]
     },
     {
       "id": "P15",
@@ -123,7 +237,15 @@
       "title": "D-HAL: Distributed Hierarchical Adversarial Learning for Multi-Agent Interaction in Autonomous Intersection Management",
       "html": "papers/P15_li2023dhal/P15_li2023dhal.html",
       "pdf": "papers/P15_li2023dhal/P15_li2023dhal.pdf",
-      "json": "papers/P15_li2023dhal/P15_li2023dhal_notes.json"
+      "html_print_pdf": "papers/P15_li2023dhal/P15_li2023dhal_html_print.pdf",
+      "json": "papers/P15_li2023dhal/P15_li2023dhal_notes.json",
+      "snapshots": [
+        "assets/P15_li2023dhal/01_title_and_abstract_p1.jpg",
+        "assets/P15_li2023dhal/02_modeling_or_problem_setup_p4.jpg",
+        "assets/P15_li2023dhal/03_core_method_or_algorithm_p2.jpg",
+        "assets/P15_li2023dhal/04_experiments_or_results_p9.jpg",
+        "assets/P15_li2023dhal/05_conclusion_or_limitations_p14.jpg"
+      ]
     }
   ]
 }

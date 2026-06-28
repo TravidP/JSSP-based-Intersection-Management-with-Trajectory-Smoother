@@ -142,6 +142,271 @@
       "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
     }
   ],
+  "textbook_study_path": [
+    "第一遍先读首页截图、摘要与引言，确认研究问题和场景假设。",
+    "第二遍沿着技术路线图复现模型变量、约束和求解器输入输出。",
+    "第三遍逐节阅读 section deep reading，对照 PDF 截图检查公式、图表和实验。",
+    "第四遍只站在审稿人视角重读实验，判断 baseline、公平性、消融和鲁棒性。",
+    "最后把博士 checklist 写成自己的复现实验或论文拓展计划。"
+  ],
+  "section_deep_reading": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "kind": "motivation",
+      "learning_goal_zh": "建立研究动机：为什么传统信号控制、FCFS 或单车控制不足以处理该论文关注的交叉口协同问题。",
+      "learning_goal_en": "Understand why the paper needs a new coordination method rather than a standard signal, FCFS, or single-vehicle controller.",
+      "key_argument_zh": "这一部分通常把痛点落到 Lane changing + arrival scheduling：既要提高效率，又要保持安全与在线可执行。",
+      "technical_focus_zh": "精读时标出作者批判的 baseline、场景假设、交通参与者类型和隐含优化目标。",
+      "critical_question_zh": "作者指出的痛点是否真的需要新方法，还是可以由更强的优化器/更保守规则解决？"
+    },
+    {
+      "page": 2,
+      "heading": "II. T WO-STAGE COOPERATION FRAMEWORK",
+      "kind": "method",
+      "learning_goal_zh": "解释算法如何把模型转化为可执行决策，并说明在线运行机制。",
+      "learning_goal_en": "Trace how the paper turns the model into executable online decisions.",
+      "key_argument_zh": "框架先求多车目标分配与路径规划，再基于最终路径构建冲突图并求到达时间。这样横向变道改变冲突关系，纵向调度再处理被改变后的路口资源竞争。",
+      "technical_focus_zh": "画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。",
+      "critical_question_zh": "若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？"
+    },
+    {
+      "page": 3,
+      "heading": "III. M ULTI-VEHICLE TARGET ASSIGNMENT AND PATH",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 6,
+      "heading": "1. However, we",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 7,
+      "heading": "IV. CAV S CHEDULING AT UNSIGNALIZED INTERSECTIONS",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 9,
+      "heading": "4. This also indicates that the theoretical evacuation times",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 9,
+      "heading": "6. We have proved that this can be solved by exchanging the",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 10,
+      "heading": "V. SIMULATIONS",
+      "kind": "experiment",
+      "learning_goal_zh": "验证方法是否在公平基准下改善效率、安全、能耗或计算时间。",
+      "learning_goal_en": "Check whether the claimed improvements are supported by fair baselines and meaningful metrics.",
+      "key_argument_zh": "实验应与论文声称的贡献闭环：Numerical simulations for different vehicle counts and traffic volumes.",
+      "technical_focus_zh": "重点追踪指标：平均延误、总行程时间、完成变道比例、冲突避免成功率和交通量敏感性。 同时检查仿真平台、交通需求和随机性设置。",
+      "critical_question_zh": "实验是否只展示平均收益，还是覆盖了高密度、异常扰动和失败案例？"
+    }
+  ],
+  "paragraph_walkthrough": [
+    {
+      "stage": "Opening motivation / 开篇动机段",
+      "zh": "先把作者的痛点翻译成一句博士问题：当车辆可以变道或选择目标车道时，如何联合决定路径/车道与无冲突到达时间？ 读这一段时不要急着接受动机，要追问传统 FCFS、信号灯或保守 MPC 为什么不足。",
+      "en": "Turn the opening motivation into one doctoral-level question and test whether the paper truly needs a new method."
+    },
+    {
+      "stage": "Assumption and setting / 假设与场景段",
+      "zh": "把车辆类型、通信条件、路口类型和动力学假设列成表。该文的关键边界包括：车辆可执行规划出的变道动作，周围交通允许形成编队。；车道级地图和目标车道需求已知。；变道安全约束可以被简化成可规划的路径/队形约束。",
+      "en": "List vehicle type, communication, intersection setting, and dynamics assumptions before reading the equations."
+    },
+    {
+      "stage": "Model and notation / 模型与符号段",
+      "zh": "围绕核心公式“联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling”复写符号表，确认每个变量是决策变量、状态变量、参数还是约束阈值。",
+      "en": "Rewrite the symbol table around the core formulation and classify variables as states, decisions, parameters, or constraints."
+    },
+    {
+      "stage": "Algorithm mechanism / 算法机制段",
+      "zh": "把算法读成一条数据流：输入交通状态，执行 Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover.，输出可执行通行/控制决策，并检查安全接口。",
+      "en": "Read the algorithm as a dataflow from traffic state to executable sequence/control decision, with explicit safety interfaces."
+    },
+    {
+      "stage": "Experiment and evidence / 实验证据段",
+      "zh": "不要只看作者报告的提升，要检查基准、公平性和指标。本文验证描述为：Numerical simulations for different vehicle counts and traffic volumes.",
+      "en": "Go beyond reported gains and inspect baselines, fairness, metrics, and computation time."
+    },
+    {
+      "stage": "Reviewer synthesis / 审稿式总结段",
+      "zh": "最后把贡献拆成可发表与需补强两部分。对你课题最直接的用途是：Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.",
+      "en": "Separate publishable contribution from missing evidence, then connect the result to your own thesis architecture."
+    }
+  ],
+  "technical_route": [
+    {
+      "step": "1",
+      "name_zh": "输入",
+      "name_en": "Input",
+      "content": "车辆状态、路径/车道、交通需求、信号或协同信息。"
+    },
+    {
+      "step": "2",
+      "name_zh": "建模",
+      "name_en": "Modeling",
+      "content": "联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling"
+    },
+    {
+      "step": "3",
+      "name_zh": "核心求解",
+      "name_en": "Core solver",
+      "content": "Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover."
+    },
+    {
+      "step": "4",
+      "name_zh": "安全接口",
+      "name_en": "Safety interface",
+      "content": "Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements."
+    },
+    {
+      "step": "5",
+      "name_zh": "平滑与效率",
+      "name_en": "Smoothing and efficiency",
+      "content": "Improves traffic efficiency by choosing target lanes and arrival schedules that avoid unnecessary queuing."
+    },
+    {
+      "step": "6",
+      "name_zh": "验证",
+      "name_en": "Validation",
+      "content": "Numerical simulations for different vehicle counts and traffic volumes."
+    }
+  ],
+  "contribution_matrix": [
+    {
+      "dimension": "理论贡献 / Theoretical contribution",
+      "score": 3,
+      "comment": "联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling"
+    },
+    {
+      "dimension": "算法贡献 / Algorithmic contribution",
+      "score": 4,
+      "comment": "Two-stage framework decoupling lateral lane assignment/path planning from graph-based arrival scheduling with minimum clique cover."
+    },
+    {
+      "dimension": "实验贡献 / Experimental contribution",
+      "score": 3,
+      "comment": "Numerical simulations for different vehicle counts and traffic volumes."
+    },
+    {
+      "dimension": "工程贡献 / Engineering contribution",
+      "score": 3,
+      "comment": "Conflict-free arrival scheduling and formation-control assumptions prevent incompatible movements."
+    },
+    {
+      "dimension": "博士课题价值 / PhD relevance",
+      "score": 4,
+      "comment": "Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation."
+    }
+  ],
+  "doctoral_checklist": [
+    "能否独立重写核心公式：联合车道分配与到达时间优化 / Joint lane assignment and arrival scheduling，并解释每个符号的物理意义？",
+    "能否画出输入-模型-算法-控制-验证的数据流图？",
+    "能否指出至少两个强假设，并说明它们在真实交通中何时失效？",
+    "能否复述实验基准是否公平，指标是否覆盖效率、安全、能耗和计算时间？",
+    "能否提出一个与自己 JSSP/RL/smoother 课题直接相连的拓展实验？"
+  ],
+  "visual_assets": [
+    {
+      "id": "snapshot_01",
+      "page": 1,
+      "kind": "title_and_abstract",
+      "capture_mode": "full_page",
+      "title_zh": "首页与摘要",
+      "title_en": "Title and abstract page",
+      "asset_path": "assets/P03_chen2021lanechanging/01_title_and_abstract_p1.jpg",
+      "paper_relative_path": "../../assets/P03_chen2021lanechanging/01_title_and_abstract_p1.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_02",
+      "page": 4,
+      "kind": "modeling_or_problem_setup",
+      "capture_mode": "full_page",
+      "title_zh": "建模或问题设定页",
+      "title_en": "Modeling or problem-setup page",
+      "asset_path": "assets/P03_chen2021lanechanging/02_modeling_or_problem_setup_p4.jpg",
+      "paper_relative_path": "../../assets/P03_chen2021lanechanging/02_modeling_or_problem_setup_p4.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_03",
+      "page": 2,
+      "kind": "core_method_or_algorithm",
+      "capture_mode": "full_page",
+      "title_zh": "核心方法或算法页",
+      "title_en": "Core method or algorithm page",
+      "asset_path": "assets/P03_chen2021lanechanging/03_core_method_or_algorithm_p2.jpg",
+      "paper_relative_path": "../../assets/P03_chen2021lanechanging/03_core_method_or_algorithm_p2.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_04",
+      "page": 10,
+      "kind": "experiments_or_results",
+      "capture_mode": "full_page",
+      "title_zh": "实验或结果页",
+      "title_en": "Experiments or results page",
+      "asset_path": "assets/P03_chen2021lanechanging/04_experiments_or_results_p10.jpg",
+      "paper_relative_path": "../../assets/P03_chen2021lanechanging/04_experiments_or_results_p10.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_05",
+      "page": 13,
+      "kind": "conclusion_or_limitations",
+      "capture_mode": "full_page",
+      "title_zh": "结论或局限页",
+      "title_en": "Conclusion or limitations page",
+      "asset_path": "assets/P03_chen2021lanechanging/05_conclusion_or_limitations_p13.jpg",
+      "paper_relative_path": "../../assets/P03_chen2021lanechanging/05_conclusion_or_limitations_p13.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for discussing route-template/lane-choice extensions beyond the current fixed-route JSSP formulation.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    }
+  ],
   "overview": {
     "background_zh": "这篇论文位于“Lane changing + arrival scheduling”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
     "background_en": "The paper belongs to the theme of Lane changing + arrival scheduling. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",

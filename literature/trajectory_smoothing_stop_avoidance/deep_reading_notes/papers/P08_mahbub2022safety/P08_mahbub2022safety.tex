@@ -1,7 +1,7 @@
 \documentclass[UTF8,a4paper,11pt,fontset=fandol]{ctexart}
 \usepackage{geometry}
 \geometry{margin=2.2cm}
-\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem}
+\usepackage{amsmath,amssymb,longtable,booktabs,array,hyperref,xcolor,enumitem,graphicx,float}
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
 \setlist[itemize]{leftmargin=1.3em,itemsep=0.2em}
 \definecolor{notegray}{RGB}{246,248,251}
@@ -48,6 +48,203 @@ How can a CAV estimate a preceding HDV online and perform safety-aware predictiv
 轨迹平滑 & Trajectory Smoothing & 减少急加减速、停车和能耗峰值。 \\
 安全约束 & Safety Constraints & 把碰撞风险写成距离、时间间隔或屏障函数。 \\
 Data-driven predictive control + RLS & 数据驱动预测控制与递归最小二乘 & 该论文的核心方法族。 \\
+\bottomrule
+\end{longtable}
+
+\section{教材式学习路径与关键截图 / Textbook-Style Study Path \& PDF Snapshots}
+\subsection{学习路径 / Study Path}
+\begin{itemize}
+\item 第一遍先读首页截图、摘要与引言，确认研究问题和场景假设。
+\item 第二遍沿着技术路线图复现模型变量、约束和求解器输入输出。
+\item 第三遍逐节阅读 section deep reading，对照 PDF 截图检查公式、图表和实验。
+\item 第四遍只站在审稿人视角重读实验，判断 baseline、公平性、消融和鲁棒性。
+\item 最后把博士 checklist 写成自己的复现实验或论文拓展计划。
+\end{itemize}
+
+
+\subsection{博士阅读 Checklist / Doctoral Reading Checklist}
+\begin{itemize}
+\item 能否独立重写核心公式：RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC，并解释每个符号的物理意义？
+\item 能否画出输入-模型-算法-控制-验证的数据流图？
+\item 能否指出至少两个强假设，并说明它们在真实交通中何时失效？
+\item 能否复述实验基准是否公平，指标是否覆盖效率、安全、能耗和计算时间？
+\item 能否提出一个与自己 JSSP/RL/smoother 课题直接相连的拓展实验？
+\end{itemize}
+
+
+\subsection{关键截图讲解 / PDF Snapshot Explanation}
+Screenshots are selected anchors from the local PDFs for study and parallel reading. They do not replace the original paper.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P08_mahbub2022safety/01_title_and_abstract_p1.jpg}
+\caption{首页与摘要 / Title and abstract page (p.1, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P08_mahbub2022safety/02_modeling_or_problem_setup_p2.jpg}
+\caption{建模或问题设定页 / Modeling or problem-setup page (p.2, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P08_mahbub2022safety/03_core_method_or_algorithm_p3.jpg}
+\caption{核心方法或算法页 / Core method or algorithm page (p.3, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P08_mahbub2022safety/04_experiments_or_results_p4.jpg}
+\caption{实验或结果页 / Experiments or results page (p.4, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\linewidth]{../../assets/P08_mahbub2022safety/05_conclusion_or_limitations_p5.jpg}
+\caption{结论或局限页 / Conclusion or limitations page (p.5, full\_page). 这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。 与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.}
+\end{figure}
+
+
+\section{章节精读与逐段导读 / Section-by-Section Deep Reading \& Walkthrough}
+\subsection*{p.1 1. INTRODUCTION}
+\textbf{章节目标 / Learning goal：} 建立研究动机：为什么传统信号控制、FCFS 或单车控制不足以处理该论文关注的交叉口协同问题。
+
+Understand why the paper needs a new coordination method rather than a standard signal, FCFS, or single-vehicle controller.
+
+\textbf{关键论点 / Key argument：} 这一部分通常把痛点落到 Data-driven predictive control + mixed traffic safety：既要提高效率，又要保持安全与在线可执行。
+
+\textbf{技术焦点 / Technical focus：} 精读时标出作者批判的 baseline、场景假设、交通参与者类型和隐含优化目标。
+
+\textbf{审稿追问 / Reviewer question：} 作者指出的痛点是否真的需要新方法，还是可以由更强的优化器/更保守规则解决？
+
+\subsection*{p.2 2. PROBLEM FORMULATION}
+\textbf{章节目标 / Learning goal：} 把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。
+
+Translate the traffic problem into variables, states, constraints, objectives, or graph relations.
+
+\textbf{关键论点 / Key argument：} 本节是复现论文的核心入口，应与公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”一起读。
+
+\textbf{技术焦点 / Technical focus：} 逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。
+
+\textbf{审稿追问 / Reviewer question：} 这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？
+
+\subsection*{p.2 2.1 Communication Topology}
+\textbf{章节目标 / Learning goal：} 承接前后章节，补充局部定义、案例或实现细节。
+
+Recover implementation details needed for reproduction.
+
+\textbf{关键论点 / Key argument：} 这类章节常常不是主贡献，但决定你能否真正复现方法。
+
+\textbf{技术焦点 / Technical focus：} 检查它是否给出了参数、伪代码、场景划分或实现细节。
+
+\textbf{审稿追问 / Reviewer question：} 跳过该节会不会导致公式或实验无法复现？
+
+\subsection*{p.2 2.2 Vehicle Dynamics and Constraints}
+\textbf{章节目标 / Learning goal：} 承接前后章节，补充局部定义、案例或实现细节。
+
+Recover implementation details needed for reproduction.
+
+\textbf{关键论点 / Key argument：} 这类章节常常不是主贡献，但决定你能否真正复现方法。
+
+\textbf{技术焦点 / Technical focus：} 检查它是否给出了参数、伪代码、场景划分或实现细节。
+
+\textbf{审稿追问 / Reviewer question：} 跳过该节会不会导致公式或实验无法复现？
+
+\subsection*{p.3 3. CONTROL FRAMEWORK}
+\textbf{章节目标 / Learning goal：} 解释算法如何把模型转化为可执行决策，并说明在线运行机制。
+
+Trace how the paper turns the model into executable online decisions.
+
+\textbf{关键论点 / Key argument：} 控制器用 RLS 实时估计前方 HDV 行为，再在有限时域内求解预测控制问题，重点避免黄灯/红灯切换时的追尾风险和过度保守制动。
+
+\textbf{技术焦点 / Technical focus：} 画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。
+
+\textbf{审稿追问 / Reviewer question：} 若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？
+
+\subsection*{p.4 3.1 Online Car-following Model Parameter Estimation}
+\textbf{章节目标 / Learning goal：} 把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。
+
+Translate the traffic problem into variables, states, constraints, objectives, or graph relations.
+
+\textbf{关键论点 / Key argument：} 本节是复现论文的核心入口，应与公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”一起读。
+
+\textbf{技术焦点 / Technical focus：} 逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。
+
+\textbf{审稿追问 / Reviewer question：} 这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？
+
+\subsection*{p.4 3.2 Predictive Control Problem}
+\textbf{章节目标 / Learning goal：} 把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。
+
+Translate the traffic problem into variables, states, constraints, objectives, or graph relations.
+
+\textbf{关键论点 / Key argument：} 本节是复现论文的核心入口，应与公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”一起读。
+
+\textbf{技术焦点 / Technical focus：} 逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。
+
+\textbf{审稿追问 / Reviewer question：} 这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？
+
+\subsection*{p.4 4. SIMULATION AND RESULT}
+\textbf{章节目标 / Learning goal：} 验证方法是否在公平基准下改善效率、安全、能耗或计算时间。
+
+Check whether the claimed improvements are supported by fair baselines and meaningful metrics.
+
+\textbf{关键论点 / Key argument：} 实验应与论文声称的贡献闭环：Numerical simulation and robustness analysis.
+
+\textbf{技术焦点 / Technical focus：} 重点追踪指标：最小车间距、碰撞风险、速度/加速度平滑性、延误和信号违规。 同时检查仿真平台、交通需求和随机性设置。
+
+\textbf{审稿追问 / Reviewer question：} 实验是否只展示平均收益，还是覆盖了高密度、异常扰动和失败案例？
+
+
+\subsection{逐段式导读 / Paragraph-Level Walkthrough}
+\paragraph{Opening motivation / 开篇动机段}先把作者的痛点翻译成一句博士问题：在混合交通信号交叉口中，如何在线估计前车行为并使 CAV 在黄灯/红灯附近安全预测控制？ 读这一段时不要急着接受动机，要追问传统 FCFS、信号灯或保守 MPC 为什么不足。
+
+Turn the opening motivation into one doctoral-level question and test whether the paper truly needs a new method.
+
+\paragraph{Assumption and setting / 假设与场景段}把车辆类型、通信条件、路口类型和动力学假设列成表。该文的关键边界包括：前车行为可由低维参数模型描述。；CAV 可可靠观测前车状态。；主要风险是纵向追尾，而非多方向冲突区碰撞。
+
+List vehicle type, communication, intersection setting, and dynamics assumptions before reading the equations.
+
+\paragraph{Model and notation / 模型与符号段}围绕核心公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”复写符号表，确认每个变量是决策变量、状态变量、参数还是约束阈值。
+
+Rewrite the symbol table around the core formulation and classify variables as states, decisions, parameters, or constraints.
+
+\paragraph{Algorithm mechanism / 算法机制段}把算法读成一条数据流：输入交通状态，执行 Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time.，输出可执行通行/控制决策，并检查安全接口。
+
+Read the algorithm as a dataflow from traffic state to executable sequence/control decision, with explicit safety interfaces.
+
+\paragraph{Experiment and evidence / 实验证据段}不要只看作者报告的提升，要检查基准、公平性和指标。本文验证描述为：Numerical simulation and robustness analysis.
+
+Go beyond reported gains and inspect baselines, fairness, metrics, and computation time.
+
+\paragraph{Reviewer synthesis / 审稿式总结段}最后把贡献拆成可发表与需补强两部分。对你课题最直接的用途是：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.
+
+Separate publishable contribution from missing evidence, then connect the result to your own thesis architecture.
+
+
+\section{技术路线图与贡献量评估 / Technical Route \& Contribution Matrix}
+\begin{longtable}{p{0.08\linewidth}p{0.24\linewidth}p{0.58\linewidth}}
+\toprule
+Step & Stage / 阶段 & Content / 内容\\
+\midrule
+1 & 输入 / Input & 车辆状态、路径/车道、交通需求、信号或协同信息。 \\
+2 & 建模 / Modeling & RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC \\
+3 & 核心求解 / Core solver & Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time. \\
+4 & 安全接口 / Safety interface & Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes. \\
+5 & 平滑与效率 / Smoothing and efficiency & Smooths CAV response near yellow/red phases while avoiding overly conservative braking behind HDVs. \\
+6 & 验证 / Validation & Numerical simulation and robustness analysis. \\
+\bottomrule
+\end{longtable}
+
+\begin{longtable}{p{0.34\linewidth}p{0.14\linewidth}p{0.42\linewidth}}
+\toprule
+Dimension / 维度 & Score & Comment / 评语\\
+\midrule
+理论贡献 / Theoretical contribution & 3/5 & RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC \\
+算法贡献 / Algorithmic contribution & 5/5 & Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time. \\
+实验贡献 / Experimental contribution & 3/5 & Numerical simulation and robustness analysis. \\
+工程贡献 / Engineering contribution & 4/5 & Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes. \\
+博士课题价值 / PhD relevance & 4/5 & Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate. \\
 \bottomrule
 \end{longtable}
 

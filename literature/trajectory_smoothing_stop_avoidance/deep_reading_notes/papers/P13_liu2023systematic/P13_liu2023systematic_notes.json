@@ -40,24 +40,12 @@
         "page": 20
       },
       {
-        "heading": "2022 IEEE 25th International Conference on Intelligent",
-        "page": 23
-      },
-      {
         "heading": "X. Cao, P. Zhang, Y . Cao, L. Qi, et al. , “Multi-",
         "page": 23
       },
       {
         "heading": "X. Cheng, “Metasaug: Meta semantic augmentation for",
         "page": 24
-      },
-      {
-        "heading": "2019 International Conference on Intelligent Comput-",
-        "page": 26
-      },
-      {
-        "heading": "2022 Design, Automation & Test in Europe Conference",
-        "page": 27
       },
       {
         "heading": "I. Posner, “Large-scale cost function learning for path",
@@ -143,15 +131,280 @@
     },
     {
       "page": 23,
-      "heading": "2022 IEEE 25th International Conference on Intelligent",
+      "heading": "X. Cao, P. Zhang, Y . Cao, L. Qi, et al. , “Multi-",
       "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
       "en": "Read as a local argument and ask how it supports the main question."
     },
     {
-      "page": 23,
-      "heading": "X. Cao, P. Zhang, Y . Cao, L. Qi, et al. , “Multi-",
+      "page": 24,
+      "heading": "X. Cheng, “Metasaug: Meta semantic augmentation for",
       "zh": "作为局部论证段落阅读，关注它如何服务主问题。",
       "en": "Read as a local argument and ask how it supports the main question."
+    }
+  ],
+  "textbook_study_path": [
+    "第一遍先读首页截图、摘要与引言，确认研究问题和场景假设。",
+    "第二遍沿着技术路线图复现模型变量、约束和求解器输入输出。",
+    "第三遍逐节阅读 section deep reading，对照 PDF 截图检查公式、图表和实验。",
+    "第四遍只站在审稿人视角重读实验，判断 baseline、公平性、消融和鲁棒性。",
+    "最后把博士 checklist 写成自己的复现实验或论文拓展计划。"
+  ],
+  "section_deep_reading": [
+    {
+      "page": 1,
+      "heading": "I. INTRODUCTION",
+      "kind": "motivation",
+      "learning_goal_zh": "建立研究动机：为什么传统信号控制、FCFS 或单车控制不足以处理该论文关注的交叉口协同问题。",
+      "learning_goal_en": "Understand why the paper needs a new coordination method rather than a standard signal, FCFS, or single-vehicle controller.",
+      "key_argument_zh": "这一部分通常把痛点落到 CAV control survey：既要提高效率，又要保持安全与在线可执行。",
+      "technical_focus_zh": "精读时标出作者批判的 baseline、场景假设、交通参与者类型和隐含优化目标。",
+      "critical_question_zh": "作者指出的痛点是否真的需要新方法，还是可以由更强的优化器/更保守规则解决？"
+    },
+    {
+      "page": 3,
+      "heading": "II. V EHICLE SIDESLIP ANGLE ESTIMATION",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 8,
+      "heading": "III. T RAJECTORY TRACKING CONTROL OF AVS",
+      "kind": "method",
+      "learning_goal_zh": "解释算法如何把模型转化为可执行决策，并说明在线运行机制。",
+      "learning_goal_en": "Trace how the paper turns the model into executable online decisions.",
+      "key_argument_zh": "作为综述，它按估计、跟踪、路径规划、协同控制等层次整理方法。对本项目最有价值的是把 comfort、safety、energy、efficiency 放入同一个 CAV 控制目标谱系。",
+      "technical_focus_zh": "画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。",
+      "critical_question_zh": "若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？"
+    },
+    {
+      "page": 13,
+      "heading": "IV. C OLLABORATIVE CONTROL OF CAVS",
+      "kind": "method",
+      "learning_goal_zh": "解释算法如何把模型转化为可执行决策，并说明在线运行机制。",
+      "learning_goal_en": "Trace how the paper turns the model into executable online decisions.",
+      "key_argument_zh": "作为综述，它按估计、跟踪、路径规划、协同控制等层次整理方法。对本项目最有价值的是把 comfort、safety、energy、efficiency 放入同一个 CAV 控制目标谱系。",
+      "technical_focus_zh": "画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。",
+      "critical_question_zh": "若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？"
+    },
+    {
+      "page": 18,
+      "heading": "V. CONCLUSION AND FUTURE WORKS",
+      "kind": "critique",
+      "learning_goal_zh": "提炼作者承认的边界，并把它转化为博士课题的可拓展问题。",
+      "learning_goal_en": "Convert acknowledged boundaries into research opportunities.",
+      "key_argument_zh": "结论不只是总结结果，更是观察作者没有解决什么的窗口。",
+      "technical_focus_zh": "把 future work 与前文假设逐一对应，寻找可发表的补强点。",
+      "critical_question_zh": "如果我是审稿人，我会要求补哪一个实验、定理或消融？"
+    },
+    {
+      "page": 20,
+      "heading": "X. Wang, “Federated vehicular transformers and their",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 23,
+      "heading": "X. Cao, P. Zhang, Y . Cao, L. Qi, et al. , “Multi-",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 24,
+      "heading": "X. Cheng, “Metasaug: Meta semantic augmentation for",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    }
+  ],
+  "paragraph_walkthrough": [
+    {
+      "stage": "Opening motivation / 开篇动机段",
+      "zh": "先把作者的痛点翻译成一句博士问题：CAV 控制从状态估计、轨迹跟踪到协同控制有哪些主线方法，它们如何支撑交叉口协同研究？ 读这一段时不要急着接受动机，要追问传统 FCFS、信号灯或保守 MPC 为什么不足。",
+      "en": "Turn the opening motivation into one doctoral-level question and test whether the paper truly needs a new method."
+    },
+    {
+      "stage": "Assumption and setting / 假设与场景段",
+      "zh": "把车辆类型、通信条件、路口类型和动力学假设列成表。该文的关键边界包括：文献覆盖广但不可避免存在选择偏差。；不同控制任务和应用场景的指标不可直接比较。；综述结论需要回到具体论文验证。",
+      "en": "List vehicle type, communication, intersection setting, and dynamics assumptions before reading the equations."
+    },
+    {
+      "stage": "Model and notation / 模型与符号段",
+      "zh": "围绕核心公式“通用车辆控制闭环 / Generic vehicle-control loop”复写符号表，确认每个变量是决策变量、状态变量、参数还是约束阈值。",
+      "en": "Rewrite the symbol table around the core formulation and classify variables as states, decisions, parameters, or constraints."
+    },
+    {
+      "stage": "Algorithm mechanism / 算法机制段",
+      "zh": "把算法读成一条数据流：输入交通状态，执行 Systematic survey from vehicle state estimation and trajectory tracking to collaborative CAV control applications.，输出可执行通行/控制决策，并检查安全接口。",
+      "en": "Read the algorithm as a dataflow from traffic state to executable sequence/control decision, with explicit safety interfaces."
+    },
+    {
+      "stage": "Experiment and evidence / 实验证据段",
+      "zh": "不要只看作者报告的提升，要检查基准、公平性和指标。本文验证描述为：Literature survey rather than original experiments.",
+      "en": "Go beyond reported gains and inspect baselines, fairness, metrics, and computation time."
+    },
+    {
+      "stage": "Reviewer synthesis / 审稿式总结段",
+      "zh": "最后把贡献拆成可发表与需补强两部分。对你课题最直接的用途是：Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.",
+      "en": "Separate publishable contribution from missing evidence, then connect the result to your own thesis architecture."
+    }
+  ],
+  "technical_route": [
+    {
+      "step": "1",
+      "name_zh": "输入",
+      "name_en": "Input",
+      "content": "车辆状态、路径/车道、交通需求、信号或协同信息。"
+    },
+    {
+      "step": "2",
+      "name_zh": "建模",
+      "name_en": "Modeling",
+      "content": "通用车辆控制闭环 / Generic vehicle-control loop"
+    },
+    {
+      "step": "3",
+      "name_zh": "核心求解",
+      "name_en": "Core solver",
+      "content": "Systematic survey from vehicle state estimation and trajectory tracking to collaborative CAV control applications."
+    },
+    {
+      "step": "4",
+      "name_zh": "安全接口",
+      "name_en": "Safety interface",
+      "content": "Reviews vehicle-control approaches relevant to safety and collaborative control."
+    },
+    {
+      "step": "5",
+      "name_zh": "平滑与效率",
+      "name_en": "Smoothing and efficiency",
+      "content": "Frames comfort, energy saving, and transportation efficiency as central CAV control goals."
+    },
+    {
+      "step": "6",
+      "name_zh": "验证",
+      "name_en": "Validation",
+      "content": "Literature survey rather than original experiments."
+    }
+  ],
+  "contribution_matrix": [
+    {
+      "dimension": "理论贡献 / Theoretical contribution",
+      "score": 3,
+      "comment": "通用车辆控制闭环 / Generic vehicle-control loop"
+    },
+    {
+      "dimension": "算法贡献 / Algorithmic contribution",
+      "score": 4,
+      "comment": "Systematic survey from vehicle state estimation and trajectory tracking to collaborative CAV control applications."
+    },
+    {
+      "dimension": "实验贡献 / Experimental contribution",
+      "score": 2,
+      "comment": "Literature survey rather than original experiments."
+    },
+    {
+      "dimension": "工程贡献 / Engineering contribution",
+      "score": 4,
+      "comment": "Reviews vehicle-control approaches relevant to safety and collaborative control."
+    },
+    {
+      "dimension": "博士课题价值 / PhD relevance",
+      "score": 4,
+      "comment": "Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together."
+    }
+  ],
+  "doctoral_checklist": [
+    "能否独立重写核心公式：通用车辆控制闭环 / Generic vehicle-control loop，并解释每个符号的物理意义？",
+    "能否画出输入-模型-算法-控制-验证的数据流图？",
+    "能否指出至少两个强假设，并说明它们在真实交通中何时失效？",
+    "能否复述实验基准是否公平，指标是否覆盖效率、安全、能耗和计算时间？",
+    "能否提出一个与自己 JSSP/RL/smoother 课题直接相连的拓展实验？"
+  ],
+  "visual_assets": [
+    {
+      "id": "snapshot_01",
+      "page": 1,
+      "kind": "title_and_abstract",
+      "capture_mode": "full_page",
+      "title_zh": "首页与摘要",
+      "title_en": "Title and abstract page",
+      "asset_path": "assets/P13_liu2023systematic/01_title_and_abstract_p1.jpg",
+      "paper_relative_path": "../../assets/P13_liu2023systematic/01_title_and_abstract_p1.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_02",
+      "page": 10,
+      "kind": "modeling_or_problem_setup",
+      "capture_mode": "full_page",
+      "title_zh": "建模或问题设定页",
+      "title_en": "Modeling or problem-setup page",
+      "asset_path": "assets/P13_liu2023systematic/02_modeling_or_problem_setup_p10.jpg",
+      "paper_relative_path": "../../assets/P13_liu2023systematic/02_modeling_or_problem_setup_p10.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_03",
+      "page": 8,
+      "kind": "core_method_or_algorithm",
+      "capture_mode": "full_page",
+      "title_zh": "核心方法或算法页",
+      "title_en": "Core method or algorithm page",
+      "asset_path": "assets/P13_liu2023systematic/03_core_method_or_algorithm_p8.jpg",
+      "paper_relative_path": "../../assets/P13_liu2023systematic/03_core_method_or_algorithm_p8.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_04",
+      "page": 31,
+      "kind": "experiments_or_results",
+      "capture_mode": "full_page",
+      "title_zh": "实验或结果页",
+      "title_en": "Experiments or results page",
+      "asset_path": "assets/P13_liu2023systematic/04_experiments_or_results_p31.jpg",
+      "paper_relative_path": "../../assets/P13_liu2023systematic/04_experiments_or_results_p31.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_05",
+      "page": 18,
+      "kind": "conclusion_or_limitations",
+      "capture_mode": "full_page",
+      "title_zh": "结论或局限页",
+      "title_en": "Conclusion or limitations page",
+      "asset_path": "assets/P13_liu2023systematic/05_conclusion_or_limitations_p18.jpg",
+      "paper_relative_path": "../../assets/P13_liu2023systematic/05_conclusion_or_limitations_p18.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful context citation for why trajectory tracking, collaborative control, safety, comfort, and energy belong together.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
     }
   ],
   "overview": {

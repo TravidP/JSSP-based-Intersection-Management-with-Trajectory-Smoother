@@ -150,6 +150,271 @@
       "en": "Tests efficiency, safety, or energy claims; inspect whether baselines are fair."
     }
   ],
+  "textbook_study_path": [
+    "第一遍先读首页截图、摘要与引言，确认研究问题和场景假设。",
+    "第二遍沿着技术路线图复现模型变量、约束和求解器输入输出。",
+    "第三遍逐节阅读 section deep reading，对照 PDF 截图检查公式、图表和实验。",
+    "第四遍只站在审稿人视角重读实验，判断 baseline、公平性、消融和鲁棒性。",
+    "最后把博士 checklist 写成自己的复现实验或论文拓展计划。"
+  ],
+  "section_deep_reading": [
+    {
+      "page": 1,
+      "heading": "1. INTRODUCTION",
+      "kind": "motivation",
+      "learning_goal_zh": "建立研究动机：为什么传统信号控制、FCFS 或单车控制不足以处理该论文关注的交叉口协同问题。",
+      "learning_goal_en": "Understand why the paper needs a new coordination method rather than a standard signal, FCFS, or single-vehicle controller.",
+      "key_argument_zh": "这一部分通常把痛点落到 Data-driven predictive control + mixed traffic safety：既要提高效率，又要保持安全与在线可执行。",
+      "technical_focus_zh": "精读时标出作者批判的 baseline、场景假设、交通参与者类型和隐含优化目标。",
+      "critical_question_zh": "作者指出的痛点是否真的需要新方法，还是可以由更强的优化器/更保守规则解决？"
+    },
+    {
+      "page": 2,
+      "heading": "2. PROBLEM FORMULATION",
+      "kind": "model",
+      "learning_goal_zh": "把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。",
+      "learning_goal_en": "Translate the traffic problem into variables, states, constraints, objectives, or graph relations.",
+      "key_argument_zh": "本节是复现论文的核心入口，应与公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”一起读。",
+      "technical_focus_zh": "逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。",
+      "critical_question_zh": "这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？"
+    },
+    {
+      "page": 2,
+      "heading": "2.1 Communication Topology",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 2,
+      "heading": "2.2 Vehicle Dynamics and Constraints",
+      "kind": "bridge",
+      "learning_goal_zh": "承接前后章节，补充局部定义、案例或实现细节。",
+      "learning_goal_en": "Recover implementation details needed for reproduction.",
+      "key_argument_zh": "这类章节常常不是主贡献，但决定你能否真正复现方法。",
+      "technical_focus_zh": "检查它是否给出了参数、伪代码、场景划分或实现细节。",
+      "critical_question_zh": "跳过该节会不会导致公式或实验无法复现？"
+    },
+    {
+      "page": 3,
+      "heading": "3. CONTROL FRAMEWORK",
+      "kind": "method",
+      "learning_goal_zh": "解释算法如何把模型转化为可执行决策，并说明在线运行机制。",
+      "learning_goal_en": "Trace how the paper turns the model into executable online decisions.",
+      "key_argument_zh": "控制器用 RLS 实时估计前方 HDV 行为，再在有限时域内求解预测控制问题，重点避免黄灯/红灯切换时的追尾风险和过度保守制动。",
+      "technical_focus_zh": "画出输入、核心求解器、输出和安全检查接口，明确哪些步骤是优化、哪些是规则、哪些是学习。",
+      "critical_question_zh": "若算法某一步失败，论文有没有 fallback、重规划或安全过滤机制？"
+    },
+    {
+      "page": 4,
+      "heading": "3.1 Online Car-following Model Parameter Estimation",
+      "kind": "model",
+      "learning_goal_zh": "把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。",
+      "learning_goal_en": "Translate the traffic problem into variables, states, constraints, objectives, or graph relations.",
+      "key_argument_zh": "本节是复现论文的核心入口，应与公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”一起读。",
+      "technical_focus_zh": "逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。",
+      "critical_question_zh": "这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？"
+    },
+    {
+      "page": 4,
+      "heading": "3.2 Predictive Control Problem",
+      "kind": "model",
+      "learning_goal_zh": "把自然语言交通问题压缩为变量、状态、约束、目标函数或图结构。",
+      "learning_goal_en": "Translate the traffic problem into variables, states, constraints, objectives, or graph relations.",
+      "key_argument_zh": "本节是复现论文的核心入口，应与公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”一起读。",
+      "technical_focus_zh": "逐项检查车辆状态、冲突关系、控制输入、时间/空间索引和安全阈值是否定义完整。",
+      "critical_question_zh": "这些建模假设在混合交通、通信延迟、感知误差和高密度车流下是否仍成立？"
+    },
+    {
+      "page": 4,
+      "heading": "4. SIMULATION AND RESULT",
+      "kind": "experiment",
+      "learning_goal_zh": "验证方法是否在公平基准下改善效率、安全、能耗或计算时间。",
+      "learning_goal_en": "Check whether the claimed improvements are supported by fair baselines and meaningful metrics.",
+      "key_argument_zh": "实验应与论文声称的贡献闭环：Numerical simulation and robustness analysis.",
+      "technical_focus_zh": "重点追踪指标：最小车间距、碰撞风险、速度/加速度平滑性、延误和信号违规。 同时检查仿真平台、交通需求和随机性设置。",
+      "critical_question_zh": "实验是否只展示平均收益，还是覆盖了高密度、异常扰动和失败案例？"
+    }
+  ],
+  "paragraph_walkthrough": [
+    {
+      "stage": "Opening motivation / 开篇动机段",
+      "zh": "先把作者的痛点翻译成一句博士问题：在混合交通信号交叉口中，如何在线估计前车行为并使 CAV 在黄灯/红灯附近安全预测控制？ 读这一段时不要急着接受动机，要追问传统 FCFS、信号灯或保守 MPC 为什么不足。",
+      "en": "Turn the opening motivation into one doctoral-level question and test whether the paper truly needs a new method."
+    },
+    {
+      "stage": "Assumption and setting / 假设与场景段",
+      "zh": "把车辆类型、通信条件、路口类型和动力学假设列成表。该文的关键边界包括：前车行为可由低维参数模型描述。；CAV 可可靠观测前车状态。；主要风险是纵向追尾，而非多方向冲突区碰撞。",
+      "en": "List vehicle type, communication, intersection setting, and dynamics assumptions before reading the equations."
+    },
+    {
+      "stage": "Model and notation / 模型与符号段",
+      "zh": "围绕核心公式“RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC”复写符号表，确认每个变量是决策变量、状态变量、参数还是约束阈值。",
+      "en": "Rewrite the symbol table around the core formulation and classify variables as states, decisions, parameters, or constraints."
+    },
+    {
+      "stage": "Algorithm mechanism / 算法机制段",
+      "zh": "把算法读成一条数据流：输入交通状态，执行 Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time.，输出可执行通行/控制决策，并检查安全接口。",
+      "en": "Read the algorithm as a dataflow from traffic state to executable sequence/control decision, with explicit safety interfaces."
+    },
+    {
+      "stage": "Experiment and evidence / 实验证据段",
+      "zh": "不要只看作者报告的提升，要检查基准、公平性和指标。本文验证描述为：Numerical simulation and robustness analysis.",
+      "en": "Go beyond reported gains and inspect baselines, fairness, metrics, and computation time."
+    },
+    {
+      "stage": "Reviewer synthesis / 审稿式总结段",
+      "zh": "最后把贡献拆成可发表与需补强两部分。对你课题最直接的用途是：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.",
+      "en": "Separate publishable contribution from missing evidence, then connect the result to your own thesis architecture."
+    }
+  ],
+  "technical_route": [
+    {
+      "step": "1",
+      "name_zh": "输入",
+      "name_en": "Input",
+      "content": "车辆状态、路径/车道、交通需求、信号或协同信息。"
+    },
+    {
+      "step": "2",
+      "name_zh": "建模",
+      "name_en": "Modeling",
+      "content": "RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC"
+    },
+    {
+      "step": "3",
+      "name_zh": "核心求解",
+      "name_en": "Core solver",
+      "content": "Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time."
+    },
+    {
+      "step": "4",
+      "name_zh": "安全接口",
+      "name_en": "Safety interface",
+      "content": "Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes."
+    },
+    {
+      "step": "5",
+      "name_zh": "平滑与效率",
+      "name_en": "Smoothing and efficiency",
+      "content": "Smooths CAV response near yellow/red phases while avoiding overly conservative braking behind HDVs."
+    },
+    {
+      "step": "6",
+      "name_zh": "验证",
+      "name_en": "Validation",
+      "content": "Numerical simulation and robustness analysis."
+    }
+  ],
+  "contribution_matrix": [
+    {
+      "dimension": "理论贡献 / Theoretical contribution",
+      "score": 3,
+      "comment": "RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC"
+    },
+    {
+      "dimension": "算法贡献 / Algorithmic contribution",
+      "score": 5,
+      "comment": "Finite-horizon predictive control uses recursive least squares to estimate preceding HDV behavior in real time."
+    },
+    {
+      "dimension": "实验贡献 / Experimental contribution",
+      "score": 3,
+      "comment": "Numerical simulation and robustness analysis."
+    },
+    {
+      "dimension": "工程贡献 / Engineering contribution",
+      "score": 4,
+      "comment": "Prioritizes rear-end collision avoidance when preceding human-driven vehicles approach signal changes."
+    },
+    {
+      "dimension": "博士课题价值 / PhD relevance",
+      "score": 4,
+      "comment": "Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate."
+    }
+  ],
+  "doctoral_checklist": [
+    "能否独立重写核心公式：RLS 估计与有限时域 MPC / RLS estimation and finite-horizon MPC，并解释每个符号的物理意义？",
+    "能否画出输入-模型-算法-控制-验证的数据流图？",
+    "能否指出至少两个强假设，并说明它们在真实交通中何时失效？",
+    "能否复述实验基准是否公平，指标是否覆盖效率、安全、能耗和计算时间？",
+    "能否提出一个与自己 JSSP/RL/smoother 课题直接相连的拓展实验？"
+  ],
+  "visual_assets": [
+    {
+      "id": "snapshot_01",
+      "page": 1,
+      "kind": "title_and_abstract",
+      "capture_mode": "full_page",
+      "title_zh": "首页与摘要",
+      "title_en": "Title and abstract page",
+      "asset_path": "assets/P08_mahbub2022safety/01_title_and_abstract_p1.jpg",
+      "paper_relative_path": "../../assets/P08_mahbub2022safety/01_title_and_abstract_p1.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_02",
+      "page": 2,
+      "kind": "modeling_or_problem_setup",
+      "capture_mode": "full_page",
+      "title_zh": "建模或问题设定页",
+      "title_en": "Modeling or problem-setup page",
+      "asset_path": "assets/P08_mahbub2022safety/02_modeling_or_problem_setup_p2.jpg",
+      "paper_relative_path": "../../assets/P08_mahbub2022safety/02_modeling_or_problem_setup_p2.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_03",
+      "page": 3,
+      "kind": "core_method_or_algorithm",
+      "capture_mode": "full_page",
+      "title_zh": "核心方法或算法页",
+      "title_en": "Core method or algorithm page",
+      "asset_path": "assets/P08_mahbub2022safety/03_core_method_or_algorithm_p3.jpg",
+      "paper_relative_path": "../../assets/P08_mahbub2022safety/03_core_method_or_algorithm_p3.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_04",
+      "page": 4,
+      "kind": "experiments_or_results",
+      "capture_mode": "full_page",
+      "title_zh": "实验或结果页",
+      "title_en": "Experiments or results page",
+      "asset_path": "assets/P08_mahbub2022safety/04_experiments_or_results_p4.jpg",
+      "paper_relative_path": "../../assets/P08_mahbub2022safety/04_experiments_or_results_p4.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    },
+    {
+      "id": "snapshot_05",
+      "page": 5,
+      "kind": "conclusion_or_limitations",
+      "capture_mode": "full_page",
+      "title_zh": "结论或局限页",
+      "title_en": "Conclusion or limitations page",
+      "asset_path": "assets/P08_mahbub2022safety/05_conclusion_or_limitations_p5.jpg",
+      "paper_relative_path": "../../assets/P08_mahbub2022safety/05_conclusion_or_limitations_p5.jpg",
+      "why_zh": "这张截图用于把笔记中的抽象概念拉回原论文页面，便于你平行阅读原文、公式、图表和实验设置。",
+      "why_en": "This snapshot anchors the study note to the original PDF page so you can read the explanation alongside the source layout.",
+      "connection_zh": "与当前课题的连接：Useful for fallback and mixed-traffic safety discussion, especially when predicted trajectories deviate.",
+      "connection_en": "Use it to connect the paper's local evidence to the JSSP scheduler, trajectory smoother, safety layer, or evaluation design."
+    }
+  ],
   "overview": {
     "background_zh": "这篇论文位于“Data-driven predictive control + mixed traffic safety”方向。对你的 JSSP-based Intersection Management 课题，它回答的是高层调度、低层轨迹平滑、安全过滤或真实验证中的一个关键子问题：如何让车辆在路口少停、少冲突、少能耗，同时保持在线可执行。",
     "background_en": "The paper belongs to the theme of Data-driven predictive control + mixed traffic safety. For a JSSP-based intersection-management thesis, it illuminates one of the key layers: scheduling, smoothing, safety filtering, or real-world validation.",
